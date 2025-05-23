@@ -14,10 +14,11 @@ export function ensureEmbed(
 
   const requiredFields = [
     "guild_id",
-    "author",
-    "author_icon",
+    "target_user_id",
     "target_profile_channel_id",
+    "type",
     "message",
+    "sent_from",
   ];
 
   for (const field of requiredFields) {

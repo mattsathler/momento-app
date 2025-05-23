@@ -5,15 +5,15 @@ import { createHmac } from "crypto";
 export function validateToken(
   message: Message
 ): true | { error: string; code: number } {
-  const tokenField = message.embeds[0].data.fields?.find(
-    (field) => field.name === "Token"
+  const tokenField = message.embeds[0]?.data.fields?.find(
+    (field) => field.name === "token"
   );
   if (!tokenField) {
-    return { error: "Campo 'Token' não encontrado.", code: 400 };
+    return { error: "Campo 'token' não encontrado.", code: 400 };
   }
   const tokenValue = tokenField.value;
   if (!tokenValue) {
-    return { error: "Campo 'Token' está vazio.", code: 400 };
+    return { error: "Campo 'token' está vazio.", code: 400 };
   }
 
   if (!isTokenValid(tokenValue)) {
@@ -23,7 +23,7 @@ export function validateToken(
   return true;
 }
 
-function isTokenValid(token: string, maxAgeMs = 60_000): boolean {
+function isTokenValid(token: string, maxAgeMs = 1800_000): boolean {
   try {
     const secret = process.env.SECRET_TOKEN;
     if (!secret) {

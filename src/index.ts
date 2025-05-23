@@ -1,5 +1,5 @@
 import { createDiscordClient } from "./client.js";
-import { handleMessage } from "./messageHandler/messageHandler.js";
+import { handleMessage } from "./handlers/messageHandler.js";
 import "dotenv/config";
 
 async function main(): Promise<void> {
@@ -18,7 +18,7 @@ async function main(): Promise<void> {
     console.log("Logged in to Discord!");
 
     client.on("messageCreate", (message) => {
-      handleMessage(message);
+      handleMessage(client, message);
     });
   } catch (error) {
     console.error("Error logging in to Discord:", error);
