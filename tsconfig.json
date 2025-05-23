@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",                       // Suporte a recursos modernos
+    "module": "ESNext",                       // Usa ESM (import/export)
+    "moduleResolution": "Node",
+    "esModuleInterop": true,                  // Permite importar pacotes CommonJS
+    "strict": true,                           // Ativa verificações rigorosas
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",                       // Código compilado vai para dist/
+    "rootDir": "./src"                        // Seu código-fonte está em src/
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

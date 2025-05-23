@@ -1,0 +1,30 @@
+# Node modules
+node_modules/
+
+# Diretório de saída do TypeScript
+dist/
+
+# Arquivos temporários de logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Configs do editor
+.vscode/
+.idea/
+
+# Cache do TypeScript
+*.tsbuildinfo
+
+# Outras pastas que podem ser geradas
+coverage/
+temp/
+tmp/
+
+# Ocultar arquivos de ambiente
+.env
