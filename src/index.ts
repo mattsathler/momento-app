@@ -1,18 +1,28 @@
-import { createDiscordClient } from "./client";
+import { createDiscordClient } from "./client.js";
+import { handleMessage } from "./messageHandler/messageHandler.js";
 import "dotenv/config";
 
-function init(): void {
+async function main(): Promise<void> {
   console.log("Initializing momento notifications...");
+
+  const token = process.env.DISCORD_TOKEN;
+  if (!token) {
+    console.error("DISCORD_TOKEN is not defined in .env");
+    process.exit(1);
+  }
+
   const client = createDiscordClient();
 
-  client
-    .login(process.env.DISCORD_TOKEN)
-    .then(() => {
-      console.log("Logged in to Discord!");
-    })
-    .catch((error) => {
-      console.error("Error logging in to Discord:", error);
+  try {
+    await client.login(token);
+    console.log("Logged in to Discord!");
+
+    client.on("messageCreate", (message) => {
+      handleMessage(message);
     });
+  } catch (error) {
+    console.error("Error logging in to Discord:", error);
+  }
 }
 
-init();
+main();

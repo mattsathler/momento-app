@@ -10,6 +10,6 @@
     "outDir": "./dist",                       // Código compilado vai para dist/
     "rootDir": "./src"                        // Seu código-fonte está em src/
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/middlewares/validateToken.ts"],
   "exclude": ["node_modules"]
 }
