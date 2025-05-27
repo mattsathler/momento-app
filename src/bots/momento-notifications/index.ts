@@ -45,10 +45,11 @@ async function main(): Promise<void> {
         validateToken
       ];
 
-      handleMessage(client, message, middlewares, sendNotification, {
-        message: "Não foi possível enviar a notificação",
-        code: 500
-      });
+      if (message.channelId === process.env.NOTIFICATION_WEBHOOK_CHANNEL_ID)
+        handleMessage(client, message, middlewares, sendNotification, {
+          message: "Não foi possível enviar a notificação",
+          code: 500
+        });
     });
   } catch (error) {
     console.error("Error logging in to Discord:", error);

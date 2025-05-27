@@ -1,5 +1,5 @@
 import { Embed, EmbedBuilder, Guild, Message, MessageType, TextChannel, ThreadAutoArchiveDuration, ThreadChannel } from "discord.js";
-import { MomentoNotification } from "../../bots/momento-notifications/models/momentoNotification";
+import { MomentoNotification } from "../../bots/momento-notifications/models/MomentoNotification";
 
 export class NotificationService {
     constructor() { }
