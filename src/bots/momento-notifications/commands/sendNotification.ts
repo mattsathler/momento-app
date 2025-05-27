@@ -1,6 +1,6 @@
 import { Client, Message, TextChannel } from "discord.js";
+import { NotificationService } from "../../../shared/services/notificationService";
 import { MomentoNotification } from "../models/momentoNotification";
-import { NotificationService } from "../services/notificationService";
 
 export async function sendNotification(client: Client, message: Message): Promise<void> {
     const embed = message.embeds[0];

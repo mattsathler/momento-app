@@ -4,8 +4,8 @@ import { ensureEmbed } from "../middlewares/ensureEmbed";
 import { Middleware } from "../middlewares/middleware";
 import { validateToken } from "../middlewares/validateToken";
 import { runMiddlewares } from "../middlewares/_index";
-import { sendNotification } from "../commands/sendNotification";
 import { errorHandler } from "./errorHandler";
+import { sendNotification } from "../../bots/momento-notifications/commands/sendNotification";
 
 export async function handleMessage(client: Client, message: Message): Promise<void> {
   const targetChannelId = process.env.NOTIFICATION_WEBHOOK_CHANNEL_ID;
