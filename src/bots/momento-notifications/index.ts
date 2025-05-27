@@ -5,6 +5,9 @@ import dotenv from "dotenv";
 import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import { sendNotification } from "./commands/sendNotification";
+import { ensureEmbed } from "../../shared/middlewares/ensureEmbed";
+import { validateToken } from "../../shared/middlewares/validateToken";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -27,10 +30,25 @@ async function main(): Promise<void> {
     await client.login(token);
     console.log("Logged in to Discord!");
 
-    client.on("messageCreate", (message: Message
-) => {
-      handleMessage
-(client, message);
+    const requiredFields = [
+      "guild_id",
+      "target_user_id",
+      "target_profile_channel_id",
+      "type",
+      "message",
+      "sent_from",
+    ];
+
+    client.on("messageCreate", (message: Message) => {
+      const middlewares = [
+        ensureEmbed(requiredFields),
+        validateToken
+      ];
+
+      handleMessage(client, message, middlewares, sendNotification, {
+        message: "Não foi possível enviar a notificação",
+        code: 500
+      });
     });
   } catch (error) {
     console.error("Error logging in to Discord:", error);

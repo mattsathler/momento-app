@@ -1,13 +1,10 @@
 import { Client, Message } from "discord.js";
 import "dotenv/config";
-import { ensureEmbed } from "../middlewares/ensureEmbed";
-import { Middleware } from "../middlewares/middleware";
-import { validateToken } from "../middlewares/validateToken";
-import { runMiddlewares } from "../middlewares/_index";
+import { Middleware, runMiddlewares } from "../middlewares/middleware";
 import { errorHandler } from "./errorHandler";
-import { sendNotification } from "../../bots/momento-notifications/commands/sendNotification";
+import { error } from "../models/error";
 
-export async function handleMessage(client: Client, message: Message): Promise<void> {
+export async function handleMessage(client: Client, message: Message, middlewares: Middleware[], callback: (client: Client, message: Message) => Promise<void>, fail: error): Promise<void> {
   const targetChannelId = process.env.NOTIFICATION_WEBHOOK_CHANNEL_ID;
 
   if (message?.guildId !== process.env.API_GUILD_ID) return;
@@ -16,23 +13,22 @@ export async function handleMessage(client: Client, message: Message): Promise<v
   try {
     await message.react("⏳");
 
-    const middlewares: Middleware[] = [ensureEmbed, validateToken];
     const isValid = await runMiddlewares(message, middlewares);
     if (!isValid) return;
 
-    await sendNotification(client, message);
+    await callback(client, message);
     await message.react("✅");
 
   } catch (error: any) {
     await message.startThread({
-      name: "Erro ao enviar notificação",
+      name: fail.message,
       autoArchiveDuration: 60,
-      reason: "Erro ao enviar notificação",
+      reason: fail.message,
     }).then((thread) => {
       thread.send({
         embeds: [errorHandler({
-          code: 500,
-          error: error.message,
+          code: fail.code,
+          message: fail.message,
         })]
       });
     }).catch(console.error);

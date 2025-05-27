@@ -1,23 +1,24 @@
 import { Message } from "discord.js";
 import "dotenv/config";
 import { createHmac } from "crypto";
+import { error } from "../models/error";
 
 export function validateToken(
   message: Message
-): true | { error: string; code: number } {
+): true | error {
   const tokenField = message.embeds[0]?.data.fields?.find(
     (field) => field.name === "token"
   );
   if (!tokenField) {
-    return { error: "Campo 'token' não encontrado.", code: 400 };
+    return { message: "Campo 'token' não encontrado.", code: 400 };
   }
   const tokenValue = tokenField.value;
   if (!tokenValue) {
-    return { error: "Campo 'token' está vazio.", code: 400 };
+    return { message: "Campo 'token' está vazio.", code: 400 };
   }
 
   if (!isTokenValid(tokenValue)) {
-    return { error: "Token inválido ou expirado.", code: 401 };
+    return { message: "Token inválido ou expirado.", code: 401 };
   }
 
   return true;

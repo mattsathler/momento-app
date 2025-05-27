@@ -7,7 +7,7 @@ export function errorHandler(error: MiddlewareResult): EmbedBuilder {
     const errorEmbed: EmbedBuilder = new EmbedBuilder()
         .setColor(0xFF0000)
         .setTitle(`ERROR: ${String(error.code)}`)
-        .setDescription(`Error Message: ${error.error}`)
+        .setDescription(`Error Message: ${error.message}`)
         .setTimestamp()
     return errorEmbed;
 }
