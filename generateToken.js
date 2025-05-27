@@ -1,7 +1,7 @@
 import { randomBytes, createHmac } from "crypto";
 import "dotenv/config";
 
-function generateSecureToken(secret){
+function getSecureToken(secret){
   if (!secret) {
     throw new Error("SECRET_TOKEN is not defined in .env");
   }
@@ -14,4 +14,4 @@ function generateSecureToken(secret){
   return token;
 }
 
-console.log(generateSecureToken(process.env.SECRET_TOKEN));
+console.log(getSecureToken(process.env.SECRET_TOKEN));
