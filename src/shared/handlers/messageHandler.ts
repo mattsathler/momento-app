@@ -3,12 +3,21 @@ import "dotenv/config";
 import { Middleware, runMiddlewares } from "../middlewares/middleware";
 import { errorHandler } from "./errorHandler";
 import { error } from "../models/error";
+import { HandlerContext } from "./handlerContext";
 
-export async function handleMessage(client: Client, message: Message, middlewares: Middleware[], callback: (client: Client, message: Message) => Promise<void>, fail: error): Promise<void> {
-  const targetChannelId = process.env.NOTIFICATION_WEBHOOK_CHANNEL_ID;
-
+export async function handleMessage(
+  client: Client,
+  message: Message,
+  middlewares: Middleware[],
+  callback: (
+    client: Client,
+    message: Message,
+    context?: HandlerContext
+  ) => Promise<void>,
+  fail: error,
+  context?: HandlerContext
+): Promise<void> {
   if (message?.guildId !== process.env.API_GUILD_ID) return;
-  if (message.channel.id !== targetChannelId) return;
 
   try {
     await message.react("⏳");
@@ -16,7 +25,7 @@ export async function handleMessage(client: Client, message: Message, middleware
     const isValid = await runMiddlewares(message, middlewares);
     if (!isValid) return;
 
-    await callback(client, message);
+    await callback(client, message, context);
     await message.react("✅");
 
   } catch (error: any) {
