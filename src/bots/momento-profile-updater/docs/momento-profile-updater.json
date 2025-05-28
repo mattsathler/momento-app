@@ -1,0 +1,53 @@
+{
+  "version": 7,
+  "backups": [
+    {
+      "name": "momento-profile-updater",
+      "messages": [
+        {
+          "data": {
+            "content": null,
+            "embeds": [
+              {
+                "color": 14492795,
+                "fields": [
+                  {
+                    "name": "guild_id",
+                    "value": "1313560282160955472"
+                  },
+                  {
+                    "name": "target_user_id",
+                    "value": "609916240760406056"
+                  },
+                  {
+                    "name": "sent_from",
+                    "value": "webhook"
+                  },
+                  {
+                    "name": "update_profile",
+                    "value": "true"
+                  },
+                  {
+                    "name": "update_collage",
+                    "value": "false"
+                  },
+                  {
+                    "name": "token",
+                    "value": "MTc0ODM3NTI5OTc0MjpkZDUzNmRhYWRmZjg0YmIxOmVhNjQ0NTZkZWJiOWVhYjY2OGMzN2RkMTU1ZTQyMjE0YWEwOTFmMDg4OGNhMWRjZTk0Mzk3ZDZiNjgyOWU4YWQ="
+                  }
+                ]
+              }
+            ],
+            "attachments": []
+          },
+          "reference": ""
+        }
+      ],
+      "targets": [
+        {
+          "url": "https://discord.com/api/webhooks/1377004510269931660/qo-t9urI9V52Xe2talLSbT82paRrCrZz8gPZ83gFDzZZvdg-hKL92NGsGEoDofuBlZcU"
+        }
+      ]
+    }
+  ]
+}
