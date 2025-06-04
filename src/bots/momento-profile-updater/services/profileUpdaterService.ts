@@ -18,8 +18,8 @@ export class profileUpdaterService {
             message: message,
             guildId: fields.find((f) => f.name === "guild_id")?.value || "",
             target_user_id: fields.find((f) => f.name === "target_user_id")?.value || "",
-            update_profile: fields.find((f) => f.name === "update_profile")?.value !== undefined || false,
-            update_collage: fields.find((f) => f.name === "update_collage")?.value !== undefined || false,
+            update_profile: fields.find((f) => f.name === "update_profile")?.value === "true" || false,
+            update_collage: fields.find((f) => f.name === "update_collage")?.value === "true" || false,
         };
     }
 
