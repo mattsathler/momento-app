@@ -82,7 +82,7 @@ export async function drawProfileCanvas(user: user, uploadChannel: TextChannel, 
 
     if (user.stats.isVerified) {
         const measureGap = canvas.width / 2 + sizes.tiny + ((ctx.measureText(user.name).width + ctx.measureText(user.surname).width + sizes.small) / 2);
-        const verifiedIcon = await loadImage('./styles/Assets/Icons/verified.png')
+        const verifiedIcon = await loadImage('../../assets/images/verified.png')
         ctx.drawImage(verifiedIcon, measureGap, y - 40, 40, 40);
     }
 
