@@ -2,7 +2,6 @@ import { Message, TextChannel } from "discord.js";
 import { Image, loadImage } from "canvas";
 
 export class LinkService {
-
     static async uploadImageToMomento(uploadChannel: TextChannel, image: Buffer, type: string = 'png'): Promise<Message> {
         try {
             if (!uploadChannel) { throw new Error('Invalid upload channel') }

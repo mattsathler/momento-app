@@ -3,7 +3,7 @@ import { ProfileUpdateRequest } from "../models/ProfileUpdateRequest";
 import { user } from "../../../shared/models/user";
 import { MongoService } from "../../../shared/services/mongoService";
 import { drawProfileCanvas } from "../../../shared/services/canvas/profileCanvas";
-import { theme } from "../../../shared/models/theme";
+import { defaultTheme, theme } from "../../../shared/models/theme";
 import { LinkService } from "../../../shared/services/LinkService";
 import { MomentoService } from "../../../shared/services/momentoService";
 import { error } from "../../../shared/models/error";
@@ -91,7 +91,7 @@ export class profileUpdaterService {
                     }
                 }
 
-                const theme = await mongoService.getOne('themes', { name: user.styles.theme }) as theme;
+                const theme = await mongoService.getOne('themes', { name: user.styles.theme }) as theme || defaultTheme;
                 const newProfilePicture = await drawProfileCanvas(user, uploadChannel, theme, postCount, trendingCount)
                 const imageURL = await LinkService.uploadImageToMomento(uploadChannel, newProfilePicture.toBuffer())
 
@@ -114,7 +114,7 @@ export class profileUpdaterService {
                     message: "Invalid Collage Message"
                 }
 
-                const theme = await mongoService.getOne('themes', { name: user.styles.theme }) as theme;
+                const theme = await mongoService.getOne('themes', { name: user.styles.theme }) as theme || defaultTheme;
                 const collageStyle = await mongoService.getOne('collages', { id: user.styles.collage }) as collage || defaultCollage;
                 const newCollagePicture = await drawCollageCanvas(uploadChannel, user, theme, collageStyle);
 
