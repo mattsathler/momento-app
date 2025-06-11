@@ -14,7 +14,6 @@ const __dirname = dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
-
 // Ajuste o caminho conforme a posição do .env na raiz do monorepo
 async function main(): Promise<void> {
   console.log("Initializing momento notifications...");
@@ -35,7 +34,6 @@ async function main(): Promise<void> {
       "target_user_id",
       "target_profile_channel_id",
       "type",
-      "message",
       "sent_from",
     ];
 

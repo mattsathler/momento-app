@@ -36,7 +36,7 @@ export class NotificationService {
         }
 
         embed.setAuthor({
-            name: notification.author?.author_name,
+            name: notification.author?.author_username,
             iconURL: notification.author?.icon_url,
         });
 
@@ -59,7 +59,6 @@ export class NotificationService {
             sent_from: fields.find((f) => f.name === "sent_from")?.value || "",
             timestamp: new Date(),
             author: {
-                author_name: fields.find((f) => f.name === "author_name")?.value || "Momento APP",
                 author_username: fields.find((f) => f.name === "author_username")?.value || "momento",
                 icon_url: fields.find((f) => f.name === "author_icon_url")?.value || "https://i.imgur.com/as03K0u.png",
             },
@@ -70,7 +69,8 @@ export class NotificationService {
     }
 
     public async getNotificationChannel(userChannelId: string, guild: Guild): Promise<ThreadChannel> {
-        const activeThreads = await guild.channels.fetchActiveThreads();
+        const userChannel = await guild.channels.fetch(userChannelId) as TextChannel;
+        const activeThreads = await userChannel.threads.fetchActive();
         const notificationChannel = activeThreads.threads.filter(thread => thread.name === "Notificações").first() as ThreadChannel;
         if (!notificationChannel) {
             const newNotificationChannel = await this.createNotificationChannel(guild, userChannelId) as ThreadChannel;

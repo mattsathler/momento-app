@@ -8,7 +8,6 @@ export interface MomentoNotification {
     image_url?: string;
     thumbnail_url: string;
     author: {
-        author_name: string;
         author_username: string;
         icon_url?: string;
     };
