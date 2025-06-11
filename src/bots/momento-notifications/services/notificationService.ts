@@ -1,12 +1,20 @@
-import { Embed, EmbedBuilder, Guild, Message, MessageType, TextChannel, ThreadAutoArchiveDuration, ThreadChannel } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Embed, EmbedBuilder, Guild, Message, MessageType, TextChannel, ThreadAutoArchiveDuration, ThreadChannel } from "discord.js";
 import { MomentoNotification } from "../models/MomentoNotification";
+import { MongoService } from "../../../shared/services/mongoService";
 
 export class NotificationService {
     constructor() { }
 
     public async sendNotification(notification: EmbedBuilder, channel: ThreadChannel, targetUserId: string): Promise<void> {
+        const deleteButton = new ButtonBuilder()
+            .setCustomId('deleteMessage')
+            .setLabel('🗑️')
+            .setStyle(ButtonStyle.Secondary);
+        const AR = new ActionRowBuilder<ButtonBuilder>().addComponents(deleteButton);
+
         await channel.send({
             embeds: [notification],
+            components: [AR]
         });
 
         this.pingUser(targetUserId, channel);
@@ -74,6 +82,10 @@ export class NotificationService {
         const notificationChannel = activeThreads.threads.filter(thread => thread.name === "Notificações").first() as ThreadChannel;
         if (!notificationChannel) {
             const newNotificationChannel = await this.createNotificationChannel(guild, userChannelId) as ThreadChannel;
+            const mongoService: MongoService = new MongoService();
+            await mongoService.patch('users', { guildId: guild.id, 'references.channelId': userChannelId }, {
+                'references.notificationId': newNotificationChannel.id,
+            });
             return newNotificationChannel;
         }
         return notificationChannel;

@@ -9,7 +9,6 @@ export async function sendNotification(client: Client, message: Message): Promis
 
         const notification: MomentoNotification = notificationService.createNotificationObject(embed);
         const embedNotification = notificationService.createEmbedNotification(notification);
-
         const guild = await client.guilds.fetch(notification.guildId);
         const notificationChannel = await notificationService.getNotificationChannel(notification.target.profile_channel_id, guild!);
         notificationService.sendNotification(embedNotification, notificationChannel, notification.target.user_id);
