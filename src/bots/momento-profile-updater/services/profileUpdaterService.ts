@@ -4,11 +4,11 @@ import { user } from "../../../shared/models/user";
 import { MongoService } from "../../../shared/services/mongoService";
 import { drawProfileCanvas } from "../../../shared/services/canvas/profileCanvas";
 import { defaultTheme, theme } from "../../../shared/models/theme";
-import { LinkService } from "../../../shared/services/LinkService";
 import { MomentoService } from "../../../shared/services/momentoService";
 import { error } from "../../../shared/models/error";
 import { drawCollageCanvas } from "../../../shared/services/canvas/collageCanvas";
 import { collage, defaultCollage } from "../../../shared/models/collage";
+import { LinkService } from "../../../shared/services/linkService";
 
 export class profileUpdaterService {
     public extractProfileUpdateRequest(message: Message): ProfileUpdateRequest {

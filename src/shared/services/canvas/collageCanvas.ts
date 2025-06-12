@@ -4,8 +4,8 @@ import { calculateSizes, Styles } from "../../models/style";
 import { theme } from "../../models/theme";
 import { user } from "../../models/user";
 import { collage } from "../../models/collage";
-import { LinkService } from "../LinkService";
 import { cropImage } from "./canvasService";
+import { LinkService } from "../linkService";
 
 export async function drawCollageCanvas(uploadChannel: TextChannel, user: user, theme: theme, userCollageStyle: collage): Promise<Canvas> {
     const canvas = createCanvas(Styles.sizes.large.profile.collage.width, Styles.sizes.large.profile.collage.height);

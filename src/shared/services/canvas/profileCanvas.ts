@@ -5,7 +5,7 @@ import { StringService } from "../stringService";
 import { user } from "../../models/user";
 import { theme } from "../../models/theme";
 import { calculateSizes, Sizes, Styles } from "../../models/style";
-import { LinkService } from "../LinkService";
+import { LinkService } from "../linkService";
 
 export async function drawProfileCanvas(user: user, uploadChannel: TextChannel, theme: theme, momentos: number, trendings: number): Promise<Canvas> {
     const canvas = createCanvas(Styles.sizes.large.profile.stats.width, Styles.sizes.large.profile.stats.height);

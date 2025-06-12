@@ -5,8 +5,8 @@ import { getSecureToken } from "../../../../shared/services/tokenService";
 import { ensureEmbed } from "../../../../shared/middlewares/ensureEmbed";
 import { validateToken } from "../../../../shared/middlewares/validateToken";
 import { handleMessage } from "../../../../shared/handlers/messageHandler";
-import { enqueue } from "../queues/profileQueue";
 import { MongoService } from "../../../../shared/services/mongoService";
+import { ProfileUpdateQueue } from "../queues/profileUpdateQueue";
 
 export async function onReady(client: Client) {
     const channel = await client.channels.fetch(process.env.PROFILE_UPDATER_WEBHOOK_CHANNEL_ID!) as TextChannel;
@@ -43,7 +43,7 @@ export async function onReady(client: Client) {
     }
 }
 
-export function onMessageCreate(client: Client, message: Message, mongoservice: MongoService): void {
+export function onMessageCreate(client: Client, message: Message, mongoservice: MongoService, profileUpdateQueue: ProfileUpdateQueue): void {
     const middlewares = [
         ensureEmbed(["guild_id", "target_user_id", "sent_from"]),
         validateToken,
@@ -58,7 +58,7 @@ export function onMessageCreate(client: Client, message: Message, mongoservice: 
                 const mongo = context?.services?.mongo;
                 const service: profileUpdaterService = new profileUpdaterService();
                 if (!mongo) throw new Error("MongoService não disponível no contexto");
-                enqueue({
+                profileUpdateQueue.enqueue({
                     client: client,
                     message: message,
                     mongo: mongoservice,
