@@ -1,11 +1,8 @@
-import { Client, Message } from "discord.js";
-import { ProfileUpdateRequest } from "../../models/ProfileUpdateRequest";
-import { profileUpdaterService } from "../../services/profileUpdaterService";
-import { MongoService } from "../../../../shared/services/mongoService";
-import { errorHandler } from "../../../../shared/handlers/errorHandler";
-import { GenericQueueProcessor, QueueItem } from "../../../../shared/queue/GenericQueueProcessor";
+import { GenericQueueProcessor, QueueItem } from "../../../shared/queue/GenericQueueProcessor";
+import { NotificationService } from "../services/NotificationService";
+import { errorHandler } from "../../../shared/handlers/errorHandler";
 
-export class ProfileUpdateQueue extends GenericQueueProcessor<QueueItem> {
+export class NotificationsQueue extends GenericQueueProcessor<QueueItem> {
   protected getKey(item: QueueItem): string {
     return item.request.target_user_id;
   }
@@ -15,14 +12,10 @@ export class ProfileUpdateQueue extends GenericQueueProcessor<QueueItem> {
   }
 
   protected async processRequest(item: QueueItem): Promise<void> {
-    const service = new profileUpdaterService();
+    const service = new NotificationService();
 
     try {
-      await service.requestUpdateProfilePictures(
-        item.client,
-        item.mongo,
-        item.request
-      );
+      await service.sendNotification(item.request);
       await item.message.react("☑️").catch(console.error);
     } catch (e: any) {
       await item.message

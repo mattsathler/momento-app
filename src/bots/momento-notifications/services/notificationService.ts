@@ -5,19 +5,19 @@ import { MongoService } from "../../../shared/services/mongoService";
 export class NotificationService {
     constructor() { }
 
-    public async sendNotification(notification: EmbedBuilder, channel: ThreadChannel, targetUserId: string): Promise<void> {
+    public async sendNotification(request: { notification: EmbedBuilder, channel: ThreadChannel, targetUserId: string }): Promise<void> {
         const deleteButton = new ButtonBuilder()
             .setCustomId('deleteMessage')
             .setLabel('🗑️')
             .setStyle(ButtonStyle.Secondary);
         const AR = new ActionRowBuilder<ButtonBuilder>().addComponents(deleteButton);
 
-        await channel.send({
-            embeds: [notification],
+        await request.channel.send({
+            embeds: [request.notification],
             components: [AR]
         });
 
-        this.pingUser(targetUserId, channel);
+        this.pingUser(request.targetUserId, request.channel);
     }
 
     public createEmbedNotification(notification: MomentoNotification): EmbedBuilder {

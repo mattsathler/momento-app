@@ -27,7 +27,7 @@ async function main(): Promise<void> {
   try {
     await client.login(token);
     console.log("Logged in to Discord!");
-    const profileUpdateQueue: ProfileUpdateQueue = new ProfileUpdateQueue();
+    const profileUpdateQueue: ProfileUpdateQueue = new ProfileUpdateQueue("Profile Updater");
     const mongoservice: MongoService = new MongoService();
 
     client.on("messageCreate", (message: Message) =>

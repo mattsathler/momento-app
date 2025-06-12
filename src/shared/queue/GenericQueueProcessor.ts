@@ -1,13 +1,22 @@
+import { Client, Message } from "discord.js";
 import { concatMap, filter, Subject } from "rxjs";
+import { MongoService } from "../services/mongoService";
 
 type ActiveKey = string;
+
+export type QueueItem = {
+  client: Client;
+  message: Message;
+  mongo: MongoService;
+  request: any;
+};
 
 export abstract class GenericQueueProcessor<T> {
   private requestSubject = new Subject<T>();
   private activeKeys: ActiveKey[] = [];
 
-  constructor() {
-    this.initQueueProcessor();
+  constructor(queue: string, allowDuplicated: boolean = false) {
+    this.initQueueProcessor(queue, allowDuplicated);
   }
 
   public enqueue(item: T) {
@@ -16,22 +25,23 @@ export abstract class GenericQueueProcessor<T> {
 
   protected abstract getKey(item: T): ActiveKey;
 
-  protected abstract onDuplicate(item: T): void;
-
   protected abstract processRequest(item: T): Promise<void>;
 
-  private initQueueProcessor() {
+  private initQueueProcessor(queue: string, allowDuplicated: boolean) {
+    console.log("Starting queue for", queue);
     this.requestSubject
       .pipe(
         filter((item) => {
           const key = this.getKey(item);
           const isActive = this.activeKeys.includes(key);
-          if (isActive) {
-            this.onDuplicate(item);
+          if (isActive && !allowDuplicated) {
             return false;
           }
 
-          this.activeKeys.push(key);
+          if (!allowDuplicated) {
+            this.activeKeys.push(key);
+          }
+
           return true;
         }),
         concatMap(async (item) => {
@@ -39,7 +49,9 @@ export abstract class GenericQueueProcessor<T> {
             await this.processRequest(item);
           } finally {
             const key = this.getKey(item);
-            this.activeKeys = this.activeKeys.filter((k) => k !== key);
+            if (!allowDuplicated) {
+              this.activeKeys = this.activeKeys.filter((k) => k !== key);
+            }
           }
         })
       )
