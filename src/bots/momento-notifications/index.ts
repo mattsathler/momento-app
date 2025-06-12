@@ -1,14 +1,11 @@
 import { createDiscordClient } from "../../shared/client";
-import { handleMessage } from "../../shared/handlers/messageHandler";
 import { Message } from "discord.js";
 import dotenv from "dotenv";
 import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import { onMessageCreate } from "./commands/events";
-import { ensureEmbed } from "../../shared/middlewares/ensureEmbed";
-import { validateToken } from "../../shared/middlewares/validateToken";
-import { NotificationsQueue } from "./queues/NotificationsQueue";
+import { onMessageCreate } from "./src/commands/events";
+import { NotificationsQueue } from "./src/queues/NotificationsQueue";
 import { MongoService } from "../../shared/services/mongoService";
 
 const __filename = fileURLToPath(import.meta.url);

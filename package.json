@@ -22,7 +22,7 @@
   },
   "scripts": {
     "token": "node generateToken.js",
-    "start:notification": "npm run start --workspace momento-notifications",
+    "start:notifications": "npm run start --workspace momento-notifications",
     "start:profile-updater": "npm run start --workspace momento-profile-updater"
   },
   "author": "",

@@ -1,12 +1,12 @@
 import { Client, Message, TextChannel } from "discord.js";
-import { NotificationService } from "../services/NotificationService";
-import { MomentoNotification } from "../models/MomentoNotification";
+import { NotificationService } from "../../services/NotificationService";
+import { MomentoNotification } from "../../models/MomentoNotification";
 import { NotificationsQueue } from "../queues/NotificationsQueue";
-import { HandlerContext } from "../../../shared/handlers/handlerContext";
-import { handleMessage } from "../../../shared/handlers/messageHandler";
-import { ensureEmbed } from "../../../shared/middlewares/ensureEmbed";
-import { validateToken } from "../../../shared/middlewares/validateToken";
-import { MongoService } from "../../../shared/services/mongoService";
+import { HandlerContext } from "../../../../shared/handlers/handlerContext";
+import { handleMessage } from "../../../../shared/handlers/messageHandler";
+import { ensureEmbed } from "../../../../shared/middlewares/ensureEmbed";
+import { validateToken } from "../../../../shared/middlewares/validateToken";
+import { MongoService } from "../../../../shared/services/mongoService";
 
 export async function onMessageCreate(client: Client, message: Message, mongoService: MongoService, queue: NotificationsQueue): Promise<void> {
     const requiredFields = [

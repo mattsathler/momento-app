@@ -1,6 +1,6 @@
-import { GenericQueueProcessor, QueueItem } from "../../../shared/queue/GenericQueueProcessor";
-import { NotificationService } from "../services/NotificationService";
-import { errorHandler } from "../../../shared/handlers/errorHandler";
+import { GenericQueueProcessor, QueueItem } from "../../../../shared/queue/GenericQueueProcessor";
+import { NotificationService } from "../../services/NotificationService";
+import { errorHandler } from "../../../../shared/handlers/errorHandler";
 
 export class NotificationsQueue extends GenericQueueProcessor<QueueItem> {
   protected getKey(item: QueueItem): string {
