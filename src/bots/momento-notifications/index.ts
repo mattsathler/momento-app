@@ -1,10 +1,10 @@
 import { createDiscordClient } from "../../shared/client";
-import { Message } from "discord.js";
+import { Client, Message } from "discord.js";
 import dotenv from "dotenv";
 import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import { onMessageCreate } from "./src/commands/events";
+import { onMessageCreate, onReady } from "./src/commands/events";
 import { NotificationsQueue } from "./src/queues/NotificationsQueue";
 import { MongoService } from "../../shared/services/mongoService";
 
@@ -31,6 +31,7 @@ async function main(): Promise<void> {
     console.log("Logged in to Discord!");
     const mongoservice: MongoService = new MongoService();
 
+    client.on("ready", (client: Client) => onReady(client));
     client.on("messageCreate", (message: Message) => {
       if (message.channelId === process.env.NOTIFICATION_WEBHOOK_CHANNEL_ID) {
         onMessageCreate(client, message, mongoservice, notificationsQueue);

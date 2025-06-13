@@ -76,13 +76,12 @@ export class NotificationService {
         };
     }
 
-    public async getNotificationChannel(userChannelId: string, guild: Guild): Promise<ThreadChannel> {
+    public async getNotificationChannel(userChannelId: string, guild: Guild, mongoService: MongoService): Promise<ThreadChannel> {
         const userChannel = await guild.channels.fetch(userChannelId) as TextChannel;
         const activeThreads = await userChannel.threads.fetchActive();
         const notificationChannel = activeThreads.threads.filter(thread => thread.name === "Notificações").first() as ThreadChannel;
         if (!notificationChannel) {
             const newNotificationChannel = await this.createNotificationChannel(guild, userChannelId) as ThreadChannel;
-            const mongoService: MongoService = new MongoService();
             await mongoService.patch('users', { guildId: guild.id, 'references.channelId': userChannelId }, {
                 'references.notificationId': newNotificationChannel.id,
             });

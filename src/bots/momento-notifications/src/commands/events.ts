@@ -7,6 +7,7 @@ import { handleMessage } from "../../../../shared/handlers/messageHandler";
 import { ensureEmbed } from "../../../../shared/middlewares/ensureEmbed";
 import { validateToken } from "../../../../shared/middlewares/validateToken";
 import { MongoService } from "../../../../shared/services/mongoService";
+import { errorHandler } from "../../../../shared/handlers/errorHandler";
 
 export async function onMessageCreate(client: Client, message: Message, mongoService: MongoService, queue: NotificationsQueue): Promise<void> {
     const requiredFields = [
@@ -33,7 +34,7 @@ export async function onMessageCreate(client: Client, message: Message, mongoSer
             const notification: MomentoNotification = notificationService.createNotificationObject(embed);
             const embedNotification = notificationService.createEmbedNotification(notification);
             const guild = await client.guilds.fetch(notification.guildId);
-            const notificationChannel = await notificationService.getNotificationChannel(notification.target.profile_channel_id, guild!);
+            const notificationChannel = await notificationService.getNotificationChannel(notification.target.profile_channel_id, guild!, mongo);
             queue.enqueue({
                 client: client,
                 message: message,
@@ -55,4 +56,38 @@ export async function onMessageCreate(client: Client, message: Message, mongoSer
             mongo: mongoService
         }
     });
+}
+
+export async function onReady(client: Client) {
+    const channel = await client.channels.fetch(process.env.NOTIFICATION_WEBHOOK_CHANNEL_ID!) as TextChannel;
+    const messages = await channel.messages.fetch({ limit: 100 });
+
+    const pending = messages.filter(m =>
+        m.embeds.length > 0 &&
+        !m.reactions.cache.has("✅") &&
+        !m.reactions.cache.has("❌")
+    );
+
+    for (const message of pending.values()) {
+        try {
+            await message.react("❌");
+            channel.send({
+                embeds: message.embeds
+            });
+        } catch (err: any) {
+            await message.react("❌");
+            await message.startThread({
+                name: err.message,
+                autoArchiveDuration: 60,
+                reason: err.message,
+            }).then((thread) => {
+                thread.send({
+                    embeds: [errorHandler({
+                        code: err.code,
+                        message: err.message,
+                    })]
+                });
+            }).catch(console.error);
+        }
+    }
 }
