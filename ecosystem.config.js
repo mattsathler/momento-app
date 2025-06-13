@@ -7,7 +7,7 @@ module.exports = {
             script: './src/bots/momento-notifications/index.ts',
             interpreter: 'node',
             interpreter_args: '--import tsx',
-            watch: true,
+            watch: false,
             instances: 1,
             exec_mode: 'fork',
             env: {
@@ -19,7 +19,7 @@ module.exports = {
             script: './src/bots/momento-profile-updater/index.ts',
             interpreter: 'node',
             interpreter_args: '--import tsx',
-            watch: true,
+            watch: false,
             instances: 1,
             exec_mode: 'fork',
             env: {
