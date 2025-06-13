@@ -1,0 +1,28 @@
+const path = require('path');
+
+module.exports = {
+    apps: [
+        {
+            name: 'momento-notifications',
+            script: './src/bots/momento-notifications/index.ts',
+            interpreter: 'node',
+            interpreter_args: '--import tsx',
+            watch: true,
+            exec_mode: 'cluster',
+            env: {
+                NODE_ENV: 'development',
+            },
+        },
+        {
+            name: 'momento-profile-updater',
+            script: './src/bots/momento-profile-updater/index.ts',
+            interpreter: 'node',
+            interpreter_args: '--import tsx',
+            watch: true,
+            exec_mode: 'cluster',
+            env: {
+                NODE_ENV: 'development',
+            },
+        },
+    ],
+};

@@ -18,9 +18,11 @@
   },
   "devDependencies": {
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
   "scripts": {
+    "pm2": "pm2 start ecosystem.config.js",
     "token": "node generateToken.js",
     "start:notifications": "npm run start --workspace momento-notifications",
     "start:profile-updater": "npm run start --workspace momento-profile-updater"
@@ -28,5 +30,5 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "type": "module"
+  "type": "commonjs"
 }
