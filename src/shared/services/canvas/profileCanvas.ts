@@ -64,9 +64,9 @@ export async function drawProfileCanvas(user: user, uploadChannel: TextChannel, 
     y += profileImageSize * 1.5 + sizes.big;
 
     // INFO ===========================================
-    registerFont('../../assets/fonts/SFPRODISPLAYBOLD.otf', { family: 'sfpro-bold' })
-    registerFont('../../assets/fonts/SFPRODISPLAYMEDIUM.otf', { family: 'sfpro-medium' })
-    registerFont('../../assets/fonts/SFPRODISPLAYREGULAR.otf', { family: 'sfpro-regular' })
+    registerFont('./src/assets/fonts/SFPRODISPLAYBOLD.otf', { family: 'sfpro-bold' })
+    registerFont('./src/assets/fonts/SFPRODISPLAYMEDIUM.otf', { family: 'sfpro-medium' })
+    registerFont('./src/assets/fonts/SFPRODISPLAYREGULAR.otf', { family: 'sfpro-regular' })
 
     ctx.textAlign = 'center';
     ctx.fillStyle = theme.colors.secondary;
@@ -82,7 +82,7 @@ export async function drawProfileCanvas(user: user, uploadChannel: TextChannel, 
 
     if (user.stats.isVerified) {
         const measureGap = canvas.width / 2 + sizes.tiny + ((ctx.measureText(user.name).width + ctx.measureText(user.surname).width + sizes.small) / 2);
-        const verifiedIcon = await loadImage('../../assets/images/verified.png')
+        const verifiedIcon = await loadImage('./src/assets/images/verified.png')
         ctx.drawImage(verifiedIcon, measureGap, y - 40, 40, 40);
     }
 

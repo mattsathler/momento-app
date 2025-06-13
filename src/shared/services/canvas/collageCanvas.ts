@@ -18,9 +18,9 @@ export async function drawCollageCanvas(uploadChannel: TextChannel, user: user, 
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // HEADER ========================================
-    registerFont('../../assets/fonts/SFPRODISPLAYBOLD.otf', { family: 'sfpro-bold' })
-    registerFont('../../assets/fonts/SFPRODISPLAYMEDIUM.otf', { family: 'sfpro-medium' })
-    registerFont('../../assets/fonts/SFPRODISPLAYREGULAR.otf', { family: 'sfpro-regular' })
+    registerFont('./src/assets/fonts/SFPRODISPLAYBOLD.otf', { family: 'sfpro-bold' })
+    registerFont('./src/assets/fonts/SFPRODISPLAYMEDIUM.otf', { family: 'sfpro-medium' })
+    registerFont('./src/assets/fonts/SFPRODISPLAYREGULAR.otf', { family: 'sfpro-regular' })
 
     ctx.textAlign = 'center';
 
