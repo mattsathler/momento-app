@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { error } from "../models/error";
+import { error } from "../models/Error";
 import { Middleware } from "./middleware";
 
 export function ensureEmbed(requiredFields: string[]): Middleware {

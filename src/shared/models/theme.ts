@@ -1,4 +1,4 @@
-export interface theme {
+export interface Theme {
     name: string,
     creatorId: string,
     colors: {
@@ -8,7 +8,7 @@ export interface theme {
     }
 }
 
-export const defaultTheme: theme = {
+export const defaultTheme: Theme = {
     name: 'light',
     creatorId: 'system',
     colors: {

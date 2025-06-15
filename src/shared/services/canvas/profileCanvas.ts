@@ -2,9 +2,9 @@ import { createCanvas, loadImage, Canvas, registerFont, Image } from "canvas";
 import { cropCirclePicture, cropImage } from "./canvasService";
 import { TextChannel } from "discord.js";
 import { StringService } from "../stringService";
-import { user } from "../../models/user";
-import { theme } from "../../models/theme";
-import { calculateSizes, Sizes, Styles } from "../../models/style";
+import { user } from "../../models/User";
+import { theme } from "../../models/Theme";
+import { calculateSizes, Sizes, Styles } from "../../models/Style";
 import { LinkService } from "../linkService";
 
 export async function drawProfileCanvas(user: user, uploadChannel: TextChannel, theme: theme, momentos: number, trendings: number): Promise<Canvas> {

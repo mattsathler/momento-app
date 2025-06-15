@@ -1,9 +1,9 @@
 import { createCanvas, loadImage, Canvas, registerFont, Image } from "canvas";
 import { TextChannel } from "discord.js";
-import { calculateSizes, Styles } from "../../models/style";
-import { theme } from "../../models/theme";
-import { user } from "../../models/user";
-import { collage } from "../../models/collage";
+import { calculateSizes, Styles } from "../../models/Style";
+import { theme } from "../../models/Theme";
+import { user } from "../../models/User";
+import { collage } from "../../models/Collage";
 import { cropImage } from "./canvasService";
 import { LinkService } from "../linkService";
 

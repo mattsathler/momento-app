@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
 import "dotenv/config";
 import { createHmac } from "crypto";
-import { error } from "../models/error";
+import { error } from "../models/Error";
 
 export function validateToken(
   message: Message

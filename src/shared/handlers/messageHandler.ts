@@ -2,7 +2,7 @@ import { Client, Message } from "discord.js";
 import "dotenv/config";
 import { Middleware, runMiddlewares } from "../middlewares/middleware";
 import { errorHandler } from "./errorHandler";
-import { error } from "../models/error";
+import { error } from "../models/Error";
 import { HandlerContext } from "./handlerContext";
 
 export async function handleMessage(

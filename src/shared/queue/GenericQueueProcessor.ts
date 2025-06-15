@@ -25,7 +25,9 @@ export abstract class GenericQueueProcessor<T> {
 
   protected abstract getKey(item: T): ActiveKey;
 
-  protected abstract processRequest(item: T): Promise<void>;
+  protected abstract processRequest(item: T, context?: {
+    client: Client, mongoService: MongoService
+  }): Promise<void>;
 
   private initQueueProcessor(queue: string, allowDuplicated: boolean) {
     console.log("Starting queue for", queue);

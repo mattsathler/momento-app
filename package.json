@@ -25,7 +25,8 @@
     "pm2": "pm2 start ecosystem.config.js",
     "token": "node generateToken.js",
     "start:notifications": "npm run start --workspace momento-notifications",
-    "start:profile-updater": "npm run start --workspace momento-profile-updater"
+    "start:profile-updater": "npm run start --workspace momento-profile-updater",
+    "start:analytics": "npm run start --workspace momento-analytics"
   },
   "author": "",
   "license": "ISC",

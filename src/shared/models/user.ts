@@ -1,6 +1,6 @@
-import { Permission } from "./permission";
+import { Permission } from "./Permission";
 
-export interface user {
+export interface User {
     userId: string;
     guildId?: string;
     permission: Permission;
