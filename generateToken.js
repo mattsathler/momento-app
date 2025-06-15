@@ -22,5 +22,3 @@ export function getSecureToken(secret) {
 
   return token;
 }
-
-console.log(getSecureToken(process.env.SECRET_TOKEN));

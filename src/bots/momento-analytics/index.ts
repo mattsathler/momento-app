@@ -1,12 +1,15 @@
 import { createDiscordClient } from "../../shared/client";
-import { Client, Message } from "discord.js";
+import { Client, Message, TextChannel } from "discord.js";
 import dotenv from "dotenv";
 import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import { onMessageCreate, onReady } from "./src/commands/events";
 import { MongoService } from "../../shared/services/mongoService";
 import { AnalyticsQueue } from "./src/queues/AnalyticsQueue";
+import { AnalyticsService } from "./services/AnalyticsService";
+import { MomentoService } from "../../shared/services/momentoService";
+import { onMessageCreate, onReady } from "./src/commands/events";
+import { getSecureToken } from "../../shared/services/tokenService";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -15,25 +18,60 @@ dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
 async function main(): Promise<void> {
   console.log("Initializing momento analytics...");
-  const analyticsQueue: AnalyticsQueue = new AnalyticsQueue("Analytics", true);
-
+  console.log()
   const token = process.env.DISCORD_TOKEN;
   if (!token) {
     console.error("DISCORD_TOKEN is not defined in .env");
     process.exit(1);
   }
 
+  console.log(getSecureToken(process.env.SECRET_TOKEN || 'e'));
   const client = createDiscordClient();
 
-  try { 
+  try {
     await client.login(token);
     console.log("Logged in to Discord!");
+    const momentoService: MomentoService = new MomentoService();
+    const uploadChannel: TextChannel = await momentoService.getUploadChannel(
+      client
+    );
     const mongoservice: MongoService = new MongoService();
+    const analyticsService: AnalyticsService = new AnalyticsService();
+    const analyticsQueue: AnalyticsQueue = new AnalyticsQueue(
+      "Analytics",
+      true,
+      {
+        client: client,
+        mongoService: mongoservice,
+        service: analyticsService,
+      }
+    );
+    let activePostList = await mongoservice.get("posts", {
+      "stats.status": "active",
+    });
+    activePostList.forEach((post) => {
+      analyticsService.addPost(post);
+    });
 
-    client.on("ready", (client: Client) => onReady(client));
+    await analyticsService.initAnalyticsCron(
+      client,
+      mongoservice,
+      analyticsQueue,
+      uploadChannel
+    );
+
+    client.on("ready", (client: Client) =>
+      onReady(
+        client,
+        analyticsService,
+        mongoservice,
+        analyticsQueue,
+        uploadChannel
+      )
+    );
     client.on("messageCreate", (message: Message) => {
-      if (message.channelId === process.env.POST_WEBHOOK_CHANNEL_ID) {
-        onMessageCreate(client, message, mongoservice, analyticsQueue);
+      if (message.channelId === process.env.ANALYTICS_WEBHOOK_CHANNEL_ID) {
+        onMessageCreate(client, message, mongoservice, analyticsService);
       }
     });
   } catch (error) {

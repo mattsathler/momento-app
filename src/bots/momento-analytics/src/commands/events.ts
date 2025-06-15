@@ -1,20 +1,19 @@
 import { Client, Message, TextChannel } from "discord.js";
-import { MomentoNotification } from "../../models/MomentoNotification";
 import { HandlerContext } from "../../../../shared/handlers/handlerContext";
 import { handleMessage } from "../../../../shared/handlers/messageHandler";
 import { ensureEmbed } from "../../../../shared/middlewares/ensureEmbed";
 import { validateToken } from "../../../../shared/middlewares/validateToken";
 import { MongoService } from "../../../../shared/services/mongoService";
 import { errorHandler } from "../../../../shared/handlers/errorHandler";
+import { AnalyticsService } from "../../services/AnalyticsService";
+import { Post } from "../../../../shared/models/Post";
 import { AnalyticsQueue } from "../queues/AnalyticsQueue";
-import { AnalyticsService } from "../../services/analyticsService";
 
-export async function onMessageCreate(client: Client, message: Message, mongoService: MongoService, queue: AnalyticsQueue): Promise<void> {
+export async function onMessageCreate(client: Client, message: Message, mongoService: MongoService, service: AnalyticsService): Promise<void> {
     const requiredFields = [
         "guild_id",
-        "target_user_id",
         "target_profile_channel_id",
-        "post_media_message_id",
+        "post_message_id",
         "sent_from",
     ];
 
@@ -36,26 +35,25 @@ export async function onMessageCreate(client: Client, message: Message, mongoSer
                 target_profile_channel_id: string,
                 post_message_id: string,
                 sent_from: string,
-            } = analyticsService.createAnalyticsRequestObject(embed);
+            } = analyticsService.createAnalyticsRegisterObject(embed);
 
-            const post = await mongoService.get('posts', {
-                guildId: analyticsRequest.guild_id,
+            const post = await mongoService.getOne('posts', {
+                'references.guildId': analyticsRequest.guild_id,
                 'references.messageId': analyticsRequest.post_message_id,
                 'references.channelId': analyticsRequest.target_profile_channel_id
-            });
-            queue.enqueue({
-                client: client,
-                message: message,
-                mongo: mongo,
-                request: {
-                    post: post,
-                }
-            })
+            }) as Post;
+
+            console.log(analyticsRequest);
+            if (!post) {
+                throw new Error("Invalid post!");
+            }
+            service.addPost(post);
+            return;
         } catch (error: any) {
             throw new Error(error.message);
         }
     }, {
-        message: "Não foi possível enviar a notificação",
+        message: "Não foi possível cadastrar o post no analytics",
         code: 500
     }, {
         services: {
@@ -64,10 +62,9 @@ export async function onMessageCreate(client: Client, message: Message, mongoSer
     });
 }
 
-export async function onReady(client: Client) {
-    const channel = await client.channels.fetch(process.env.NOTIFICATION_WEBHOOK_CHANNEL_ID!) as TextChannel;
+export async function onReady(client: Client, service: AnalyticsService, mongo: MongoService, queue: AnalyticsQueue, uploadChannel: TextChannel) {
+    const channel = await client.channels.fetch(process.env.ANALYTICS_WEBHOOK_CHANNEL_ID!) as TextChannel;
     const messages = await channel.messages.fetch({ limit: 100 });
-
     const pending = messages.filter(m =>
         m.embeds.length > 0 &&
         !m.reactions.cache.has("✅") &&
