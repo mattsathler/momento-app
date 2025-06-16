@@ -8,6 +8,7 @@ import { User } from "../../../shared/models/user";
 import { AnalyticsQueue } from "../src/queues/AnalyticsQueue";
 import { AxiosService } from "../../../shared/services/axiosService";
 import { getSecureToken } from "../../../shared/services/tokenService";
+import { Theme } from "src/shared/models/theme";
 
 export class AnalyticsService {
     private activePosts: Post[] = [];
@@ -19,8 +20,8 @@ export class AnalyticsService {
         return;
     }
 
-    public removePost(guildId: string, postMessageId: string) {
-        this.activePosts = this.activePosts.filter((post) => !(post.references.guildId === guildId && post.references.messageId === postMessageId));
+    public removePost(post: Post) {
+        this.activePosts = this.activePosts.filter((p) => !(p.references.guildId === post.references.guildId && p.references.messageId === post.references.messageId));
         return;
     }
 
@@ -74,7 +75,7 @@ export class AnalyticsService {
                 'stats.status': 'inactive'
             })
 
-            this.removePost(post.references.guildId, post.references.messageId);
+            this.removePost(post);
 
             await mongoService.patch('users', {
                 userId: author.userId,
@@ -97,7 +98,11 @@ export class AnalyticsService {
                 messageId: post.references.messageId,
             }) as Log[];
 
-            const canvas = await drawPostAnalytics(uploadChannel, post, postAuthor, likesLogs, postFollowers);
+            const theme = await mongoService.getOne('themes', {
+                name: postAuthor.styles.theme
+            }) as Theme;
+
+            const canvas = await drawPostAnalytics(uploadChannel, post, postAuthor, likesLogs, postFollowers, theme);
             const buffer = canvas.toBuffer('image/png');
             const link = await LinkService.uploadImageToMomento(uploadChannel, buffer);
 
@@ -124,7 +129,7 @@ export class AnalyticsService {
         }
     }
 
-    public async sendAnalyticsNotification(author: User, link: string): Promise<void> {
+    public async sendAnalyticsNotification(author: User, imageUrl: string): Promise<void> {
         const axiosService: AxiosService = new AxiosService();
         const notificationWebhook = process.env.NOTIFICATION_WEBHOOK as string;
         if (!notificationWebhook) throw new Error("Invalid Webhook URL");
@@ -168,7 +173,7 @@ export class AnalyticsService {
                         },
                         {
                             "name": "image_url",
-                            "value": link
+                            "value": imageUrl
                         },
                         {
                             "name": "message",
@@ -177,6 +182,47 @@ export class AnalyticsService {
                         {
                             "name": "thumbnail_url",
                             "value": "https://imgur.com/WSI7odl.png"
+                        }
+                    ]
+                }
+            ],
+            "attachments": []
+        })
+    }
+
+    public async requestUpdateProfile(author: User): Promise<void> {
+        const axiosService: AxiosService = new AxiosService();
+        const notificationWebhook = process.env.PROFILE_UPDATER_WEBHOOK as string;
+        if (!notificationWebhook) throw new Error("Invalid Webhook URL");
+        await axiosService.postWebhook(notificationWebhook, {
+            "content": null,
+            "embeds": [
+                {
+                    "color": 14492795,
+                    "fields": [
+                        {
+                            "name": "guild_id",
+                            "value": author.guildId
+                        },
+                        {
+                            "name": "target_user_id",
+                            "value": author.userId
+                        },
+                        {
+                            "name": "update_profile",
+                            "value": "true"
+                        },
+                        {
+                            "name": "update_collage",
+                            "value": false
+                        },
+                        {
+                            "name": "sent_from",
+                            "value": "momento_analytics"
+                        },
+                        {
+                            "name": "token",
+                            "value": getSecureToken(process.env.SECRET_TOKEN || '')
                         }
                     ]
                 }
@@ -209,6 +255,7 @@ export class AnalyticsService {
         guild_id: string,
         target_profile_channel_id: string,
         post_message_id: string,
+        method: string,
         sent_from: string
     } {
         const fields = embed.fields;
@@ -217,6 +264,7 @@ export class AnalyticsService {
             guild_id: fields.find((f) => f.name === "guild_id")?.value || "",
             target_profile_channel_id: fields.find((f) => f.name === "target_profile_channel_id")?.value || "",
             post_message_id: fields.find((f) => f.name === "post_message_id")?.value || "",
+            method: fields.find((f) => f.name === "method")?.value || "add",
             sent_from: fields.find((f) => f.name === "sent_from")?.value || "",
         };
     }

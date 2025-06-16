@@ -14,6 +14,7 @@ export async function onMessageCreate(client: Client, message: Message, mongoSer
         "guild_id",
         "target_profile_channel_id",
         "post_message_id",
+        "method",
         "sent_from",
     ];
 
@@ -33,6 +34,7 @@ export async function onMessageCreate(client: Client, message: Message, mongoSer
                 guild_id: string,
                 target_profile_channel_id: string,
                 post_message_id: string,
+                method: string,
                 sent_from: string,
             } = analyticsService.createAnalyticsRegisterObject(embed);
 
@@ -45,7 +47,11 @@ export async function onMessageCreate(client: Client, message: Message, mongoSer
             if (!post) {
                 throw new Error("Invalid post!");
             }
-            service.addPost(post);
+            if (analyticsRequest.method === "add") {
+                service.addPost(post);
+            } else {
+                service.removePost(post);
+            }
             await message.react("☑️");
 
             return;

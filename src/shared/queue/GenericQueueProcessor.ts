@@ -59,7 +59,6 @@ export abstract class GenericQueueProcessor<T> {
         filter((item) => {
           const key = this.getKey(item);
           const isActive = this.activeKeys.includes(key);
-          console.log(isActive);
           if (isActive && !allowDuplicated) {
             this.onDuplicate(item);
             return false;

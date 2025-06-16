@@ -2,7 +2,15 @@ import { Canvas, registerFont } from "canvas";
 import { Theme } from "../../models/theme";
 import { fontsPaths } from "assets-paths";
 
-export function drawTextInCanvas(text: string, theme: Theme, fontName: string, maxWidth: number, size: number, textAlign = 'left'): Canvas {
+export function drawTextInCanvas(
+    text: string,
+    theme: Theme,
+    fontName: string,
+    maxWidth: number,
+    size: number,
+    textAlign = 'left',
+    maxHeight?: number
+): Canvas {
     let canvas = new Canvas(maxWidth, 4000);
     const ctx = canvas.getContext('2d');
 
@@ -14,7 +22,6 @@ export function drawTextInCanvas(text: string, theme: Theme, fontName: string, m
     let y: number = size;
 
     ctx.textAlign = 'left';
-
     ctx.fillStyle = theme.colors.primary;
     registerFont(fontsPaths.SFPROMEDIUM, { family: fontName });
     ctx.font = `${size}px ${fontName}`;
@@ -22,33 +29,53 @@ export function drawTextInCanvas(text: string, theme: Theme, fontName: string, m
     const words = text.split(' ');
     let currentLine = '';
 
-    for (let word of words) {
+    for (let i = 0; i < words.length; i++) {
+        const word = words[i];
         const testLine = currentLine ? currentLine + ' ' + word : word;
         const testWidth = ctx.measureText(testLine).width;
 
         if (testWidth > maxWidth || word === '/N') {
-            if (textAlign == 'center') {
+            if (maxHeight && y + size > maxHeight) {
+                const ellipsis = '...';
+                let trimmed = currentLine;
+
+                while (ctx.measureText(trimmed + ellipsis).width > maxWidth && trimmed.length > 0) {
+                    trimmed = trimmed.slice(0, -1);
+                }
+
+                if (textAlign === 'center') {
+                    x = (maxWidth - ctx.measureText(trimmed + ellipsis).width) / 2;
+                }
+
+                ctx.fillText(trimmed + ellipsis, Math.round(x), Math.round(y));
+                y += size;
+                break;
+            }
+
+            if (textAlign === 'center') {
                 x = (maxWidth - ctx.measureText(currentLine).width) / 2;
             }
+
             ctx.fillText(currentLine, Math.round(x), Math.round(y));
             y += size;
-            if (word !== '/N') {
-                currentLine = word;
-            }
+            currentLine = word !== '/N' ? word : '';
         } else {
             currentLine = testLine;
         }
     }
 
-    if (textAlign == 'center') {
-        x = (maxWidth - ctx.measureText(currentLine).width) / 2;
+    if (!maxHeight || y + size <= maxHeight) {
+        if (textAlign === 'center') {
+            x = (maxWidth - ctx.measureText(currentLine).width) / 2;
+        }
+        ctx.fillText(currentLine, Math.round(x), Math.round(y));
+        y += size;
     }
-    ctx.fillText(currentLine, Math.round(x), Math.round(y));
-    y += size;
 
-    canvas = resizeCanvas(canvas, canvas.width, y)
+    canvas = resizeCanvas(canvas, canvas.width, maxHeight ? Math.min(y, maxHeight) : y);
     return canvas;
 }
+
 
 export function resizeCanvas(originalCanvas: Canvas, newWidth: number, newHeight: number): Canvas {
     const newCanvas = new Canvas(newWidth, newHeight);

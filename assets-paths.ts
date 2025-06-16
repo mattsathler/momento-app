@@ -10,6 +10,7 @@ export const assetPaths = {
     noPhoto: path.join(assetsRoot, 'templates/no-photo.png'),
     likesIcon: path.join(assetsRoot, 'images/likes.png'),
     trendingIcon: path.join(assetsRoot, 'images/trending.png'),
+    followersIcon: path.join(assetsRoot, 'images/followers.png'),
 };
 
 export const fontsPaths = {

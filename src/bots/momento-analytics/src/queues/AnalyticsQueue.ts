@@ -43,6 +43,7 @@ export class AnalyticsQueue extends GenericQueueProcessor<QueueItem> {
       const image = await LinkService.readImageOfMomento(item.request.uploadChannel, imageUrl);
       if (!image) { throw new Error("Invalid Analytics!") }
       await context.service.sendAnalyticsNotification(item.request.author, image);
+      await context.service.requestUpdateProfile(item.request.author);
       return;
     } catch (e: any) {
       if (!item.message) return;
