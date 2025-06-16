@@ -32,7 +32,7 @@ export class AnalyticsService {
             const now = new Date();
 
             //CHANGE TO 24HRS! = 86400000 =========================
-            const timeoutTimestamp = new Date(now.getTime() - 100);
+            const timeoutTimestamp = new Date(now.getTime() - 86400000);
             //CHANGE TO 24HRS! = 86400000 =========================
 
             for (let post of this.activePosts) {
