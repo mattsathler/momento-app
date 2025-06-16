@@ -121,10 +121,12 @@ export class AnalyticsService {
             }
             catch (error) {
                 console.log(error);
+                this.removePost(post);
             }
         }
         catch (err) {
             console.log(err)
+            this.removePost(post);
             return;
         }
     }
