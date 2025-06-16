@@ -7,10 +7,12 @@ import { AnalyticsService } from "../../services/AnalyticsService";
 import { Post } from "../../../../shared/models/Post";
 import { Client } from "discord.js";
 import { MongoService } from "../../../../shared/services/mongoService";
+import { LinkService } from "../../../../shared/services/linkService";
 
 export class AnalyticsQueue extends GenericQueueProcessor<QueueItem> {
+
   protected getKey(item: QueueItem): string {
-    return item.request.target_user_id;
+    return item.request.post.references.messageId;
   }
 
   protected onDuplicate(item: QueueItem): void {
@@ -25,18 +27,23 @@ export class AnalyticsQueue extends GenericQueueProcessor<QueueItem> {
       service: AnalyticsService;
     }
   ): Promise<void> {
+
     if (!context?.service) throw new Error("Invalid analytics service");
     try {
       const post = item.request.post as Post;
       if (!post.references.messageId) return;
-      await context.service.analyticPost(
+      const imageUrl = await context.service.analyticPost(
         item.client,
         item.mongo,
         item.request.author,
         item.request.post,
         item.request.uploadChannel
       );
-      await item.message?.react("☑️").catch(console.error);
+      if (!imageUrl) { throw new Error("Invalid Analytics!") }
+      const image = await LinkService.readImageOfMomento(item.request.uploadChannel, imageUrl);
+      if (!image) { throw new Error("Invalid Analytics!") }
+      await context.service.sendAnalyticsNotification(item.request.author, image);
+      return;
     } catch (e: any) {
       if (!item.message) return;
       await item.message

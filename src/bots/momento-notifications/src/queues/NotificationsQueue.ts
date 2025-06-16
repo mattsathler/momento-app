@@ -8,7 +8,7 @@ export class NotificationsQueue extends GenericQueueProcessor<QueueItem> {
   }
 
   protected onDuplicate(item: QueueItem): void {
-    item.message.react("🔂").catch(console.error);
+    item.message?.react("🔂").catch(console.error);
   }
 
   protected async processRequest(item: QueueItem): Promise<void> {
@@ -16,10 +16,9 @@ export class NotificationsQueue extends GenericQueueProcessor<QueueItem> {
 
     try {
       await service.sendNotification(item.request);
-      await item.message.react("☑️").catch(console.error);
+      await item.message?.react("☑️").catch(console.error);
     } catch (e: any) {
-      await item.message
-        .startThread({
+      await item.message?.startThread({
           name: e.message,
           autoArchiveDuration: 60,
           reason: e.message,
@@ -36,7 +35,7 @@ export class NotificationsQueue extends GenericQueueProcessor<QueueItem> {
         })
         .catch(console.error);
 
-      await item.message.react("❌").catch(console.error);
+      await item.message?.react("❌").catch(console.error);
     }
   }
 }

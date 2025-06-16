@@ -31,7 +31,6 @@ export async function onMessageCreate(client: Client, message: Message, mongoSer
             const analyticsService = new AnalyticsService();
             const analyticsRequest: {
                 guild_id: string,
-                target_user_id: string,
                 target_profile_channel_id: string,
                 post_message_id: string,
                 sent_from: string,
@@ -43,11 +42,12 @@ export async function onMessageCreate(client: Client, message: Message, mongoSer
                 'references.channelId': analyticsRequest.target_profile_channel_id
             }) as Post;
 
-            console.log(analyticsRequest);
             if (!post) {
                 throw new Error("Invalid post!");
             }
             service.addPost(post);
+            await message.react("☑️");
+
             return;
         } catch (error: any) {
             throw new Error(error.message);

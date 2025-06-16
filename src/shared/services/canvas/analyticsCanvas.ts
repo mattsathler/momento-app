@@ -10,7 +10,9 @@ import { drawChart } from "./ChartCanvas";
 import { User } from "../../models/user";
 import { calculateSizes, Sizes, Styles } from "../../models/style";
 import { defaultTheme } from "../../models/theme";
-
+import { assetPaths } from "assets-paths";
+import fs from 'fs';
+import path from 'path';
 export async function drawPostAnalytics(uploadChannel: TextChannel, post: Post, author: User, likesLogs: Log[], newFollowers: number) {
     const analyticsWidth = Styles.sizes.large.post.width;
     const theme = defaultTheme;
@@ -26,7 +28,8 @@ export async function drawPostAnalytics(uploadChannel: TextChannel, post: Post, 
     x = sizes.medium;
     y += sizes.medium;
     ctx.quality = 'best';
-    const analyticsIcon = await loadImage('../../assets/images/analytics.png');
+
+    const analyticsIcon = await loadImage(assetPaths.analyticsIcon);
     ctx.drawImage(analyticsIcon, sizes.medium, y, 40, 40);
     const profileImageUrl: string | undefined = await LinkService.readImageOfMomento(uploadChannel, author.imagesUrl.profilePicture);
     if (!profileImageUrl) { throw new Error('Erro ao carregar imagem de perfil') }
@@ -43,7 +46,7 @@ export async function drawPostAnalytics(uploadChannel: TextChannel, post: Post, 
 
     // POST IMAGE ==============================
     const postImageURL: string | undefined = post.content.thumbUrl ? await LinkService.readImageOfMomento(uploadChannel, post.content.thumbUrl) : undefined;
-    const postImage: Image = post.content.imagesCount > 0 && postImageURL ? await loadImage(postImageURL) : await loadImage('../../assets/templates/no-photo.png');
+    const postImage: Image = post.content.imagesCount > 0 && postImageURL ? await loadImage(postImageURL) : await loadImage(assetPaths.noPhoto);
     ctx.drawImage(ImageCropper.cropImage(postImage, canvas.width / 3, canvas.height - y - sizes.medium), x, y);
 
     // POST CONTENT ============================
@@ -68,12 +71,12 @@ export async function drawPostAnalytics(uploadChannel: TextChannel, post: Post, 
     const highlightsBoxSize = ((canvas.width - x - sizes.medium - sizes.small * 3) / 3);
 
 
-    const likesIcon = await loadImage('../../assets/images/likes.png');
+    const likesIcon = await loadImage(assetPaths.likesIcon);
     createInfoBox(canvas, likesIcon, `Teve ${likesLogs.length} curtida(s) e ${newFollowers} novos seguidor(es)`, x, y, highlightsBoxSize, sizes)
     x += highlightsBoxSize + sizes.small
 
     if (post.stats.isTrending) {
-        const trendingIcon = await loadImage('../../assets/images/trending.png');
+        const trendingIcon = await loadImage(assetPaths.trendingIcon);
         createInfoBox(canvas, trendingIcon, 'Esse momento estava entre os Trendings Topics!', x, y, highlightsBoxSize, sizes)
         x += highlightsBoxSize + sizes.small
     }

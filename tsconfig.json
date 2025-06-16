@@ -6,7 +6,12 @@
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": false
+    "forceConsistentCasingInFileNames": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./"
+      ]
+    }
   },
-  "include": ["src"]
 }

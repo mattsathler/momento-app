@@ -6,6 +6,8 @@ import { Log } from "../../../shared/models/Log";
 import { drawPostAnalytics } from "../../../shared/services/canvas/analyticsCanvas";
 import { User } from "../../../shared/models/user";
 import { AnalyticsQueue } from "../src/queues/AnalyticsQueue";
+import { AxiosService } from "../../../shared/services/axiosService";
+import { getSecureToken } from "../../../shared/services/tokenService";
 
 export class AnalyticsService {
     private activePosts: Post[] = [];
@@ -14,12 +16,10 @@ export class AnalyticsService {
 
     public addPost(post: Post): void {
         this.activePosts.push(post);
-        console.log("Adding post...");
         return;
     }
 
     public removePost(guildId: string, postMessageId: string) {
-        console.log('Removing post...', this.activePosts.length);
         this.activePosts = this.activePosts.filter((post) => !(post.references.guildId === guildId && post.references.messageId === postMessageId));
         return;
     }
@@ -31,34 +31,32 @@ export class AnalyticsService {
             const now = new Date();
 
             //CHANGE TO 24HRS! = 86400000 =========================
-            const timeoutTimestamp = new Date(now.getTime() - 86400000);
+            const timeoutTimestamp = new Date(now.getTime() - 100);
             //CHANGE TO 24HRS! = 86400000 =========================
-            console.log('Active posts:', this.activePosts.length);
 
             for (let post of this.activePosts) {
-                const postDate = new Date(post.stats.date) 
+                const postDate = new Date(post.stats.date)
                 const author = await mongoService.getOne('users', {
                     userId: post.references.ownerId,
-					guildId: post.references.guildId
-				}) as User;
-                
+                    guildId: post.references.guildId
+                }) as User;
+
                 if (postDate <= timeoutTimestamp) {
-                    console.log('processing', post.content.description);
                     queue.enqueue({
-                    client: client,
-                    mongo: mongoService,
-                    request: {
-                        author: author,
-                        post: post,
-                        uploadChannel: uploadChannel
-                    }
-                });   
+                        client: client,
+                        mongo: mongoService,
+                        request: {
+                            author: author,
+                            post: post,
+                            uploadChannel: uploadChannel
+                        }
+                    });
                 }
             }
         });
     }
 
-    public async analyticPost(client: Client, mongoService: MongoService, author: User, post: Post, uploadChannel: TextChannel): Promise<string | null> {
+    public async analyticPost(client: Client, mongoService: MongoService, author: User, post: Post, uploadChannel: TextChannel): Promise<string | undefined> {
         try {
             if (!author.guildId) { throw new Error('Invalid guild') }
             const guild = await client.guilds.fetch(author.guildId) as Guild;
@@ -69,12 +67,12 @@ export class AnalyticsService {
             const postFollowers = this.calculateNewFollowers(post, author);
             newFollowers += postFollowers;
 
-            // await mongoService.patch('posts', {
-            //     'references.messageId': post.references.messageId,
-            //     'references.channelId': post.references.channelId
-            // }, {
-            //     'stats.status': 'inactive'
-            // })
+            await mongoService.patch('posts', {
+                'references.messageId': post.references.messageId,
+                'references.channelId': post.references.channelId
+            }, {
+                'stats.status': 'inactive'
+            })
 
             this.removePost(post.references.guildId, post.references.messageId);
 
@@ -104,22 +102,87 @@ export class AnalyticsService {
             const link = await LinkService.uploadImageToMomento(uploadChannel, buffer);
 
             const userProfileChannel = await client.channels.fetch(postAuthor.references.channelId) as TextChannel;
-            const postMessage = await userProfileChannel.messages.fetch(post.references.messageId) as Message;
-
-            if (postMessage) {
-                const postCommentThread = await this.getPostCommentThread(userProfileChannel, postMessage);
-                if (postCommentThread) {
-                    await postCommentThread.delete();
+            try {
+                const postMessage = await userProfileChannel.messages.fetch(post.references.messageId) as Message;
+                if (postMessage) {
+                    const postCommentThread = await this.getPostCommentThread(userProfileChannel, postMessage);
+                    if (postCommentThread) {
+                        await postCommentThread.delete();
+                    }
+                    await postMessage.delete();
                 }
-                await postMessage.delete();
-            }
 
-            return link.url;
+                return link.url;
+            }
+            catch (error) {
+                console.log(error);
+            }
         }
         catch (err) {
             console.log(err)
-            return null;
+            return;
         }
+    }
+
+    public async sendAnalyticsNotification(author: User, link: string): Promise<void> {
+        const axiosService: AxiosService = new AxiosService();
+        const notificationWebhook = process.env.NOTIFICATION_WEBHOOK as string;
+        if (!notificationWebhook) throw new Error("Invalid Webhook URL");
+        await axiosService.postWebhook(notificationWebhook, {
+            "content": null,
+            "embeds": [
+                {
+                    "color": 14492795,
+                    "fields": [
+                        {
+                            "name": "guild_id",
+                            "value": author.guildId
+                        },
+                        {
+                            "name": "author_username",
+                            "value": "MOMENTO"
+                        },
+                        {
+                            "name": "author_icon_url",
+                            "value": "https://imgur.com/fZdmjLn.png"
+                        },
+                        {
+                            "name": "target_profile_channel_id",
+                            "value": author.references.channelId
+                        },
+                        {
+                            "name": "target_user_id",
+                            "value": author.userId
+                        },
+                        {
+                            "name": "type",
+                            "value": "embed"
+                        },
+                        {
+                            "name": "sent_from",
+                            "value": "momento_analytics"
+                        },
+                        {
+                            "name": "token",
+                            "value": getSecureToken(process.env.SECRET_TOKEN || '')
+                        },
+                        {
+                            "name": "image_url",
+                            "value": link
+                        },
+                        {
+                            "name": "message",
+                            "value": "Confira o alcance do seu momento!"
+                        },
+                        {
+                            "name": "thumbnail_url",
+                            "value": "https://imgur.com/WSI7odl.png"
+                        }
+                    ]
+                }
+            ],
+            "attachments": []
+        })
     }
 
     private calculateNewFollowers(post: Post, author: User) {
@@ -144,7 +207,6 @@ export class AnalyticsService {
 
     public createAnalyticsRegisterObject(embed: Embed): {
         guild_id: string,
-        target_user_id: string,
         target_profile_channel_id: string,
         post_message_id: string,
         sent_from: string
@@ -153,7 +215,6 @@ export class AnalyticsService {
 
         return {
             guild_id: fields.find((f) => f.name === "guild_id")?.value || "",
-            target_user_id: fields.find((f) => f.name === "target_user_id")?.value || "",
             target_profile_channel_id: fields.find((f) => f.name === "target_profile_channel_id")?.value || "",
             post_message_id: fields.find((f) => f.name === "post_message_id")?.value || "",
             sent_from: fields.find((f) => f.name === "sent_from")?.value || "",

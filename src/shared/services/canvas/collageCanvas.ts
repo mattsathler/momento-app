@@ -1,13 +1,14 @@
 import { createCanvas, loadImage, Canvas, registerFont, Image } from "canvas";
 import { TextChannel } from "discord.js";
 import { calculateSizes, Styles } from "../../models/Style";
-import { theme } from "../../models/Theme";
-import { user } from "../../models/User";
-import { collage } from "../../models/Collage";
 import { cropImage } from "./canvasService";
 import { LinkService } from "../linkService";
+import { User } from "../../models/user";
+import { Theme } from "../../models/theme";
+import { Collage } from "../../models/Collage";
+import { fontsPaths } from "assets-paths";
 
-export async function drawCollageCanvas(uploadChannel: TextChannel, user: user, theme: theme, userCollageStyle: collage): Promise<Canvas> {
+export async function drawCollageCanvas(uploadChannel: TextChannel, user: User, theme: Theme, userCollageStyle: Collage): Promise<Canvas> {
     const canvas = createCanvas(Styles.sizes.large.profile.collage.width, Styles.sizes.large.profile.collage.height);
     const ctx = canvas.getContext('2d');
     const sizes = calculateSizes(canvas.width)
@@ -18,9 +19,9 @@ export async function drawCollageCanvas(uploadChannel: TextChannel, user: user, 
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // HEADER ========================================
-    registerFont('./src/assets/fonts/SFPRODISPLAYBOLD.otf', { family: 'sfpro-bold' })
-    registerFont('./src/assets/fonts/SFPRODISPLAYMEDIUM.otf', { family: 'sfpro-medium' })
-    registerFont('./src/assets/fonts/SFPRODISPLAYREGULAR.otf', { family: 'sfpro-regular' })
+    registerFont(fontsPaths.SFPROBOLD, { family: 'sfpro-bold' })
+    registerFont(fontsPaths.SFPROMEDIUM, { family: 'sfpro-medium' })
+    registerFont(fontsPaths.SFPROREGULAR, { family: 'sfpro-regular' })
 
     ctx.textAlign = 'center';
 

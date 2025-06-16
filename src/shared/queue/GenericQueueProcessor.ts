@@ -33,6 +33,8 @@ export abstract class GenericQueueProcessor<T> {
 
   protected abstract getKey(item: T): ActiveKey;
 
+  protected abstract onDuplicate(item: T): void;
+
   protected abstract processRequest(
     item: T,
     context?: {
@@ -57,7 +59,9 @@ export abstract class GenericQueueProcessor<T> {
         filter((item) => {
           const key = this.getKey(item);
           const isActive = this.activeKeys.includes(key);
+          console.log(isActive);
           if (isActive && !allowDuplicated) {
+            this.onDuplicate(item);
             return false;
           }
 

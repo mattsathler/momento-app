@@ -1,5 +1,6 @@
 import { Canvas, registerFont } from "canvas";
 import { Theme } from "../../models/theme";
+import { fontsPaths } from "assets-paths";
 
 export function drawTextInCanvas(text: string, theme: Theme, fontName: string, maxWidth: number, size: number, textAlign = 'left'): Canvas {
     let canvas = new Canvas(maxWidth, 4000);
@@ -15,7 +16,7 @@ export function drawTextInCanvas(text: string, theme: Theme, fontName: string, m
     ctx.textAlign = 'left';
 
     ctx.fillStyle = theme.colors.primary;
-    registerFont(`../../assets/fonts/${fontName}.OTF`, { family: fontName })
+    registerFont(fontsPaths.SFPROMEDIUM, { family: fontName });
     ctx.font = `${size}px ${fontName}`;
 
     const words = text.split(' ');

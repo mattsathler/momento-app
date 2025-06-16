@@ -18,14 +18,12 @@ dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
 async function main(): Promise<void> {
   console.log("Initializing momento analytics...");
-  console.log()
   const token = process.env.DISCORD_TOKEN;
   if (!token) {
     console.error("DISCORD_TOKEN is not defined in .env");
     process.exit(1);
   }
 
-  console.log(getSecureToken(process.env.SECRET_TOKEN || 'e'));
   const client = createDiscordClient();
 
   try {
@@ -39,7 +37,7 @@ async function main(): Promise<void> {
     const analyticsService: AnalyticsService = new AnalyticsService();
     const analyticsQueue: AnalyticsQueue = new AnalyticsQueue(
       "Analytics",
-      true,
+      false,
       {
         client: client,
         mongoService: mongoservice,
