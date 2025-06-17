@@ -28,7 +28,7 @@ export class AnalyticsService {
     public async initAnalyticsCron(client: Client, mongoService: MongoService, queue: AnalyticsQueue, uploadChannel: TextChannel): Promise<void> {
         const cron = require('node-cron');
         console.log("Starting Cronjob...");
-        cron.schedule('*/10 * * * * *', async () => {
+        cron.schedule('0 */5 * * * *', async () => {
             const now = new Date();
 
             //CHANGE TO 24HRS! = 86400000 =========================
