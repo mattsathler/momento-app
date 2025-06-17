@@ -1,12 +1,12 @@
 import { Client, Message } from "discord.js";
 import { concatMap, filter, Subject } from "rxjs";
-import { MongoService } from "../services/mongoService";
+import { MongoService } from "../services/MongoService";
 
 type ActiveKey = string;
 
 export type QueueItem = {
   client: Client;
-  message: Message;
+  message?: Message;
   mongo: MongoService;
   request: any;
 };
@@ -15,8 +15,16 @@ export abstract class GenericQueueProcessor<T> {
   private requestSubject = new Subject<T>();
   private activeKeys: ActiveKey[] = [];
 
-  constructor(queue: string, allowDuplicated: boolean = false) {
-    this.initQueueProcessor(queue, allowDuplicated);
+  constructor(
+    queue: string,
+    allowDuplicated: boolean = false,
+    context?: {
+      client: Client;
+      mongoService: MongoService;
+      service: any;
+    }
+  ) {
+    this.initQueueProcessor(queue, allowDuplicated, context);
   }
 
   public enqueue(item: T) {
@@ -25,9 +33,26 @@ export abstract class GenericQueueProcessor<T> {
 
   protected abstract getKey(item: T): ActiveKey;
 
-  protected abstract processRequest(item: T): Promise<void>;
+  protected abstract onDuplicate(item: T): void;
 
-  private initQueueProcessor(queue: string, allowDuplicated: boolean) {
+  protected abstract processRequest(
+    item: T,
+    context?: {
+      client: Client;
+      mongoService: MongoService;
+      service: any;
+    }
+  ): Promise<void>;
+
+  private initQueueProcessor(
+    queue: string,
+    allowDuplicated: boolean,
+    context?: {
+      client: Client;
+      mongoService: MongoService;
+      service: any;
+    }
+  ) {
     console.log("Starting queue for", queue);
     this.requestSubject
       .pipe(
@@ -35,6 +60,7 @@ export abstract class GenericQueueProcessor<T> {
           const key = this.getKey(item);
           const isActive = this.activeKeys.includes(key);
           if (isActive && !allowDuplicated) {
+            this.onDuplicate(item);
             return false;
           }
 
@@ -46,7 +72,7 @@ export abstract class GenericQueueProcessor<T> {
         }),
         concatMap(async (item) => {
           try {
-            await this.processRequest(item);
+            await this.processRequest(item, context);
           } finally {
             const key = this.getKey(item);
             if (!allowDuplicated) {

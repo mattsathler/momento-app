@@ -1,7 +1,4 @@
-import { Client, Message } from "discord.js";
-import { ProfileUpdateRequest } from "../../models/ProfileUpdateRequest";
-import { profileUpdaterService } from "../../services/profileUpdaterService";
-import { MongoService } from "../../../../shared/services/mongoService";
+import { ProfileUpdaterService } from "../../services/ProfileUpdaterService";
 import { errorHandler } from "../../../../shared/handlers/errorHandler";
 import { GenericQueueProcessor, QueueItem } from "../../../../shared/queue/GenericQueueProcessor";
 
@@ -11,11 +8,11 @@ export class ProfileUpdateQueue extends GenericQueueProcessor<QueueItem> {
   }
 
   protected onDuplicate(item: QueueItem): void {
-    item.message.react("🔂").catch(console.error);
+    item.message?.react("🔂").catch(console.error);
   }
 
   protected async processRequest(item: QueueItem): Promise<void> {
-    const service = new profileUpdaterService();
+    const service = new ProfileUpdaterService();
 
     try {
       await service.requestUpdateProfilePictures(
@@ -23,10 +20,9 @@ export class ProfileUpdateQueue extends GenericQueueProcessor<QueueItem> {
         item.mongo,
         item.request
       );
-      await item.message.react("☑️").catch(console.error);
+      await item.message?.react("☑️").catch(console.error);
     } catch (e: any) {
-      await item.message
-        .startThread({
+      await item.message?.startThread({
           name: e.message,
           autoArchiveDuration: 60,
           reason: e.message,
@@ -43,7 +39,7 @@ export class ProfileUpdateQueue extends GenericQueueProcessor<QueueItem> {
         })
         .catch(console.error);
 
-      await item.message.react("❌").catch(console.error);
+      await item.message?.react("❌").catch(console.error);
     }
   }
 }

@@ -1,16 +1,16 @@
 import { Client, Guild, Message, TextChannel } from "discord.js";
 import { ProfileUpdateRequest } from "../models/ProfileUpdateRequest";
-import { user } from "../../../shared/models/user";
-import { MongoService } from "../../../shared/services/mongoService";
-import { drawProfileCanvas } from "../../../shared/services/canvas/profileCanvas";
-import { defaultTheme, theme } from "../../../shared/models/theme";
-import { MomentoService } from "../../../shared/services/momentoService";
-import { error } from "../../../shared/models/error";
-import { drawCollageCanvas } from "../../../shared/services/canvas/collageCanvas";
-import { collage, defaultCollage } from "../../../shared/models/collage";
-import { LinkService } from "../../../shared/services/linkService";
+import { MongoService } from "../../../shared/services/MongoService";
+import { drawProfileCanvas } from "../../../shared/services/canvas/ProfileCanvas";
+import { defaultTheme, Theme } from "../../../shared/models/Theme";
+import { MomentoService } from "../../../shared/services/MomentoService";
+import { drawCollageCanvas } from "../../../shared/services/canvas/CollageCanvas";
+import { Collage, defaultCollage } from "../../../shared/models/Collage";
+import { LinkService } from "../../../shared/services/LinkService";
+import { User } from "../../../shared/models/User";
+import { Error } from "../../../shared/models/Error";
 
-export class profileUpdaterService {
+export class ProfileUpdaterService {
     public extractProfileUpdateRequest(message: Message): ProfileUpdateRequest {
         const fields = message?.embeds[0]?.fields;
 
@@ -27,12 +27,12 @@ export class profileUpdaterService {
     if (!request.message.guild) throw new Error("Missing guild!");
 
         const momentoService = new MomentoService();
-        const uploadChannel = await momentoService.getUploadChannel(request.message.guild);
+        const uploadChannel = await momentoService.getUploadChannel(request.message.client);
 
         const user = await mongoService.getOne("users", {
             'guildId': request.guildId,
             'userId': request.target_user_id
-        }) as user;
+        }) as User
 
         if (!uploadChannel) {
             throw new Error("Não foi possível encontrar o canal de imagens!")
@@ -46,7 +46,7 @@ export class profileUpdaterService {
         throw new Error(promise?.message)
     }
 
-    private async updateProfilePictures(client: Client, mongoService: MongoService, uploadChannel: TextChannel, user: user, profile: boolean = true, collage: boolean = true): Promise<true | error> {
+    private async updateProfilePictures(client: Client, mongoService: MongoService, uploadChannel: TextChannel, user: User, profile: boolean = true, collage: boolean = true): Promise<true | Error> {
         if (!user?.guildId) {
             return {
                 code: 500,
@@ -91,7 +91,7 @@ export class profileUpdaterService {
                     }
                 }
 
-                const theme = await mongoService.getOne('themes', { name: user.styles.theme }) as theme || defaultTheme;
+                const theme = await mongoService.getOne('themes', { name: user.styles.theme }) as Theme || defaultTheme;
                 const newProfilePicture = await drawProfileCanvas(user, uploadChannel, theme, postCount, trendingCount)
                 const imageURL = await LinkService.uploadImageToMomento(uploadChannel, newProfilePicture.toBuffer())
 
@@ -114,8 +114,8 @@ export class profileUpdaterService {
                     message: "Invalid Collage Message"
                 }
 
-                const theme = await mongoService.getOne('themes', { name: user.styles.theme }) as theme || defaultTheme;
-                const collageStyle = await mongoService.getOne('collages', { id: user.styles.collage }) as collage || defaultCollage;
+                const theme = await mongoService.getOne('themes', { name: user.styles.theme }) as Theme || defaultTheme;
+                const collageStyle = await mongoService.getOne('collages', { id: user.styles.collage }) as Collage || defaultCollage;
                 const newCollagePicture = await drawCollageCanvas(uploadChannel, user, theme, collageStyle);
 
                 const imageURL = await LinkService.uploadImageToMomento(uploadChannel, newCollagePicture.toBuffer());

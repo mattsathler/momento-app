@@ -20,7 +20,6 @@ export function cropCirclePicture(image: Canvas, width: number = 80, height: num
     }
 }
 
-
 export function cropImage(src: Image, width?: number, height?: number, keepRatio?: boolean): Canvas {
     width = width ?? src.width;
     height = height ?? src.height;

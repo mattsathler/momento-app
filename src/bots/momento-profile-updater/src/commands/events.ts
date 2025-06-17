@@ -1,11 +1,11 @@
 import { Client, EmbedBuilder, Message, TextChannel } from "discord.js";
-import { profileUpdaterService } from "../../services/profileUpdaterService";
+import { ProfileUpdaterService } from "../../services/ProfileUpdaterService";
 import { errorHandler } from "../../../../shared/handlers/errorHandler";
-import { getSecureToken } from "../../../../shared/services/tokenService";
+import { getSecureToken } from "../../../../shared/services/TokenService";
 import { ensureEmbed } from "../../../../shared/middlewares/ensureEmbed";
 import { validateToken } from "../../../../shared/middlewares/validateToken";
 import { handleMessage } from "../../../../shared/handlers/messageHandler";
-import { MongoService } from "../../../../shared/services/mongoService";
+import { MongoService } from "../../../../shared/services/MongoService";
 import { ProfileUpdateQueue } from "../queues/profileUpdateQueue";
 
 export async function onReady(client: Client) {
@@ -21,7 +21,7 @@ export async function onReady(client: Client) {
     for (const message of pending.values()) {
         try {
             await message.react("❌");
-            const service: profileUpdaterService = new profileUpdaterService();
+            const service: ProfileUpdaterService = new ProfileUpdaterService();
             channel.send({
                 embeds: message.embeds
             });
@@ -56,7 +56,7 @@ export function onMessageCreate(client: Client, message: Message, mongoservice: 
             middlewares,
             async (client, message, context) => {
                 const mongo = context?.services?.mongo;
-                const service: profileUpdaterService = new profileUpdaterService();
+                const service: ProfileUpdaterService = new ProfileUpdaterService();
                 if (!mongo) throw new Error("MongoService não disponível no contexto");
                 profileUpdateQueue.enqueue({
                     client: client,

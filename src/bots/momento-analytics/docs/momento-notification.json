@@ -1,0 +1,81 @@
+{
+  "version": 7,
+  "backups": [
+    {
+      "name": "momento-notification",
+      "messages": [
+        {
+          "data": {
+            "content": null,
+            "embeds": [
+              {
+                "color": 14492795,
+                "fields": [
+                  {
+                    "name": "guild_id",
+                    "value": "1313560282160955472"
+                  },
+                  {
+                    "name": "author_name",
+                    "value": "Doug Castelano"
+                  },
+                  {
+                    "name": "author_username",
+                    "value": "dougcastelano"
+                  },
+                  {
+                    "name": "author_icon_url",
+                    "value": "https://images.unsplash.com/photo-1575936123452-b67c3203c357?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2VtfGVufDB8fDB8fHww"
+                  },
+                  {
+                    "name": "target_profile_channel_id",
+                    "value": "1346326056394555455"
+                  },
+                  {
+                    "name": "target_user_id",
+                    "value": "609916240760406056"
+                  },
+                  {
+                    "name": "image_url",
+                    "value": "https://images.unsplash.com/photo-1575936123452-b67c3203c357?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2VtfGVufDB8fDB8fHww"
+                  },
+                  {
+                    "name": "thumbnail_url",
+                    "value": "https://images.unsplash.com/photo-1575936123452-b67c3203c357?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2VtfGVufDB8fDB8fHww"
+                  },
+                  {
+                    "name": "message",
+                    "value": "Começou a seguir você!"
+                  },
+                  {
+                    "name": "type",
+                    "value": "embed"
+                  },
+                  {
+                    "name": "sent_from",
+                    "value": "webhook"
+                  },
+                  {
+                    "name": "url",
+                    "value": "https://discord.com/channels/1313560282160955472/1346326056394555455"
+                  },
+                  {
+                    "name": "token",
+                    "value": "MTc0ODAwNzE2Mzc4OTpmNTFmNjg2NjMzN2ViMTI0OjQyNWM1ODM0ZDE5MWVlYTBjZmU4YTE5OTYxY2UzNWMzMWUzNjMyYjNmZTQ5YTg1MzM4M2I0MTg4YzU1OWJkMzA="
+                  }
+                ]
+              }
+            ],
+            "attachments": []
+          },
+          "reference": ""
+        }
+      ],
+      "targets": [
+        {
+          "url": "https://discord.com/api/webhooks/1375279635625152512/Bc-g4HaZt_oSbRBAwMQXh7Q0opbgKgs3ACIaDAafVwxHUHH1vbE8yPkSq3UIfxtLQYLX"
+        }
+      ]
+    }
+  ]
+}

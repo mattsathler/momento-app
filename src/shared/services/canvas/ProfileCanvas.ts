@@ -1,13 +1,13 @@
 import { createCanvas, loadImage, Canvas, registerFont, Image } from "canvas";
-import { cropCirclePicture, cropImage } from "./canvasService";
+import { cropCirclePicture, cropImage } from "./CanvasService";
 import { TextChannel } from "discord.js";
-import { StringService } from "../stringService";
-import { user } from "../../models/user";
-import { theme } from "../../models/theme";
-import { calculateSizes, Sizes, Styles } from "../../models/style";
-import { LinkService } from "../linkService";
+import { StringService } from "../StringService";
+import { calculateSizes, Sizes, Styles } from "../../models/Style";
+import { LinkService } from "../LinkService";
+import { User } from "../../models/User";
+import { Theme } from "../../models/Theme";
 
-export async function drawProfileCanvas(user: user, uploadChannel: TextChannel, theme: theme, momentos: number, trendings: number): Promise<Canvas> {
+export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, theme: Theme, momentos: number, trendings: number): Promise<Canvas> {
     const canvas = createCanvas(Styles.sizes.large.profile.stats.width, Styles.sizes.large.profile.stats.height);
     const ctx = canvas.getContext('2d');
 
@@ -64,10 +64,10 @@ export async function drawProfileCanvas(user: user, uploadChannel: TextChannel, 
     y += profileImageSize * 1.5 + sizes.big;
 
     // INFO ===========================================
-    registerFont('./src/assets/fonts/SFPRODISPLAYBOLD.otf', { family: 'sfpro-bold' })
-    registerFont('./src/assets/fonts/SFPRODISPLAYMEDIUM.otf', { family: 'sfpro-medium' })
-    registerFont('./src/assets/fonts/SFPRODISPLAYREGULAR.otf', { family: 'sfpro-regular' })
-
+    registerFont('src/assets/fonts/SFPRODISPLAYBOLD.OTF', { family: 'sfpro-bold' })
+    registerFont('src/assets/fonts/SFPRODISPLAYMEDIUM.OTF', { family: 'sfpro-medium' })
+    registerFont('src/assets/fonts/SFPRODISPLAYREGULAR.OTF', { family: 'sfpro-regular' })
+    
     ctx.textAlign = 'center';
     ctx.fillStyle = theme.colors.secondary;
 
@@ -82,7 +82,7 @@ export async function drawProfileCanvas(user: user, uploadChannel: TextChannel, 
 
     if (user.stats.isVerified) {
         const measureGap = canvas.width / 2 + sizes.tiny + ((ctx.measureText(user.name).width + ctx.measureText(user.surname).width + sizes.small) / 2);
-        const verifiedIcon = await loadImage('./src/assets/images/verified.png')
+        const verifiedIcon = await loadImage('src/assets/images/verified.png')
         ctx.drawImage(verifiedIcon, measureGap, y - 40, 40, 40);
     }
 

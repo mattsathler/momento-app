@@ -1,4 +1,4 @@
-export interface collage {
+export interface Collage {
     id: number,
     authorId: string,
     isExclusive: boolean,
@@ -7,7 +7,7 @@ export interface collage {
     positions: string[]
 }
 
-export const defaultCollage: collage = {
+export const defaultCollage: Collage = {
     id: 1,
     authorId: "bot",
     isExclusive: false,

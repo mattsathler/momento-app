@@ -4,9 +4,8 @@ import dotenv from "dotenv";
 import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import { ProfileUpdateRequest } from "./models/ProfileUpdateRequest";
 import { onMessageCreate, onReady } from "./src/commands/events";
-import { MongoService } from "../../shared/services/mongoService";
+import { MongoService } from "../../shared/services/MongoService";
 import { ProfileUpdateQueue } from "./src/queues/profileUpdateQueue";
 
 const __filename = fileURLToPath(import.meta.url);

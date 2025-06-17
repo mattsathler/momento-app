@@ -2,7 +2,7 @@ import { Client, Message } from "discord.js";
 import "dotenv/config";
 import { Middleware, runMiddlewares } from "../middlewares/middleware";
 import { errorHandler } from "./errorHandler";
-import { error } from "../models/error";
+import { Error } from "../models/Error";
 import { HandlerContext } from "./handlerContext";
 
 export async function handleMessage(
@@ -14,7 +14,7 @@ export async function handleMessage(
     message: Message,
     context?: HandlerContext
   ) => Promise<void>,
-  fail: error,
+  fail: Error,
   context?: HandlerContext
 ): Promise<void> {
   if (message?.guildId !== process.env.API_GUILD_ID) return;
