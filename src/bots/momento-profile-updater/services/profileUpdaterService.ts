@@ -6,7 +6,7 @@ import { defaultTheme, Theme } from "../../../shared/models/Theme";
 import { MomentoService } from "../../../shared/services/MomentoService";
 import { drawCollageCanvas } from "../../../shared/services/canvas/CollageCanvas";
 import { Collage, defaultCollage } from "../../../shared/models/Collage";
-import { LinkService } from "../../../shared/services/linkService";
+import { LinkService } from "../../../shared/services/LinkService";
 import { User } from "../../../shared/models/User";
 import { Error } from "../../../shared/models/Error";
 

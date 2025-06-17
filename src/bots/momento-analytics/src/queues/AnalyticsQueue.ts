@@ -7,7 +7,7 @@ import { AnalyticsService } from "../../services/AnalyticsService";
 import { Post } from "../../../../shared/models/Post";
 import { Client } from "discord.js";
 import { MongoService } from "../../../../shared/services/MongoService";
-import { LinkService } from "../../../../shared/services/linkService";
+import { LinkService } from "../../../../shared/services/LinkService";
 
 export class AnalyticsQueue extends GenericQueueProcessor<QueueItem> {
 
