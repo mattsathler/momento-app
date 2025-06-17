@@ -2,7 +2,7 @@ import { createCanvas, loadImage, Canvas, registerFont, Image } from "canvas";
 import { cropCirclePicture, cropImage } from "./CanvasService";
 import { TextChannel } from "discord.js";
 import { StringService } from "../StringService";
-import { calculateSizes, Sizes, Styles } from "../../models/style";
+import { calculateSizes, Sizes, Styles } from "../../models/Style";
 import { LinkService } from "../LinkService";
 import { User } from "../../models/user";
 import { Theme } from "../../models/theme";

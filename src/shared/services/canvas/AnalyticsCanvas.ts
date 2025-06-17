@@ -1,14 +1,14 @@
 import { Canvas, Image, loadImage, registerFont } from "canvas";
 import { Post } from "../../models/Post";
 import { Log } from "../../models/Log";
-import { LinkService } from "../linkService";
+import { LinkService } from "../LinkService";
 import { TextChannel } from "discord.js";
 import { cropCirclePicture } from "./CanvasService";
 import { ImageCropper } from "../ImageCropper";
 import { drawTextInCanvas } from "./TextCanvas";
 import { drawChart } from "./ChartCanvas";
 import { User } from "../../models/user";
-import { calculateSizes, Sizes, Styles } from "../../models/style";
+import { calculateSizes, Sizes, Styles } from "../../models/Style";
 import { defaultTheme, Theme } from "../../models/theme";
 import { assetPaths, fontsPaths } from "assets-paths";
 import { generateSurface } from "../ThemeService";
