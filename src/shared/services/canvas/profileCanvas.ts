@@ -1,5 +1,5 @@
 import { createCanvas, loadImage, Canvas, registerFont, Image } from "canvas";
-import { cropCirclePicture, cropImage } from "./canvasService";
+import { cropCirclePicture, cropImage } from "./CanvasService";
 import { TextChannel } from "discord.js";
 import { StringService } from "../stringService";
 import { calculateSizes, Sizes, Styles } from "../../models/style";

@@ -1,16 +1,16 @@
 import { Client, Guild, Message, TextChannel } from "discord.js";
 import { ProfileUpdateRequest } from "../models/ProfileUpdateRequest";
-import { MongoService } from "../../../shared/services/mongoService";
-import { drawProfileCanvas } from "../../../shared/services/canvas/profileCanvas";
+import { MongoService } from "../../../shared/services/MongoService";
+import { drawProfileCanvas } from "../../../shared/services/canvas/ProfileCanvas";
 import { defaultTheme, Theme } from "../../../shared/models/Theme";
-import { MomentoService } from "../../../shared/services/momentoService";
-import { drawCollageCanvas } from "../../../shared/services/canvas/collageCanvas";
+import { MomentoService } from "../../../shared/services/MomentoService";
+import { drawCollageCanvas } from "../../../shared/services/canvas/CollageCanvas";
 import { Collage, defaultCollage } from "../../../shared/models/Collage";
 import { LinkService } from "../../../shared/services/linkService";
 import { User } from "../../../shared/models/User";
 import { Error } from "../../../shared/models/Error";
 
-export class profileUpdaterService {
+export class ProfileUpdaterService {
     public extractProfileUpdateRequest(message: Message): ProfileUpdateRequest {
         const fields = message?.embeds[0]?.fields;
 

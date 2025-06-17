@@ -1,4 +1,4 @@
-import { EmbedBuilder, Message } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import { MiddlewareResult } from "../middlewares/middleware";
 
 export function errorHandler(error: MiddlewareResult): EmbedBuilder {

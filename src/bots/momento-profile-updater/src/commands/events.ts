@@ -1,11 +1,11 @@
 import { Client, EmbedBuilder, Message, TextChannel } from "discord.js";
 import { profileUpdaterService } from "../../services/profileUpdaterService";
 import { errorHandler } from "../../../../shared/handlers/errorHandler";
-import { getSecureToken } from "../../../../shared/services/tokenService";
+import { getSecureToken } from "../../../../shared/services/TokenService";
 import { ensureEmbed } from "../../../../shared/middlewares/ensureEmbed";
 import { validateToken } from "../../../../shared/middlewares/validateToken";
 import { handleMessage } from "../../../../shared/handlers/messageHandler";
-import { MongoService } from "../../../../shared/services/mongoService";
+import { MongoService } from "../../../../shared/services/MongoService";
 import { ProfileUpdateQueue } from "../queues/profileUpdateQueue";
 
 export async function onReady(client: Client) {

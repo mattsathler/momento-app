@@ -4,12 +4,12 @@ import dotenv from "dotenv";
 import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import { MongoService } from "../../shared/services/mongoService";
+import { MongoService } from "../../shared/services/MongoService";
 import { AnalyticsQueue } from "./src/queues/AnalyticsQueue";
 import { AnalyticsService } from "./services/AnalyticsService";
-import { MomentoService } from "../../shared/services/momentoService";
+import { MomentoService } from "../../shared/services/MomentoService";
 import { onMessageCreate, onReady } from "./src/commands/events";
-import { getSecureToken } from "../../shared/services/tokenService";
+import { getSecureToken } from "../../shared/services/TokenService";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

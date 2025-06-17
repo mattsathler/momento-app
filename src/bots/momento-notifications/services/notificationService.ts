@@ -1,7 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Embed, EmbedBuilder, Guild, Message, MessageType, TextChannel, ThreadAutoArchiveDuration, ThreadChannel } from "discord.js";
 import { MomentoNotification } from "../models/MomentoNotification";
-import { MongoService } from "../../../shared/services/mongoService";
-import { getSecureToken } from "../../../shared/services/tokenService";
+import { MongoService } from "../../../shared/services/MongoService";
 
 export class NotificationService {
     constructor() { }

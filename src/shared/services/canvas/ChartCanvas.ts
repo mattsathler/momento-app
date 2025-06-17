@@ -119,5 +119,6 @@ export function drawChart(postHour: number, logs: Log[], width: number, height: 
     }
 
     return canvas;
+
 }
 

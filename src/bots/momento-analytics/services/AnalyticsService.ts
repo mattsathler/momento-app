@@ -1,13 +1,13 @@
 import { Client, Embed, Guild, Message, TextChannel, ThreadChannel } from "discord.js";
 import { Post } from "../../../shared/models/Post";
-import { MongoService } from "../../../shared/services/mongoService";
-import { LinkService } from "../../../shared/services/linkService";
+import { MongoService } from "../../../shared/services/MongoService";
+import { LinkService } from "../../../shared/services/LinkService";
 import { Log } from "../../../shared/models/Log";
-import { drawPostAnalytics } from "../../../shared/services/canvas/analyticsCanvas";
+import { drawPostAnalytics } from "../../../shared/services/canvas/AnalyticsCanvas";
 import { User } from "../../../shared/models/user";
 import { AnalyticsQueue } from "../src/queues/AnalyticsQueue";
-import { AxiosService } from "../../../shared/services/axiosService";
-import { getSecureToken } from "../../../shared/services/tokenService";
+import { AxiosService } from "../../../shared/services/AxiosService";
+import { getSecureToken } from "../../../shared/services/TokenService";
 import { Theme } from "src/shared/models/theme";
 
 export class AnalyticsService {

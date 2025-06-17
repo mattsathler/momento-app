@@ -1,6 +1,6 @@
 import { Client, Message } from "discord.js";
 import { concatMap, filter, Subject } from "rxjs";
-import { MongoService } from "../services/mongoService";
+import { MongoService } from "../services/MongoService";
 
 type ActiveKey = string;
 

@@ -3,7 +3,7 @@ import { Post } from "../../models/Post";
 import { Log } from "../../models/Log";
 import { LinkService } from "../linkService";
 import { TextChannel } from "discord.js";
-import { cropCirclePicture } from "./canvasService";
+import { cropCirclePicture } from "./CanvasService";
 import { ImageCropper } from "../ImageCropper";
 import { drawTextInCanvas } from "./TextCanvas";
 import { drawChart } from "./ChartCanvas";

@@ -1,4 +1,4 @@
-import { MongoService } from "../services/mongoService";
+import { MongoService } from "../services/MongoService";
 
 export interface HandlerContext {
     services?: {

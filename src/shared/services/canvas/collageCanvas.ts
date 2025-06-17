@@ -1,7 +1,7 @@
 import { createCanvas, loadImage, Canvas, registerFont, Image } from "canvas";
 import { TextChannel } from "discord.js";
 import { calculateSizes, Styles } from "../../models/Style";
-import { cropImage } from "./canvasService";
+import { cropImage } from "./CanvasService";
 import { LinkService } from "../linkService";
 import { User } from "../../models/user";
 import { Theme } from "../../models/theme";

@@ -6,7 +6,7 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { onMessageCreate, onReady } from "./src/commands/events";
 import { NotificationsQueue } from "./src/queues/NotificationsQueue";
-import { MongoService } from "../../shared/services/mongoService";
+import { MongoService } from "../../shared/services/MongoService";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

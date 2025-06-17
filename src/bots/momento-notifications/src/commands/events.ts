@@ -6,7 +6,7 @@ import { HandlerContext } from "../../../../shared/handlers/handlerContext";
 import { handleMessage } from "../../../../shared/handlers/messageHandler";
 import { ensureEmbed } from "../../../../shared/middlewares/ensureEmbed";
 import { validateToken } from "../../../../shared/middlewares/validateToken";
-import { MongoService } from "../../../../shared/services/mongoService";
+import { MongoService } from "../../../../shared/services/MongoService";
 import { errorHandler } from "../../../../shared/handlers/errorHandler";
 
 export async function onMessageCreate(client: Client, message: Message, mongoService: MongoService, queue: NotificationsQueue): Promise<void> {

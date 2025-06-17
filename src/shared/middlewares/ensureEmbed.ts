@@ -1,9 +1,9 @@
 import { Message } from "discord.js";
-import { error } from "../models/Error";
 import { Middleware } from "./middleware";
+import { Error } from "../models/Error";
 
 export function ensureEmbed(requiredFields: string[]): Middleware {
-  return (message: Message): true | error => {
+  return (message: Message): true | Error => {
     if (message.embeds.length === 0) {
       return { message: "Mensagem não contém embed.", code: 400 };
     }
