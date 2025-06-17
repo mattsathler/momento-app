@@ -1,11 +1,11 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { Embed } from 'discord.js';
 
 export class AxiosService {
     private axiosInstance: AxiosInstance;
 
     constructor() {
-        this.axiosInstance = axios.create({
+        this.axiosInstance = Axios.create({
             timeout: 5000, // Timeout padrão de 5 segundos
         });
     }
