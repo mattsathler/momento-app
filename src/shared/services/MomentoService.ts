@@ -1,5 +1,5 @@
 import { Client, TextChannel } from "discord.js";
-import { AxiosService } from "./axiosService";
+import { AxiosService } from "./AxiosService";
 
 export class MomentoService {
     public async getUploadChannel(client: Client): Promise<TextChannel> {
