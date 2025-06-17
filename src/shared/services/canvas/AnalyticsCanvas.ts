@@ -9,7 +9,7 @@ import { drawTextInCanvas } from "./TextCanvas";
 import { drawChart } from "./ChartCanvas";
 import { User } from "../../models/user";
 import { calculateSizes, Sizes, Styles } from "../../models/Style";
-import { defaultTheme, Theme } from "../../models/theme";
+import { defaultTheme, Theme } from "../../models/Theme";
 import { assetPaths, fontsPaths } from "assets-paths";
 import { generateSurface } from "../ThemeService";
 import { drawCard } from "src/momento-ui/atoms/cards";
