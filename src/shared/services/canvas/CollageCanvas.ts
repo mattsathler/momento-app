@@ -3,8 +3,8 @@ import { TextChannel } from "discord.js";
 import { calculateSizes, Styles } from "../../models/Style";
 import { cropImage } from "./CanvasService";
 import { LinkService } from "../LinkService";
-import { User } from "../../models/user";
-import { Theme } from "../../models/theme";
+import { User } from "../../models/User";
+import { Theme } from "../../models/Theme";
 import { Collage } from "../../models/Collage";
 import { fontsPaths } from "assets-paths";
 

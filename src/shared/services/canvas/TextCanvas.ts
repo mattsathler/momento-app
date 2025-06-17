@@ -1,5 +1,5 @@
 import { Canvas, registerFont } from "canvas";
-import { Theme } from "../../models/theme";
+import { Theme } from "../../models/Theme";
 import { fontsPaths } from "assets-paths";
 
 export function drawTextInCanvas(

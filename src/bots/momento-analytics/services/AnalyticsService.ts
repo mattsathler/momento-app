@@ -8,7 +8,7 @@ import { User } from "../../../shared/models/user";
 import { AnalyticsQueue } from "../src/queues/AnalyticsQueue";
 import { AxiosService } from "../../../shared/services/AxiosService";
 import { getSecureToken } from "../../../shared/services/TokenService";
-import { Theme } from "src/shared/models/theme";
+import { Theme } from "src/shared/models/Theme";
 
 export class AnalyticsService {
     private activePosts: Post[] = [];

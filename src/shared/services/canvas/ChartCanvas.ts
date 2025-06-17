@@ -1,7 +1,7 @@
 import { Canvas } from "canvas";
 import { Log, LogType } from "../../models/Log";
 import { resizeCanvas } from "./TextCanvas";
-import { Theme } from "src/shared/models/theme";
+import { Theme } from "src/shared/models/Theme";
 
 function generateMockupLogs(count: number): Log[] {
     const now = Date.now();

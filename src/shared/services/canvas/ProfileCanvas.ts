@@ -4,8 +4,8 @@ import { TextChannel } from "discord.js";
 import { StringService } from "../StringService";
 import { calculateSizes, Sizes, Styles } from "../../models/Style";
 import { LinkService } from "../LinkService";
-import { User } from "../../models/user";
-import { Theme } from "../../models/theme";
+import { User } from "../../models/User";
+import { Theme } from "../../models/Theme";
 
 export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, theme: Theme, momentos: number, trendings: number): Promise<Canvas> {
     const canvas = createCanvas(Styles.sizes.large.profile.stats.width, Styles.sizes.large.profile.stats.height);
