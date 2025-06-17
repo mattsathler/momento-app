@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
     apps: [
         {
-            name: 'momento-notifications',
+            name: 'notifications',
             script: './src/bots/momento-notifications/index.ts',
             interpreter: 'node',
             interpreter_args: '--import tsx',
@@ -15,7 +15,7 @@ module.exports = {
             },
         },
         {
-            name: 'momento-profile-updater',
+            name: 'profile-updater',
             script: './src/bots/momento-profile-updater/index.ts',
             interpreter: 'node',
             interpreter_args: '--import tsx',
@@ -27,7 +27,7 @@ module.exports = {
             },
         },
         {
-            name: 'momento-analytics',
+            name: 'analytics',
             script: './src/bots/momento-analytics/index.ts',
             interpreter: 'node',
             interpreter_args: '--import tsx',
