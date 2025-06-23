@@ -15,7 +15,16 @@
     "node-cron": "^4.1.0",
     "nodemon": "^3.1.10",
     "rxjs": "^7.8.2",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "canvas-to-buffer": "^3.0.1",
+    "ffmpeg-extract-frames": "^2.0.2",
+    "ffmpeg-static": "^5.2.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "gif-encoder-2": "^1.0.3",
+    "json": "^11.0.0",
+    "pm2": "^6.0.8",
+    "tsx": "^4.20.3"
   },
   "devDependencies": {
     "ts-node": "^10.9.2",
@@ -25,6 +34,7 @@
   "scripts": {
     "pm2": "pm2 start ecosystem.config.js",
     "token": "node generateToken.ts",
+    "start:core": "npm run start --workspace momento-core",
     "start:notifications": "npm run start --workspace momento-notifications",
     "start:profile-updater": "npm run start --workspace momento-profile-updater",
     "start:analytics": "npm run start --workspace momento-analytics"
