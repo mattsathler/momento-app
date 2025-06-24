@@ -7,9 +7,9 @@ import { fileURLToPath } from "url";
 import { MongoService } from "../../shared/services/MongoService";
 import { AnalyticsQueue } from "./src/queues/AnalyticsQueue";
 import { AnalyticsService } from "./services/AnalyticsService";
-import { MomentoService } from "../../shared/services/MomentoService";
 import { onMessageCreate, onReady } from "./src/commands/events";
 import { getSecureToken } from "../../shared/services/TokenService";
+import { MomentoService } from "src/shared/services/MomentoService";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -29,10 +29,7 @@ async function main(): Promise<void> {
   try {
     await client.login(token);
     console.log("Logged in to Discord!");
-    const momentoService: MomentoService = new MomentoService();
-    const uploadChannel: TextChannel = await momentoService.getUploadChannel(
-      client
-    );
+    const uploadChannel: TextChannel = await MomentoService.getUploadChannel(client);
     const mongoservice: MongoService = new MongoService();
     const analyticsService: AnalyticsService = new AnalyticsService();
     const analyticsQueue: AnalyticsQueue = new AnalyticsQueue(

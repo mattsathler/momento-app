@@ -4,6 +4,7 @@ import path from 'path';
  * Caminho absoluto para o diretório 'assets/' na raiz do monorepo.
  */
 const assetsRoot = path.resolve(__dirname, './src/assets');
+const root = path.resolve(__dirname, './');
 
 export const assetPaths = {
     analyticsIcon: path.join(assetsRoot, 'images/analytics.png'),
@@ -23,4 +24,10 @@ export const fontsPaths = {
     SFPROBOLD: path.join(assetsRoot, 'fonts/SFPRODISPLAYBOLD.OTF'),
     SFPROMEDIUM: path.join(assetsRoot, 'fonts/SFPRODISPLAYMEDIUM.OTF'),
     SFPROREGULAR: path.join(assetsRoot, 'fonts/SFPRODISPLAYREGULAR.OTF'),
+}
+
+export const toolsPaths = {
+    ffmpeg: path.join(root, 'tools/ffmpeg.exe'),
+    ffplay: path.join(root, 'tools/ffplay.exe'),
+    ffprobe: path.join(root, 'tools/ffprobe.exe'),
 }

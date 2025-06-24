@@ -1,5 +1,4 @@
 import { Canvas, loadImage } from "canvas";
-import { drawNotificationHeader } from "../../../bots/momento-core/Styles/Canvas/Notifications/NotificationHeader";
 import { resizeCanvas } from "../../../bots/momento-core/Utils/Pictures";
 import { drawPostActionBar } from "./Post";
 import { IContext } from "../../../bots/momento-core/Interfaces/IContext";
@@ -8,6 +7,7 @@ import { Theme } from "src/shared/models/Theme";
 import { calculateSizes, Styles } from "src/shared/models/Style";
 import { LinkService } from "src/shared/services/LinkService";
 import { drawTextInCanvas } from "src/shared/services/canvas/TextCanvas";
+import { drawNotificationHeader } from "src/bots/momento-core/Styles/Canvas/Notifications/NotificationHeader";
 
 
 export async function drawCommentCanvas(context: IContext, user: User, text: string, theme: Theme): Promise<Canvas> {
