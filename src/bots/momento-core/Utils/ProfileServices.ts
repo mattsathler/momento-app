@@ -1,6 +1,4 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, Embed, Guild, PermissionsBitField, TextChannel, ThreadChannel } from "discord.js";
-import { IUser } from "../Interfaces/IUser";
-import { ITheme } from "../Interfaces/ITheme";
 import { IContext } from "../Interfaces/IContext";
 import { Canvas } from "canvas";
 import { tryDeleteMessage } from "./Messages";
@@ -12,11 +10,13 @@ import { MomentoService } from "src/shared/services/MomentoService";
 import { Collage } from "src/shared/models/Collage";
 import { drawCollageCanvas } from "src/shared/services/canvas/CollageCanvas";
 import { drawProfileCanvas } from "src/shared/services/canvas/ProfileCanvas";
+import { User } from "src/shared/models/user";
+import { Theme } from "src/shared/models/Theme";
 
 export class ProfileServices {
     public async updateProfilePictures(
         ctx: IContext,
-        user: IUser,
+        user: User,
         profile: boolean = true,
         collage: boolean = true
     ): Promise<boolean> {
@@ -113,7 +113,7 @@ export class ProfileServices {
         return ProfileButtons;
     }
 
-    public async createEditProfileButtons(user: IUser): Promise<ActionRowBuilder<ButtonBuilder>> {
+    public async createEditProfileButtons(user: User): Promise<ActionRowBuilder<ButtonBuilder>> {
         let ProfileButtons: ActionRowBuilder<ButtonBuilder> = new ActionRowBuilder();
 
         const editProfileButton = new ButtonBuilder()
@@ -142,7 +142,7 @@ export class ProfileServices {
         return ProfileButtons;
     }
 
-    public async drawProfilePictures(ctx: IContext, user: IUser, theme: ITheme, collage: Collage, momentos: number, trendings: number): Promise<{ profileImgURL: string, collageImgURL: string }> {
+    public async drawProfilePictures(ctx: IContext, user: User, theme: Theme, collage: Collage, momentos: number, trendings: number): Promise<{ profileImgURL: string, collageImgURL: string }> {
         const uploadChannel: TextChannel = await MomentoService.getUploadChannel(ctx.client);
         const newProfilePicture: Canvas = await drawProfileCanvas(user, uploadChannel, theme, momentos, trendings);
         const newProfileCollage: Canvas = await drawCollageCanvas(uploadChannel, user, theme, collage);
