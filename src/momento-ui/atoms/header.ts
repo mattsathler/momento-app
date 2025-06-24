@@ -11,8 +11,7 @@ import { Client, TextChannel } from "discord.js";
 
 export async function drawHeader(client: Client, title: string, width: number, theme: Theme, description?: string, icon?: string, userIcon?: string): Promise<Canvas> {
     const sizes = calculateSizes(width);
-    const momentoService: MomentoService = new MomentoService();
-    const uploadChannel = await momentoService.getUploadChannel(client) as TextChannel;
+    const uploadChannel = await MomentoService.getUploadChannel(client) as TextChannel;
 
     if (!uploadChannel) throw new Error("Invalid Upload Channel!");
 

@@ -26,8 +26,7 @@ export class ProfileUpdaterService {
     public async requestUpdateProfilePictures(client: Client, mongoService: MongoService, request: ProfileUpdateRequest): Promise<void> {
     if (!request.message.guild) throw new Error("Missing guild!");
 
-        const momentoService = new MomentoService();
-        const uploadChannel = await momentoService.getUploadChannel(request.message.client);
+        const uploadChannel = await MomentoService.getUploadChannel(request.message.client);
 
         const user = await mongoService.getOne("users", {
             'guildId': request.guildId,
