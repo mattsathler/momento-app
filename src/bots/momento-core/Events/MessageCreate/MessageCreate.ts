@@ -70,7 +70,7 @@ export async function messageCreate(ctx: IContext, message: Message) {
                         tryDeleteMessage(message);
                     }
                 }
-                catch(error: any) {
+                catch (error: any) {
                     console.log(error)
                     return;
                 }
@@ -119,11 +119,20 @@ export async function messageCreate(ctx: IContext, message: Message) {
                 )
 
                 postImagesURL = postImagesURL.slice(0, 5);
-                
-                const post: IPost = {
+                const locationMatch = message.content.match(/`([^`]*)`/);
+                const postLocation = locationMatch ? locationMatch[1] : null;
+
+                const postDescription = postLocation
+                    ? message.content
+                        .replace(/`[^`]*`/, '')
+                        .replace(/[\r\n]+/g, ' ')
+                        .trim()
+                    : message.content.replace(/[\r\n]+/g, ' ').trim();
+
+                let post: IPost = {
                     content: {
                         images: postImagesURL,
-                        description: message.content,
+                        description: postDescription,
                         imagesCount: postImagesURL.length
                     },
                     references: {
@@ -142,6 +151,9 @@ export async function messageCreate(ctx: IContext, message: Message) {
                     }
                 }
 
+                if (postLocation) {
+                    post.content.location = postLocation;
+                }
                 await postService.createImagePost(message, post, author, theme)
             }
 

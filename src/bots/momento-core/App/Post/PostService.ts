@@ -37,11 +37,20 @@ export class PostService {
 
             console.log('Creating video post of', author.userId, author.guildId);
             const authorProfileChannel = await message.guild.channels.fetch(author.references.channelId) as TextChannel;
+            const locationMatch = message.content.match(/`([^`]*)`/);
 
-            const post: IPost = {
+            const postLocation = locationMatch ? locationMatch[1] : null;
+            const postDescription = postLocation
+                ? message.content
+                    .replace(/`[^`]*`/, '')
+                    .replace(/[\r\n]+/g, ' ')
+                    .trim()
+                : message.content.replace(/[\r\n]+/g, ' ').trim();
+
+            let post: IPost = {
                 content: {
                     images: [],
-                    description: message.content,
+                    description: postDescription,
                     imagesCount: 1
                 },
                 references: {
@@ -58,6 +67,10 @@ export class PostService {
                     isTrending: false,
                     isRepost: false,
                 }
+            }
+
+            if (postLocation) {
+                post.content.location = postLocation;
             }
 
             const fs = require('fs').promises;
