@@ -19,10 +19,10 @@ export class NotificationsQueue extends GenericQueueProcessor<QueueItem> {
       await item.message?.react("☑️").catch(console.error);
     } catch (e: any) {
       await item.message?.startThread({
-          name: e.message,
-          autoArchiveDuration: 60,
-          reason: e.message,
-        })
+        name: e.message,
+        autoArchiveDuration: 60,
+        reason: e.message,
+      })
         .then((thread) => {
           thread.send({
             embeds: [
@@ -36,6 +36,7 @@ export class NotificationsQueue extends GenericQueueProcessor<QueueItem> {
         .catch(console.error);
 
       await item.message?.react("❌").catch(console.error);
+      await item.message?.react("⚡").catch(console.error);
     }
   }
 }

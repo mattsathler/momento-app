@@ -1,11 +1,11 @@
 import { Message } from "discord.js";
 import "dotenv/config";
 import { createHmac } from "crypto";
-import { error } from "../models/Error";
+import { Error } from "../models/Error";
 
 export function validateToken(
   message: Message
-): true | error {
+): true | Error {
   const tokenField = message.embeds[0]?.data.fields?.find(
     (field) => field.name === "token"
   );

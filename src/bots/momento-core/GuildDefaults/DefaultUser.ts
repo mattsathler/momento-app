@@ -1,7 +1,7 @@
+import { User } from "src/shared/models/user";
 import { Permission } from "../Interfaces/IPermission";
-import { IUser } from "../Interfaces/IUser";
 
-export const DefaultUser: IUser = {
+export const DefaultUser: User = {
     userId: '',
     guildId: '',
     permission: Permission.user,

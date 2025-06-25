@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
-import { error } from "../models/Error";
+import { Error } from "../models/Error";
 import { errorHandler } from "../handlers/errorHandler";
-export type MiddlewareResult = true | error;
+export type MiddlewareResult = true | Error;
 export type Middleware<T = any> = (message: Message, args?: T) => Promise<MiddlewareResult> | MiddlewareResult;
 
 export async function runMiddlewares<T>(
