@@ -27,7 +27,7 @@ export async function drawPostCanvas(context: IContext, user: User, theme: Theme
     const postHeader = await drawNotificationHeader(theme, userImage, user.username, `${user.name} ${user.surname}`, post.content.music, postWidth, user.stats.isVerified);
     const postBar = await drawPostActionBar(postWidth, post, theme);
 
-    let y = 0; // Initialize y coordinate
+    let y = 0;
     let x = 0;
 
     ctx.fillStyle = theme.colors.background;
@@ -52,7 +52,7 @@ export async function drawPostCanvas(context: IContext, user: User, theme: Theme
         y += textDescriptionCanvas.height;
     }
 
-    ctx.drawImage(postBar, sizes.big, y);
+    ctx.drawImage(postBar, 0, y);
     y += postBar.height;
 
     canvas = resizeCanvas(canvas, postWidth, y);
@@ -80,8 +80,9 @@ export async function drawPostActionBar(width: number, post: IPost | null, theme
 
     ctx.strokeStyle = theme.colors.secondary;
     ctx.lineWidth = 2;
-    ctx.moveTo(sizes.medium, y);
-    ctx.lineTo(width - sizes.huge - 50, y);
+    ctx.moveTo(x, y);
+    ctx.lineTo(width - x, y);
+
     ctx.stroke();
     y += sizes.medium;
 
@@ -240,7 +241,6 @@ export async function drawMultiplePostsCanvas(uploadChannel: TextChannel, user: 
             newCtx.fill();
             newCtx.closePath();
 
-            // Adicionando o canvas à postCanvases
             postCanvases[index] = newCanvas;
         }));
     }

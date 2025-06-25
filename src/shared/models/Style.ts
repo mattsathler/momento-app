@@ -74,25 +74,3 @@ export function calculateSizes(canvasWidth: number): Sizes {
 
     return sizes
 }
-
-// export function calculatePostSizes(width: number, postDescription: string): {
-//     postHeader: number,
-//     postBar: number
-// } {
-//     let sizes: {
-//         postHeader: number,
-//         postBar: number
-//     } = { postBar: 0, postHeader: 0 };
-
-//     const postWidth = Styles.sizes.large.post.width;
-//     const size = calculateSizes(postWidth);
-//     let descriptionSize = 0
-
-//     if (postDescription) {
-//         const font = `SFPRODISPLAYMEDIUM`;
-//         descriptionSize = drawTextInCanvas(postDescription, LightTheme, font, postWidth - (size.huge * 2), size.big).height
-//     }
-//     sizes.postHeader = Math.round(postWidth / 10 + size.huge);
-//     sizes.postBar = Math.round(((size.medium * 2) + 50) + descriptionSize);
-//     return sizes;
-// }

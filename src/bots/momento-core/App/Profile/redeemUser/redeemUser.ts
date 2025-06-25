@@ -68,8 +68,20 @@ export const redeemUser: ICommand = {
             const collage = await ctx.mongoService.getOne('collages', { id: user.styles.collage }) as Collage || defaultCollage;
 
             if (!collage) { throw new Error('Invalid collage') }
-            const postCount = await ctx.mongoService.count('posts', { 'references.ownerId': user.userId, 'references.guildId': user.guildId });
-            const trendingCount = await ctx.mongoService.count('posts', { 'references.ownerId': user.userId, 'references.guildId': user.guildId, 'stats.isTrending': true });
+
+            const postCount = await ctx.mongoService.count('posts', {
+                'references.ownerId': user.userId,
+                'references.guildId': user.guildId,
+                'stats.status': { $in: ['active', 'inactive'] },
+                'stats.type': { $in: ['image', 'carousel', 'video'] }
+            });
+
+            const trendingCount = await ctx.mongoService.count('posts', {
+                'references.ownerId': user.userId,
+                'references.guildId': user.guildId, 'stats.isTrending': true,
+                'stats.status': { $in: ['active', 'inactive'] },
+                'stats.type': { $in: ['image', 'carousel', 'video'] }
+            })
 
             const profileImages = await profileService.drawProfilePictures(ctx, user, theme, collage, postCount, trendingCount);
             if (!profileImages) { throw new Error('Invalid profile images') }
