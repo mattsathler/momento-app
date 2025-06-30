@@ -6,7 +6,7 @@ import { calculateSizes, Styles } from "src/shared/models/Style";
 import { LinkService } from "src/shared/services/LinkService";
 import { Theme } from "src/shared/models/Theme";
 import { User } from "src/shared/models/User";
-import { fontsPaths } from "assets-paths";
+import { assetPaths, fontsPaths } from "assets-paths";
 import { drawTextInCanvas } from "src/shared/services/canvas/TextCanvas";
 
 export async function drawAnswerCanvas(context: IContext, question: string, answer: string, questionAuthor: string, user: User, theme: Theme): Promise<Canvas> {
@@ -36,7 +36,7 @@ export async function drawAnswerCanvas(context: IContext, question: string, answ
     // ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // HEADER ========================================
-    const questionIcon = await loadImage('./Styles/Assets/Icons/question.png');
+    const questionIcon = await loadImage(assetPaths.questionIcon);
     const questionBoxSize = {
         width: canvas.width - (2 * sizes.huge),
         height: canvas.height / 3

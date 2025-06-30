@@ -18,6 +18,7 @@ export const assetPaths = {
     commentIcon: path.join(assetsRoot, 'images/comment.png'),
     shareIcon: path.join(assetsRoot, 'images/share.png'),
     locationIcon: path.join(assetsRoot, 'images/location.png'),
+    questionIcon: path.join(assetsRoot, 'images/question.png'),
 };
 
 export const fontsPaths = {
