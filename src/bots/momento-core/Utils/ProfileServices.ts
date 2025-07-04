@@ -41,7 +41,7 @@ export class ProfileServices {
                             },
                             {
                                 name: "sent_from",
-                                value: "momento_bot"
+                                value: "momento_core"
                             },
                             {
                                 name: "update_profile",

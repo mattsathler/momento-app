@@ -610,7 +610,7 @@ export class PostService {
                         },
                         {
                             name: 'sent_from',
-                            value: 'momento_bot'
+                            value: 'momento_core'
                         },
                         {
                             name: "token",
