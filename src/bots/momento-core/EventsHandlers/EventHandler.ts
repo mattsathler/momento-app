@@ -67,7 +67,6 @@ export class EventHandler {
         }) as IServer || null;
         const notificationService: NotificationService = new NotificationService(ctx);
         ctx.notificationService = notificationService;
-        if (!serverConfig) { return };
         ctx.serverConfig = serverConfig;
         await interactionCreate(ctx, interaction);
     }

@@ -7,14 +7,6 @@ export const openThemeModal: ICommand = {
     permission: Permission.user,
     isProfileCommand: false,
     exec: async (ctx: IContext, interaction: ButtonInteraction) => {
-        try {
-            const userAlreadyRegistered = await ctx.mongoService.getOne('users', { userId: interaction.user.id, guildId: interaction.guildId })
-            if (!userAlreadyRegistered) { throw new Error('Você precisa estar cadastrado para criar um tema!') }
-        }
-        catch (err: any) {
-            await interaction.reply({ content: err.message, ephemeral: true })
-            return
-        }
         const modal = createThemeModal()
         await interaction.showModal(modal)
     }

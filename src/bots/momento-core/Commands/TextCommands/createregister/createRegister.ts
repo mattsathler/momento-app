@@ -1,7 +1,7 @@
 import { Permission } from "../../../Interfaces/IPermission"
 import { ICommand } from "../../../Interfaces/ICommand"
 import { IContext } from "../../../Interfaces/IContext"
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Message } from "discord.js"
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Embed, EmbedBuilder, Message, TextChannel } from "discord.js"
 
 export const createRegister: ICommand = {
     reply: 'MOMENTO!',
@@ -30,24 +30,26 @@ async function createRegisterMessage(ctx: IContext, message: Message) {
             .setStyle(ButtonStyle.Secondary)
             .setEmoji('🔧'),
         new ButtonBuilder()
-            .setCustomId('openThemeModal')
-            .setLabel('CRIAR TEMA')
-            .setStyle(ButtonStyle.Secondary)
-            .setEmoji('🖌️'),
-        new ButtonBuilder()
-            .setCustomId('openCollageModal')
-            .setLabel('CRIAR COLLAGE')
-            .setStyle(ButtonStyle.Secondary)
-            .setEmoji('🪟'),
-        new ButtonBuilder()
-            .setLabel('SAIBA MAIS')
+            .setURL('https://discord.gg/7DbwUcufMx')
+            .setLabel('HUB DO MOMENTO')
             .setStyle(ButtonStyle.Link)
-            .setEmoji('🔗')
-            .setURL('https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
+            .setEmoji('🌐')
     );
 
-    await message.reply({
-        content: 'Clique no botão abaixo para se registrar',
+    const embed = new EmbedBuilder()
+
+    embed.setDescription("Clique em \"Registrar-se\" para criar sua conta nesse RPG ou em \"Perdi acesso ao meu perfil\" caso não veja mais seu perfil entre os usuários!\n\nAcesse a HUB do momento para ver o catálogo de temas, collages e se tornar verificado na plataforma, além de ficar por dentro de novidades e avisos sobre o bot!\n\n🔗  https://discord.gg/7DbwUcufMx\n\n",)
+    embed.setColor('#DD247B')
+    embed.setTitle('BEM VINDO AO MOMENTO!')
+    embed.setFooter({
+        text: "Criado por: doug",
+        iconURL: "https://imgur.com/ZWx9A3N.png"
+    })
+    embed.setThumbnail("https://imgur.com/ZWx9A3N.png")
+
+    const channel = message.channel as TextChannel;
+    await channel.send({
+        embeds: [embed],
         components: [actionRow]
     })
 }

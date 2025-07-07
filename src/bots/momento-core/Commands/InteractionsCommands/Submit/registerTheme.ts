@@ -11,6 +11,7 @@ import { drawProfileCanvas } from "src/shared/services/canvas/ProfileCanvas"
 import { drawCollageCanvas } from "src/shared/services/canvas/CollageCanvas"
 import { defaultCollage } from "src/shared/models/Collage"
 import { LinkService } from "src/shared/services/LinkService"
+import { createThemeEmbed } from "src/shared/services/ThemeService"
 
 interface IFormFields {
     name: string | null,
@@ -31,7 +32,6 @@ export const registerTheme: ICommand = {
         await interaction.reply({ content: 'Criando seu tema, aguarde...', ephemeral: true });
 
         if (!interaction) { throw new Error('Invalid interaction type') }
-        if (!ctx.serverConfig) { throw new Error('Invalid server config') }
         if (!interaction.guild) { throw new Error('Invalid guild') }
         if (!interaction.isButton) { throw new Error('Invalid interaction type') }
 
@@ -142,65 +142,19 @@ async function createTheme(ctx: IContext, guild: Guild, theme: Theme) {
 }
 
 export async function displayThemeInCatalogue(ctx: IContext, guild: Guild, theme: Theme) {
-    if (!ctx.serverConfig?.channelsId?.themeCatalogue) { throw new Error('Não foi possível encontrar o canal de temas!') }
+    const hubGuildId = process.env.HUB_GUILD_ID;
+    const hubGuild = await ctx.client.guilds.fetch(hubGuildId!);
 
-    const themeUploaderChannel = await guild.channels.fetch(ctx.serverConfig.channelsId.themeCatalogue) as TextChannel;
+    const themeUploaderChannel = await hubGuild.channels.fetch(process.env.HUB_THEMES_CHANNEL_ID!) as TextChannel;
     const uploadChannel = await MomentoService.getUploadChannel(ctx.client);
     const postCount = 0;
     const trendingCount = 0;
     const newThemeProfile = await drawProfileCanvas(DefaultUser, uploadChannel, theme, postCount, trendingCount);
-    const newThemeCollage = await drawCollageCanvas(uploadChannel, DefaultUser, theme, defaultCollage);
-
-    const themeImage = drawThemeInCanvas(newThemeProfile, newThemeCollage);
-    const themeLink = await LinkService.uploadImageToMomento(uploadChannel, themeImage.toBuffer());
+    const themeLink = await LinkService.uploadImageToMomento(uploadChannel, newThemeProfile.toBuffer());
 
     const themeEmbed = createThemeEmbed(guild.members.cache.get(theme.creatorId)?.displayName || 'Indisponível', theme).setImage(themeLink.attachments.first()?.url || '')
-    const AR: ActionRowBuilder<ButtonBuilder> = new ActionRowBuilder<ButtonBuilder>();
 
-    const useThemeButton = new ButtonBuilder()
-        .setCustomId('useTheme')
-        .setLabel('Usar')
-        .setStyle(ButtonStyle.Success)
-
-    const deleteThemeButton = new ButtonBuilder()
-        .setCustomId('deleteTheme')
-        .setLabel('Deletar')
-        .setStyle(ButtonStyle.Secondary)
-
-    AR.addComponents(useThemeButton, deleteThemeButton);
-    await themeUploaderChannel.send({ embeds: [themeEmbed], components: [AR] });
-}
-
-function createThemeEmbed(username: string, theme: Theme): EmbedBuilder {
-    const embed = new EmbedBuilder()
-        .setColor('#DD247B')
-        .setTitle('TEMA')
-        .setThumbnail('https://imgur.com/ZWx9A3N.png')
-
-        .addFields([
-            {
-                name: 'Nome',
-                value: theme.name
-            },
-            {
-                name: 'Cor Primária',
-                value: theme.colors.primary
-            },
-            {
-                name: 'Cor Secundária',
-                value: theme.colors.secondary
-            },
-            {
-                name: 'Cor de Fundo',
-                value: theme.colors.background
-            }
-        ])
-        .setFooter({
-            text: `Criado por: @${username}`,
-            iconURL: 'https://imgur.com/ZWx9A3N.png'
-        })
-
-    return embed
+    await themeUploaderChannel.send({ embeds: [themeEmbed] });
 }
 
 

@@ -1,3 +1,6 @@
+import { EmbedBuilder } from "discord.js";
+import { Theme } from "../models/Theme";
+
 export function hexToRgb(hex: string): [number, number, number] {
     const cleaned = hex.replace('#', '');
     const bigint = parseInt(cleaned, 16);
@@ -18,4 +21,30 @@ export function generateSurface(background: string): string {
     const adjustment = avg > 127 ? -16 : 16;
     const adjusted = adjustLightness(rgb, adjustment);
     return rgbToHex(...adjusted);
+}
+
+
+export function createThemeEmbed(username: string, theme: Theme): EmbedBuilder {
+    const embed = new EmbedBuilder()
+        .setColor('#DD247B')
+        .setTitle('TEMA')
+        .setThumbnail('https://imgur.com/ZWx9A3N.png')
+        .setDescription("Para usar, cole o nome do tema na personalização do seu perfil de usuário.")
+
+        .addFields([
+            {
+                name: 'Nome',
+                value: theme.name
+            },
+            {
+                name: 'Cores',
+                value: `Primária: ${theme.colors.primary}\nSecundária: ${theme.colors.secondary}\nFundo: ${theme.colors.background}`,
+            }
+        ])
+        .setFooter({
+            text: `Criado por: ${username}`,
+            iconURL: 'https://imgur.com/ZWx9A3N.png'
+        })
+
+    return embed
 }
