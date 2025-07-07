@@ -45,7 +45,7 @@ export function onMessageCreate(client: Client, message: Message, mongoservice: 
         validateToken,
     ];
 
-    if (message.channelId === process.env.PROFILE_UPDATER_WEBHOOK_CHANNEL_ID) {
+    if (message.channelId === "SOME CHANNEL ID") {
         handleMessage(
             client,
             message,
