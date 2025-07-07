@@ -42,14 +42,25 @@ export async function onMessageCreate(client: Client, message: Message, mongoser
         if (!mongoservice) throw new Error("MongoService não disponível no contexto");
         const themeService = new ThemeService();
 
-        if (message.content === '!createThemesList') {
-            await themeService.createThemeList(client, message.channel as TextChannel, mongoservice);
-            return;
-        }
+        switch (message.content) {
+            case '!createThemeList':
+                await themeService.createThemeList(client, message.channel as TextChannel, mongoservice);
+                return;
 
-        if (message.content === '!createThemeMessage') {
-            themeService.createThemeMessage(message);
-            return;
+            case '!createThemeMessage':
+                await themeService.createThemeMessage(message);
+                return;
+
+            case '!createCollageList':
+                await themeService.createCollageList(client, message.channel as TextChannel, mongoservice);
+                return;
+
+            case '!createCollageMessage':
+                await themeService.createCollageMessage(message);
+                return;
+
+            default:
+                return;
         }
     }
 }

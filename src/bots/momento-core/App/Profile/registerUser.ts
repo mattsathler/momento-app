@@ -2,13 +2,13 @@ import { ComponentType, Guild, GuildMember, Message, ModalSubmitInteraction, Tex
 import { ICommand } from "../../Interfaces/ICommand";
 import { Permission } from "../../Interfaces/IPermission";
 import { IContext } from "../../Interfaces/IContext";
-import { DefaultUser } from "../../GuildDefaults/DefaultUser";
 import { StringValidator } from "../../Utils/StringValidator";
 import { ProfileServices } from "../../Utils/ProfileServices";
 import { NotificationType } from "../../Interfaces/INotification";
 import { User } from "src/shared/models/User";
 import { defaultTheme, Theme } from "src/shared/models/Theme";
 import { defaultCollage } from "src/shared/models/Collage";
+import { DefaultUser } from "src/shared/models/DefaultUser";
 
 export const registerUser: ICommand = {
     permission: Permission.user,

@@ -6,6 +6,7 @@ import { calculateSizes, Sizes, Styles } from "../../models/Style";
 import { LinkService } from "../LinkService";
 import { User } from "../../models/User";
 import { Theme } from "../../models/Theme";
+import { assetPaths, fontsPaths } from "assets-paths";
 
 export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, theme: Theme, momentos: number, trendings: number): Promise<Canvas> {
     const canvas = createCanvas(Styles.sizes.large.profile.stats.width, Styles.sizes.large.profile.stats.height);
@@ -64,9 +65,9 @@ export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, 
     y += profileImageSize * 1.5 + sizes.big;
 
     // INFO ===========================================
-    registerFont('src/assets/fonts/SFPRODISPLAYBOLD.OTF', { family: 'sfpro-bold' })
-    registerFont('src/assets/fonts/SFPRODISPLAYMEDIUM.OTF', { family: 'sfpro-medium' })
-    registerFont('src/assets/fonts/SFPRODISPLAYREGULAR.OTF', { family: 'sfpro-regular' })
+    registerFont(fontsPaths.SFPROBOLD, { family: 'sfpro-bold' })
+    registerFont(fontsPaths.SFPROMEDIUM, { family: 'sfpro-medium' })
+    registerFont(fontsPaths.SFPROREGULAR, { family: 'sfpro-regular' })
     
     ctx.textAlign = 'center';
     ctx.fillStyle = theme.colors.secondary;

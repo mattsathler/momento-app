@@ -12,6 +12,7 @@ import { drawCollageCanvas } from "src/shared/services/canvas/CollageCanvas";
 import { drawProfileCanvas } from "src/shared/services/canvas/ProfileCanvas";
 import { User } from "src/shared/models/user";
 import { Theme } from "src/shared/models/Theme";
+import { displayCollageInCatalogue } from "src/shared/services/ThemeService";
 
 export class ProfileServices {
     public async updateProfilePictures(
@@ -160,12 +161,13 @@ export class ProfileServices {
         await channel.send(`<@${userId}>`).then(async (message) => { tryDeleteMessage(message) })
     }
 
-    public async createCollage(ctx: IContext, collage: Collage): Promise<void> {
+    public async createCollage(ctx: IContext, username: string, collage: Collage): Promise<void> {
         const isCollageValid = this.validateGrid(collage.positions);
         if (!isCollageValid) throw new Error('Collage inválido! Verifique o guia para a criação de collages.')
 
 
         await ctx.mongoService.post('collages', collage);
+        displayCollageInCatalogue(ctx.client, username, collage);
         return;
     }
 

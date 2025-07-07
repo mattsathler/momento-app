@@ -37,7 +37,8 @@
     "start:core": "npm run start --workspace momento-core",
     "start:notifications": "npm run start --workspace momento-notifications",
     "start:profile-updater": "npm run start --workspace momento-profile-updater",
-    "start:analytics": "npm run start --workspace momento-analytics"
+    "start:analytics": "npm run start --workspace momento-analytics",
+    "start:themes": "npm run start --workspace momento-themes"
   },
   "author": "",
   "license": "ISC",

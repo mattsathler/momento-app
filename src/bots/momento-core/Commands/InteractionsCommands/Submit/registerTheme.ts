@@ -3,8 +3,6 @@ import { ICommand } from "../../../Interfaces/ICommand"
 import { IContext } from "../../../Interfaces/IContext"
 import { Permission } from "../../../Interfaces/IPermission"
 import { StringValidator } from "../../../Utils/StringValidator"
-import { DefaultUser } from "../../../GuildDefaults/DefaultUser"
-import { drawThemeInCanvas } from "../../../../../shared/services/canvas/Theme"
 import { Theme } from "src/shared/models/Theme"
 import { MomentoService } from "src/shared/services/MomentoService"
 import { drawProfileCanvas } from "src/shared/services/canvas/ProfileCanvas"
@@ -12,6 +10,7 @@ import { drawCollageCanvas } from "src/shared/services/canvas/CollageCanvas"
 import { defaultCollage } from "src/shared/models/Collage"
 import { LinkService } from "src/shared/services/LinkService"
 import { createThemeEmbed } from "src/shared/services/ThemeService"
+import { DefaultUser } from "src/shared/models/DefaultUser"
 
 interface IFormFields {
     name: string | null,

@@ -16,7 +16,6 @@ export const createCollage: ICommand = {
 
 async function createNewCollage(ctx: IContext, interaction: ModalSubmitInteraction) {
     if (!interaction.guild) { throw new Error('Invalid guild') };
-    if (!ctx.serverConfig) { throw new Error('Invalid server config') };
 
     const collage = await fetchFormFields(ctx, interaction);
     if (!collage) { throw new Error('Informações inválidas! Consulte o guia para a criação de collages!') }
@@ -26,7 +25,7 @@ async function createNewCollage(ctx: IContext, interaction: ModalSubmitInteracti
 
     const profileServices: ProfileServices = new ProfileServices();
     try {
-        await profileServices.createCollage(ctx, collage);
+        await profileServices.createCollage(ctx, interaction.user.username, collage);
         if (interaction.isRepliable()) {
             await interaction.editReply({ content: 'Collage criado com sucesso!' })
         }
@@ -41,9 +40,6 @@ async function createNewCollage(ctx: IContext, interaction: ModalSubmitInteracti
 
 async function fetchFormFields(ctx: IContext, interaction: ModalSubmitInteraction): Promise<Collage | null> {
     const gridStyle = interaction.fields.getField('grid_style', ComponentType.TextInput).value
-    const author = await ctx.mongoService.getOne('users', { userId: interaction.user.id, guildId: interaction.guildId }) as User;
-    if (!author) { throw new Error('Invalid author') }
-
 
     const collageLimit = await ctx.mongoService.count('collages', {});
     const positions: string[] = convertGridAreasToPositions(gridStyle);
@@ -53,7 +49,7 @@ async function fetchFormFields(ctx: IContext, interaction: ModalSubmitInteractio
 
     const collage: Collage = {
         id: collageLimit + 1,
-        authorId: author.userId,
+        authorId: interaction.user.id,
         gridTemplateColumns: dimensions.columns,
         gridTemplateRows: dimensions.rows,
         isExclusive: false,
