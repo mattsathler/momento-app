@@ -17,16 +17,21 @@ export class ThemeService {
         const uploadChannel = await MomentoService.getUploadChannel(client);
 
         themes.forEach(async (theme) => {
-            const themeEmbed = createThemeEmbed("Desconhecido", theme);
-            const drawedProfile = await drawProfileCanvas(DefaultUser, uploadChannel, theme, 0, 0);
-            const themeImageUrl = await LinkService.uploadImageToMomento(uploadChannel, drawedProfile.toBuffer());
-            themeEmbed.setImage(themeImageUrl.attachments.first()?.url!);
-            if (drawedProfile) {
-                await channel.send({
-                    embeds: [themeEmbed]
-                });
-            } else {
-                console.error(`Failed to draw profile for theme: ${theme.name}`);
+            try {
+                const themeEmbed = createThemeEmbed("Desconhecido", theme);
+                const drawedProfile = await drawProfileCanvas(DefaultUser, uploadChannel, theme, 0, 0);
+                const themeImageUrl = await LinkService.uploadImageToMomento(uploadChannel, drawedProfile.toBuffer());
+                themeEmbed.setImage(themeImageUrl.attachments.first()?.url!);
+                if (drawedProfile) {
+                    await channel.send({
+                        embeds: [themeEmbed]
+                    });
+                } else {
+                    console.error(`Failed to draw profile for theme: ${theme.name}`);
+                }
+            }
+            catch (error) {
+                console.error(`Error processing theme ${theme.name}:`, error);
             }
         });
     }
@@ -59,18 +64,24 @@ export class ThemeService {
         const uploadChannel = await MomentoService.getUploadChannel(client);
 
         collages.forEach(async (collage) => {
-            const collagesEmbed = createCollageEmbed("Desconhecido", collage);
-            const drawedProfile = await drawCollageCanvas(uploadChannel, DefaultUser, defaultTheme, collage);
-            const collagesImageUrl = await LinkService.uploadImageToMomento(uploadChannel, drawedProfile.toBuffer());
-            collagesEmbed.setImage(collagesImageUrl.attachments.first()?.url!);
-            if (drawedProfile) {
-                await channel.send({
-                    embeds: [collagesEmbed]
-                });
-            } else {
-                console.error(`Failed to draw profile for collage: ${collage.id}`);
+            try {
+                const collagesEmbed = createCollageEmbed("Desconhecido", collage);
+                const drawedProfile = await drawCollageCanvas(uploadChannel, DefaultUser, defaultTheme, collage);
+                const collagesImageUrl = await LinkService.uploadImageToMomento(uploadChannel, drawedProfile.toBuffer());
+                collagesEmbed.setImage(collagesImageUrl.attachments.first()?.url!);
+                if (drawedProfile) {
+                    await channel.send({
+                        embeds: [collagesEmbed]
+                    });
+                } else {
+                    console.error(`Failed to draw profile for collage: ${collage.id}`);
+                }
+            }
+            catch (error) {
+                console.error(`Error processing collage ${collage.id}:`, error);
             }
         });
+
     }
 
     public async createCollageMessage(message: Message): Promise<void> {

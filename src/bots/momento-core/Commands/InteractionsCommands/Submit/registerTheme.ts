@@ -90,7 +90,7 @@ export const registerTheme: ICommand = {
             throw new Error('A cor de background não pode conter emojis!')
         }
 
-        const isThemeNameAvailable = await checkThemeNameAvailability(ctx, response.name)
+        const isThemeNameAvailable = await checkThemeNameAvailability(ctx, response.name.toLowerCase())
         if (!isThemeNameAvailable) {
             await interaction.editReply('Já existe um tema com esse nome!')
             throw new Error('Já existe um tema com esse nome!')

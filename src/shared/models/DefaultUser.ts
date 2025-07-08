@@ -5,9 +5,9 @@ export const DefaultUser: User = {
     userId: '',
     guildId: '',
     permission: Permission.user,
-    username: 'testuser',
-    name: 'Momento',
-    surname: 'Teste',
+    username: 'usuario',
+    name: 'Nome',
+    surname: 'Sobrenome',
     bio: 'Esse é o seu momento!',
     references: {
         channelId: '',
