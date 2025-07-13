@@ -7,23 +7,24 @@
     "src/bots/*"
   ],
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "axios": "^1.10.0",
     "canvas": "^3.1.0",
+    "canvas-to-buffer": "^3.0.1",
     "discord.js": "^14.19.3",
     "dotenv": "^16.5.0",
-    "mongoose": "^8.15.1",
-    "node-cron": "^4.1.0",
-    "nodemon": "^3.1.10",
-    "rxjs": "^7.8.2",
-    "ts-node": "^10.9.2",
-    "@ffmpeg-installer/ffmpeg": "^1.1.0",
-    "canvas-to-buffer": "^3.0.1",
     "ffmpeg-extract-frames": "^2.0.2",
     "ffmpeg-static": "^5.2.0",
     "fluent-ffmpeg": "^2.1.2",
     "gif-encoder-2": "^1.0.3",
     "json": "^11.0.0",
+    "mongoose": "^8.15.1",
+    "node-cron": "^4.1.0",
+    "nodemon": "^3.1.10",
     "pm2": "^6.0.8",
+    "qrcode-pix": "^5.0.0",
+    "rxjs": "^7.8.2",
+    "ts-node": "^10.9.2",
     "tsx": "^4.20.3"
   },
   "devDependencies": {
@@ -38,7 +39,7 @@
     "start:notifications": "npm run start --workspace momento-notifications",
     "start:profile-updater": "npm run start --workspace momento-profile-updater",
     "start:analytics": "npm run start --workspace momento-analytics",
-    "start:themes": "npm run start --workspace momento-themes"
+    "start:hub": "npm run start --workspace momento-hub"
   },
   "author": "",
   "license": "ISC",

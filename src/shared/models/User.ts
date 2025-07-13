@@ -26,7 +26,7 @@ export interface User {
     }
     stats: {
         followers: number;
-        isVerified: boolean;
+        isVerified: Date;
         notifications: boolean;
         influencyLevel: number;
         lastOnline: Date;

@@ -5,7 +5,7 @@ import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { MongoService } from "../../shared/services/MongoService";
-import { onMessageCreate, onReady } from "./src/commands/events";
+import { onInteractionCreate, onMessageCreate, onReady } from "./src/commands/events";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,7 +13,7 @@ const __dirname = dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
 async function main(): Promise<void> {
-  console.log("Initializing momento profile updater...");
+  console.log("Initializing momento verify...");
   const token = process.env.DISCORD_TOKEN;
   if (!token) {
     console.error("DISCORD_TOKEN is not defined in .env");
@@ -30,6 +30,11 @@ async function main(): Promise<void> {
     client.on("messageCreate", (message: Message) =>
       onMessageCreate(client, message, mongoservice)
     );
+
+    client.on("interactionCreate", async (interaction) => {
+      if (!interaction.isButton() && !interaction.isSelectMenu()) return;
+      onInteractionCreate(client, interaction);
+    });
 
     client.on("ready", async () => onReady(client));
 

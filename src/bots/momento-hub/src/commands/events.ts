@@ -1,7 +1,8 @@
-import { Client, Message, TextChannel } from "discord.js";
+import { ButtonInteraction, Client, Message, SelectMenuInteraction, TextChannel } from "discord.js";
 import { errorHandler } from "../../../../shared/handlers/errorHandler";
 import { MongoService } from "../../../../shared/services/MongoService";
 import { ThemeService } from "../../services/ThemesService";
+import { HubService } from "../../services/HubService";
 
 export async function onReady(client: Client) {
     const channel = await client.channels.fetch(process.env.PROFILE_UPDATER_WEBHOOK_CHANNEL_ID!) as TextChannel;
@@ -41,6 +42,7 @@ export async function onMessageCreate(client: Client, message: Message, mongoser
     if (message.guildId === process.env.HUB_GUILD_ID && message.author.id === process.env.OWNER_ID) {
         if (!mongoservice) throw new Error("MongoService não disponível no contexto");
         const themeService = new ThemeService();
+        const hubService = new HubService();
 
         switch (message.content) {
             case '!createThemeList':
@@ -59,8 +61,25 @@ export async function onMessageCreate(client: Client, message: Message, mongoser
                 await themeService.createCollageMessage(message);
                 return;
 
-            default:
+            case "!createVerifyMessage":
+                await hubService.createVerifyMessage(message.channel as TextChannel);
                 return;
         }
+        return;
+    }
+}
+
+export async function onInteractionCreate(client: Client, interaction: ButtonInteraction | SelectMenuInteraction): Promise<void> {
+    const hubService: HubService = new HubService();
+
+    if (interaction.guildId === process.env.HUB_GUILD_ID) {
+        switch (interaction.customId) {
+            case "createVerifyTicket": await hubService.createVerifyTicketChannel(client, interaction as ButtonInteraction);
+                break;
+
+            case "selectSubscriptionType": await hubService.createPaymentQRCode(client, interaction as SelectMenuInteraction);
+                break;
+        }
+        return;
     }
 }
