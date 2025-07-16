@@ -11,6 +11,7 @@ import { calculateSizes, Styles } from "src/shared/models/Style";
 import { LinkService } from "src/shared/services/LinkService";
 import { assetPaths } from "assets-paths";
 import { drawTextInCanvas } from "src/shared/services/canvas/TextCanvas";
+import { MomentoService } from "../MomentoService";
 
 
 export async function drawPostCanvas(context: IContext, user: User, theme: Theme, post: IPost): Promise<Canvas> {
@@ -24,7 +25,7 @@ export async function drawPostCanvas(context: IContext, user: User, theme: Theme
 
     const userImage = await loadImage(profileImageUrl);
 
-    const postHeader = await drawNotificationHeader(theme, userImage, user.username, `${user.name} ${user.surname}`, post.content.music, postWidth, user.stats.isVerified);
+    const postHeader = await drawNotificationHeader(theme, userImage, user.username, `${user.name} ${user.surname}`, post.content.music, postWidth, MomentoService.isUserVerified(user.stats.isVerified));
     const postBar = await drawPostActionBar(postWidth, post, theme);
 
     let y = 0;
@@ -130,7 +131,7 @@ export async function drawPostFrame(uploadChannel: TextChannel, user: User, post
 
     const userImage = await loadImage(profileImageUrl);
 
-    const postHeader = await drawNotificationHeader(theme, userImage, user.username, `${user.name} ${user.surname}`, null, postWidth, user.stats.isVerified);
+    const postHeader = await drawNotificationHeader(theme, userImage, user.username, `${user.name} ${user.surname}`, null, postWidth, MomentoService.isUserVerified(user.stats.isVerified));
     const postBar = await drawPostActionBar(postWidth, post || null, theme);
 
     let y: number;
@@ -177,7 +178,7 @@ export async function drawMultiplePostsCanvas(uploadChannel: TextChannel, user: 
 
     const userImage = await loadImage(profileImageUrl);
 
-    const postHeader = await drawNotificationHeader(theme, userImage, user.username, `${user.name} ${user.surname}`, post.content.music, postWidth, user.stats.isVerified);
+    const postHeader = await drawNotificationHeader(theme, userImage, user.username, `${user.name} ${user.surname}`, post.content.music, postWidth, MomentoService.isUserVerified(user.stats.isVerified));
     const postBar = await drawPostActionBar(postWidth, post, theme);
 
     let y: number;

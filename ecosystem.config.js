@@ -51,8 +51,8 @@ module.exports = {
             },
         },
         {
-            name: 'themes',
-            script: './src/bots/momento-themes/index.ts',
+            name: 'hub',
+            script: './src/bots/momento-hub/index.ts',
             interpreter: 'node',
             interpreter_args: '--import tsx',
             watch: false,

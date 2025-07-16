@@ -12,4 +12,16 @@ export class MomentoService {
         const axiosService: AxiosService = new AxiosService();
         axiosService.postWebhook("NOTIFICATION_WEBHOOK", body);
     }
+
+    public static isUserVerified(verificationDate: Date) {
+        if (!verificationDate) return false;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const verificationDay = new Date(verificationDate);
+        verificationDay.setHours(0, 0, 0, 0);
+
+        return verificationDay >= today;
+    }
 }

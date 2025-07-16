@@ -10,6 +10,7 @@ import { User } from "src/shared/models/User";
 import { defaultTheme, Theme } from "src/shared/models/Theme";
 import { defaultCollage } from "src/shared/models/Collage";
 import { DefaultUser } from "src/shared/models/DefaultUser";
+import { MomentoService } from "src/shared/services/MomentoService";
 
 export const registerUser: ICommand = {
     permission: Permission.user,
@@ -74,7 +75,7 @@ async function createUser(ctx: IContext, newUser: User, guild: Guild) {
     try {
         const profileService = new ProfileServices();
         const createdUser = { ...newUser };
-        const theme = await ctx.mongoService.getOne('themes', { name: createdUser.styles.theme }) as Theme || defaultTheme;
+        const theme = MomentoService.isUserVerified(createdUser.stats.isVerified) ? await ctx.mongoService.getOne('themes', { name: createdUser.styles.theme }) as Theme ?? defaultTheme : defaultTheme;
         const collageStyle = await ctx.mongoService.getOne('collages', { id: createdUser.styles.collage }) || defaultCollage;
 
         const userChannel = await profileService.createUserChannel(guild, createdUser.username, createdUser.userId);

@@ -4,9 +4,10 @@ import { calculateSizes, Styles } from "../../models/Style";
 import { cropImage } from "./CanvasService";
 import { LinkService } from "../LinkService";
 import { User } from "../../models/User";
-import { Theme } from "../../models/Theme";
+import { defaultTheme, Theme } from "../../models/Theme";
 import { Collage } from "../../models/Collage";
 import { fontsPaths } from "assets-paths";
+import { MomentoService } from "../MomentoService";
 
 export async function drawCollageCanvas(uploadChannel: TextChannel, user: User, theme: Theme, userCollageStyle: Collage): Promise<Canvas> {
     const canvas = createCanvas(Styles.sizes.large.profile.collage.width, Styles.sizes.large.profile.collage.height);
@@ -14,6 +15,9 @@ export async function drawCollageCanvas(uploadChannel: TextChannel, user: User, 
     const sizes = calculateSizes(canvas.width)
     ctx.quality = "best";
     let y = sizes.medium * 2;
+
+    theme = MomentoService.isUserVerified(user.stats.isVerified) ? theme : defaultTheme;
+
 
     ctx.fillStyle = theme.colors.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);

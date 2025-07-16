@@ -5,12 +5,15 @@ import { StringService } from "../StringService";
 import { calculateSizes, Sizes, Styles } from "../../models/Style";
 import { LinkService } from "../LinkService";
 import { User } from "../../models/User";
-import { Theme } from "../../models/Theme";
-import { assetPaths, fontsPaths } from "assets-paths";
+import { defaultTheme, Theme } from "../../models/Theme";
+import { fontsPaths } from "assets-paths";
+import { MomentoService } from "../MomentoService";
 
 export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, theme: Theme, momentos: number, trendings: number): Promise<Canvas> {
     const canvas = createCanvas(Styles.sizes.large.profile.stats.width, Styles.sizes.large.profile.stats.height);
     const ctx = canvas.getContext('2d');
+
+    theme = MomentoService.isUserVerified(user.stats.isVerified) ? theme : defaultTheme;
 
     ctx.fillStyle = theme.colors.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -81,7 +84,7 @@ export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, 
     ctx.font = `${sizes.big}px sfpro-bold`;
     ctx.fillText(`${user.name} ${user.surname}`, canvas.width / 2, y);
 
-    if (user.stats.isVerified) {
+    if (MomentoService.isUserVerified(user.stats.isVerified)) {
         const measureGap = canvas.width / 2 + sizes.tiny + ((ctx.measureText(user.name).width + ctx.measureText(user.surname).width + sizes.small) / 2);
         const verifiedIcon = await loadImage('src/assets/images/verified.png')
         ctx.drawImage(verifiedIcon, measureGap, y - 40, 40, 40);

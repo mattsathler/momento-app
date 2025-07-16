@@ -451,7 +451,7 @@ export class PostService {
             }) as User;
             if (!author) { throw new Error('Invalid author') }
 
-            const theme = await ctx.mongoService.getOne('themes', { name: author.styles.theme }) as Theme ?? defaultTheme;
+            const theme = MomentoService.isUserVerified(author.stats.isVerified) ? await ctx.mongoService.getOne('themes', { name: author.styles.theme }) as Theme ?? defaultTheme : defaultTheme;
 
             let postImageURL: Message;
             const uploadChannel = await MomentoService.getUploadChannel(this.ctx.client);

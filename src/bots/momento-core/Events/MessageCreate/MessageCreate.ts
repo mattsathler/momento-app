@@ -9,7 +9,7 @@ import { PostService } from "../../App/Post/PostService";
 import { IPost, IPostStatus } from "../../Interfaces/IPost";
 import { Permission } from "../../Interfaces/IPermission";
 import { User } from "src/shared/models/User";
-import { defaultTheme } from "src/shared/models/Theme";
+import { defaultTheme, Theme } from "src/shared/models/Theme";
 import { ImageCropper } from "src/shared/services/ImageCropper";
 import { LinkService } from "src/shared/services/LinkService";
 import { MomentoService } from "src/shared/services/MomentoService";
@@ -97,7 +97,7 @@ export async function messageCreate(ctx: IContext, message: Message) {
             const postService = new PostService(ctx);
 
             let postImagesURL: string[] = [];
-            const theme = await ctx.mongoService.getOne('themes', { name: author.styles.theme }) || defaultTheme;
+            const theme = MomentoService.isUserVerified(author.stats.isVerified) ? await ctx.mongoService.getOne('themes', { name: author.styles.theme }) as Theme ?? defaultTheme : defaultTheme;
             await message.react('📸');
 
             const isVideo = message.attachments.first()?.contentType === 'video/mp4' || message.attachments.first()?.contentType === 'video/quicktime'

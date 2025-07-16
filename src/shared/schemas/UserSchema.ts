@@ -26,7 +26,7 @@ export const UserSchema = new Schema({
     },
     stats: {
         followers: { type: Schema.Types.Number, required: true },
-        isVerified: { type: Boolean, required: true },
+        isVerified: { type: Date, required: true },
         notifications: { type: Boolean, required: true },
         influencyLevel: { type: Schema.Types.Number, required: true, default: 1 },
         lastOnline: { type: Date, required: true }

@@ -37,7 +37,7 @@ async function createNewPost(ctx: IContext, interaction: ModalSubmitInteraction)
     const author = await ctx.mongoService.getOne('users', { userId: interaction.user.id, guildId: interaction.guildId }) as User;
     if (!author) { throw new Error('Invalid author') }
 
-    const theme = await ctx.mongoService.getOne('themes', { name: author.styles.theme }) as Theme ?? defaultTheme;
+    const theme = MomentoService.isUserVerified(author.stats.isVerified) ? await ctx.mongoService.getOne('themes', { name: author.styles.theme }) as Theme ?? defaultTheme : defaultTheme;
 
     const formField = fetchFormFields(interaction);
     let imageMsg: Message | null = null;
@@ -59,12 +59,12 @@ async function createNewPost(ctx: IContext, interaction: ModalSubmitInteraction)
     }
     if (interaction.isRepliable()) {
         await interaction.reply({ content: 'Criando seu momento...', ephemeral: true })
-    }   
+    }
     const postService = new PostService(ctx);
-    
+
     if (!author.guildId) { throw new Error('Invalid author guild id') }
     if (!author.references.channelId) { throw new Error('Invalid author channel id') }
-    
+
     if (!interaction.message) return;
 
     const post: IPost = {

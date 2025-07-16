@@ -8,6 +8,7 @@ import { calculateSizes, Styles } from "src/shared/models/Style";
 import { LinkService } from "src/shared/services/LinkService";
 import { drawTextInCanvas } from "src/shared/services/canvas/TextCanvas";
 import { drawNotificationHeader } from "src/bots/momento-core/Styles/Canvas/Notifications/NotificationHeader";
+import { MomentoService } from "../MomentoService";
 
 
 export async function drawCommentCanvas(context: IContext, user: User, text: string, theme: Theme): Promise<Canvas> {
@@ -18,7 +19,7 @@ export async function drawCommentCanvas(context: IContext, user: User, text: str
     if (!profileImageUrl) { throw new Error('Erro ao carregar imagem de perfil') }
     const userImage = await loadImage(profileImageUrl);
     const textCanvas = drawTextInCanvas(text, theme, `SFPRODISPLAYMEDIUM`, canvas.width - (sizes.huge * 2), sizes.big);
-    const postHeader = await drawNotificationHeader(theme, userImage, user.username, `${user.name} ${user.surname}`, '', canvas.width, user.stats.isVerified);
+    const postHeader = await drawNotificationHeader(theme, userImage, user.username, `${user.name} ${user.surname}`, '', canvas.width, MomentoService.isUserVerified(user.stats.isVerified));
     ctx.fillStyle = theme.colors.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 

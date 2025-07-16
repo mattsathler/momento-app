@@ -11,6 +11,7 @@ import { PostService } from "./PostService";
 import { User } from "src/shared/models/User";
 import { defaultTheme } from "src/shared/models/Theme";
 import { LinkService } from "src/shared/services/LinkService";
+import { MomentoService } from "src/shared/services/MomentoService";
 
 export const createComment: ICommand = {
     permission: Permission.user,
@@ -40,9 +41,9 @@ async function createNewComment(ctx: IContext, message: Message) {
         throw new Error('User not found!')
     }
 
-    const theme = await ctx.mongoService.getOne('themes', {
+    const theme = MomentoService.isUserVerified(user.stats.isVerified) ? await ctx.mongoService.getOne('themes', {
         name: postAuthorUser.styles.theme,
-    }) || defaultTheme;
+    }) || defaultTheme : defaultTheme;
 
     const commentText = message.content;
     if (!commentText) { throw new Error('Invalid comment text') }

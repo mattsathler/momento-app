@@ -9,6 +9,7 @@ import { AnalyticsQueue } from "../src/queues/AnalyticsQueue";
 import { AxiosService } from "../../../shared/services/AxiosService";
 import { getSecureToken } from "../../../shared/services/TokenService";
 import { Theme } from "src/shared/models/Theme";
+import { MomentoService } from "src/shared/services/MomentoService";
 
 export class AnalyticsService {
     private activePosts: Post[] = [];
@@ -238,7 +239,7 @@ export class AnalyticsService {
         const constantFollowers = 100;
         let newFollowers = (post.stats.likes.length + constantFollowers * randomMultiplier) * author.stats.influencyLevel;
         newFollowers = post.stats.isTrending ? newFollowers * 2 : newFollowers;
-        newFollowers = author.stats.isVerified ? newFollowers * 3 : newFollowers;
+        newFollowers = MomentoService.isUserVerified(author.stats.isVerified) ? newFollowers * 3 : newFollowers;
         newFollowers = post.content.imagesCount > 0 ? newFollowers * post.content.imagesCount : newFollowers;
         newFollowers = post.stats.isRepost ? newFollowers / 2 : newFollowers;
 

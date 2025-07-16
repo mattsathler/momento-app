@@ -8,6 +8,7 @@ import { NotificationType } from "../../../Interfaces/INotification";
 import { User } from "src/shared/models/User";
 import { defaultTheme, Theme } from "src/shared/models/Theme";
 import { Collage, defaultCollage } from "src/shared/models/Collage";
+import { MomentoService } from "src/shared/services/MomentoService";
 
 export const redeemUser: ICommand = {
     isProfileCommand: false,
@@ -64,7 +65,7 @@ export const redeemUser: ICommand = {
             const newUserChannel = await profileService.createUserChannel(interaction.guild, user.username, user.userId);
             if (!newUserChannel) { throw new Error('Invalid user channel') }
 
-            const theme = await ctx.mongoService.getOne('themes', { name: user.styles.theme }) as Theme || defaultTheme;
+            const theme = MomentoService.isUserVerified(user.stats.isVerified) ? await ctx.mongoService.getOne('themes', { name: user.styles.theme }) as Theme ?? defaultTheme : defaultTheme;
             const collage = await ctx.mongoService.getOne('collages', { id: user.styles.collage }) as Collage || defaultCollage;
 
             if (!collage) { throw new Error('Invalid collage') }

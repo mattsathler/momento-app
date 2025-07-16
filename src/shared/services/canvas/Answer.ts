@@ -4,10 +4,11 @@ import { cropCirclePicture } from "../../../bots/momento-core/Utils/Pictures";
 import { IContext } from "../../../bots/momento-core/Interfaces/IContext";
 import { calculateSizes, Styles } from "src/shared/models/Style";
 import { LinkService } from "src/shared/services/LinkService";
-import { Theme } from "src/shared/models/Theme";
+import { defaultTheme, Theme } from "src/shared/models/Theme";
 import { User } from "src/shared/models/User";
 import { assetPaths, fontsPaths } from "assets-paths";
 import { drawTextInCanvas } from "src/shared/services/canvas/TextCanvas";
+import { MomentoService } from "../MomentoService";
 
 export async function drawAnswerCanvas(context: IContext, question: string, answer: string, questionAuthor: string, user: User, theme: Theme): Promise<Canvas> {
     registerFont(fontsPaths.SFPROBOLD, { family: 'sfpro-bold' })
@@ -22,8 +23,11 @@ export async function drawAnswerCanvas(context: IContext, question: string, answ
             secondary: '#EAEAEA',
             background: '#DD247B'
         }
-
     }
+
+    theme = MomentoService.isUserVerified(user.stats.isVerified) ? theme : defaultTheme;
+
+
     const canvas = createCanvas(Styles.sizes.large.post.width, Styles.sizes.large.post.height);
     const ctx = canvas.getContext('2d');
     const sizes = calculateSizes(canvas.width)

@@ -40,7 +40,7 @@ export const DefaultUser: User = {
     },
     stats: {
         followers: 0,
-        isVerified: false,
+        isVerified: new Date(),
         notifications: true,
         influencyLevel: 1,
         lastOnline: new Date()

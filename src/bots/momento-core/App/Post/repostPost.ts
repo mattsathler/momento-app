@@ -50,9 +50,7 @@ async function execRepostPost(ctx: IContext, message: Message, author: User): Pr
     if (!actionImageUrl) { throw new Error('Erro ao carregar imagem de perfil') }
 
     const profileUrl: string = `https://discord.com/channels/${message.guildId}/${authorUser.references.channelId}/` || `https://discord.com/channels/${message.guildId}/${message.channelId}`
-    const theme = await ctx.mongoService.getOne("themes", {
-        name: targetUser.styles.theme
-    }) as Theme
+    const theme = MomentoService.isUserVerified(targetUser.stats.isVerified) ? await ctx.mongoService.getOne('themes', { name: targetUser.styles.theme }) as Theme ?? defaultTheme : defaultTheme;
 
     if (post.content.imagesCount > 0) {
         post.content.images = [post.content.thumbUrl];
