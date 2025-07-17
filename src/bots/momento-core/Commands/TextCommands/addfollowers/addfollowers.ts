@@ -43,7 +43,7 @@ export const addFollowers: ICommand = {
                     targetUser: newUser,
                     type: NotificationType.Embed,
                     message: `Parabéns! Você recebeu ${newFollowers} novos seguidores!`,
-                    pictureUrl: "https://i.imgur.com/TvJJmjx.png"
+                    pictureUrl: "https://i.imgur.com/as03K0u.png"
                 };
 
                 const notificationService = new NotificationService(ctx);

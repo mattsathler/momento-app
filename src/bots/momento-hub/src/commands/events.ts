@@ -64,20 +64,27 @@ export async function onMessageCreate(client: Client, message: Message, mongoser
             case "!createVerifyMessage":
                 await hubService.createVerifyMessage(message.channel as TextChannel);
                 return;
+
+            case "!createCommandsMessage":
+                await hubService.createCommandsMessage(message.channel as TextChannel);
+                return;
         }
         return;
     }
 }
 
-export async function onInteractionCreate(client: Client, interaction: ButtonInteraction | SelectMenuInteraction): Promise<void> {
+export async function onInteractionCreate(client: Client, interaction: ButtonInteraction | SelectMenuInteraction, mongoservice: MongoService): Promise<void> {
     const hubService: HubService = new HubService();
 
     if (interaction.guildId === process.env.HUB_GUILD_ID) {
         switch (interaction.customId) {
-            case "createVerifyTicket": await hubService.createVerifyTicketChannel(client, interaction as ButtonInteraction);
+            case "createVerifyTicket": await hubService.createVerifyTicketChannel(client, interaction as ButtonInteraction, mongoservice);
                 break;
 
             case "selectSubscriptionType": await hubService.createPaymentQRCode(client, interaction as SelectMenuInteraction);
+                break;
+            
+            case "confirmPayment": await hubService.confirmPayment(client, interaction as ButtonInteraction, mongoservice);
                 break;
         }
         return;

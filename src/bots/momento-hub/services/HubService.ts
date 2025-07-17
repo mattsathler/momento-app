@@ -1,26 +1,51 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelType, Client, EmbedBuilder, Message, SelectMenuBuilder, SelectMenuInteraction, StringSelectMenuBuilder, TextChannel } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelType, Client, ContainerBuilder, EmbedBuilder, MediaGalleryBuilder, MediaGalleryItemBuilder, Message, MessageFlags, PermissionOverwrites, SelectMenuBuilder, SelectMenuInteraction, SeparatorBuilder, SeparatorSpacingSize, StringSelectMenuBuilder, TextChannel, TextDisplayBuilder } from "discord.js";
 import { QrCodePix, QrCodePixParams } from "qrcode-pix";
+import { User } from "src/shared/models/user";
 import { LinkService } from "src/shared/services/LinkService";
 import { MomentoService } from "src/shared/services/MomentoService";
+import { MongoService } from "src/shared/services/MongoService";
 
 export class HubService {
     public async createVerifyMessage(channel: TextChannel): Promise<void> {
-        const verifiedEmbed = new EmbedBuilder()
-            .setTitle("✦ SEJA VERIFICADO")
-            .setDescription(
-                "Seu photoplayer não é só mais um — ele é influente, único, e merece estar no centro dos holofotes.\n\n"
-                + "💫 **Benefícios da assinatura:**\n"
-                + "🔮 Posts com mais chances de entrar nos **Trends**\n"
-                + "🎨 Temas **personalizados** para o seu perfil\n"
-                + "📈 Até 3x mais **seguidores** nos seus analytics\n"
-                + "✨ Acesso antecipado a recursos exclusivos\n"
-                + "🤝 Apoio direto ao desenvolvimento do bot\n\n"
-                + "**a partir de R$19,90/mês**\n"
-                + "Um valor simbólico para quem quer viver a experiência completa — e ajudar o Momento a continuar evoluindo."
-            )
-            .setColor(0xDD247B)
-            .setThumbnail("https://imgur.com/OfdUb2R.png")
-            .setFooter({ text: "Clique abaixo e inicie sua verificação!" });
+        const components =
+            new ContainerBuilder()
+                .setAccentColor(14492795)
+                .addMediaGalleryComponents(
+                    new MediaGalleryBuilder()
+                        .addItems(
+                            new MediaGalleryItemBuilder()
+                                .setURL("https://imgur.com/yTEFZAt.png"),
+                        ),
+                )
+                .addSeparatorComponents(
+                    new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+                )
+                .addMediaGalleryComponents(
+                    new MediaGalleryBuilder()
+                        .addItems(
+                            new MediaGalleryItemBuilder()
+                                .setURL("https://imgur.com/75Z3RzS.png"),
+                        ),
+                )
+                .addMediaGalleryComponents(
+                    new MediaGalleryBuilder()
+                        .addItems(
+                            new MediaGalleryItemBuilder()
+                                .setURL("https://imgur.com/xobVr8x.png"),
+                            new MediaGalleryItemBuilder()
+                                .setURL("https://imgur.com/PTOGXyN.png"),
+                            new MediaGalleryItemBuilder()
+                                .setURL("https://imgur.com/acD2aPx.png"),
+                        ),
+                )
+                .addMediaGalleryComponents(
+                    new MediaGalleryBuilder()
+                        .addItems(
+                            new MediaGalleryItemBuilder()
+                                .setURL("https://imgur.com/0iBVt7w.png"),
+                        ),
+                )
+
 
         const verifyButton = new ButtonBuilder()
             .setCustomId("createVerifyTicket")
@@ -30,13 +55,81 @@ export class HubService {
         const AR = new ActionRowBuilder<ButtonBuilder>().addComponents(verifyButton);
 
         await channel.send({
-            embeds: [verifiedEmbed],
-            components: [AR]
+            flags: MessageFlags.IsComponentsV2,
+            components: [components, AR]
         })
     }
 
-    public async createVerifyTicketChannel(client: Client, interaction: ButtonInteraction) {
+    public async createCommandsMessage(channel: TextChannel): Promise<void> {
+        const container = new ContainerBuilder()
+            .setAccentColor(14492795)
+            .addMediaGalleryComponents(
+                new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL("https://imgur.com/yTEFZAt.png"),
+                    ),
+            )
+            .addSeparatorComponents(
+                new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+            )
+            .addMediaGalleryComponents(
+                new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL("https://imgur.com/jF4Ml7R.png"),
+                    ),
+            )
+            .addMediaGalleryComponents(
+                new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL("https://imgur.com/nlDc0Hy.png"),
+                    ),
+            )
+            .addMediaGalleryComponents(
+                new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL("https://imgur.com/nFRNU0b.png"),
+                    ),
+            )
+            .addMediaGalleryComponents(
+                new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL("https://imgur.com/x8fwYpB.png"),
+                    ),
+            )
+            .addMediaGalleryComponents(
+                new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL("https://imgur.com/xvIfWI4.png"),
+                    ),
+            )
+            .addMediaGalleryComponents(
+                new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL("https://imgur.com/a5dTKS1.png"),
+                    ),
+            )
+
+        await channel.send({
+            flags: MessageFlags.IsComponentsV2,
+            components: [container]
+        })
+    }
+
+    public async createVerifyTicketChannel(client: Client, interaction: ButtonInteraction, mongoservice: MongoService) {
         const channel = interaction.channel as TextChannel;
+        const user: User[] = await mongoservice.get("users", { userId: interaction.user.id }) as User[];
+        if (user.length === 0) {
+            await interaction.reply({ content: "É necessário ter pelo menos uma conta em algum RPG do momento para assinar o verificado.", flags: MessageFlags.Ephemeral })
+            return;
+        }
+
         const newTicketChannel = await interaction.guild?.channels.create({
             name: `verificação-${interaction.user.username}`,
             type: ChannelType.GuildText,
@@ -62,17 +155,39 @@ export class HubService {
             })
             .catch((error) => console.error("Error sending ping message:", error));
 
-        const subscriptionTypeEmbed = new EmbedBuilder()
-            .setTitle("📬 Bem-vindo ao seu canal de verificação!")
-            .setDescription(
-                "Você está a um passo de se tornar **Verificado** no Momento.\n\n"
-                + "Selecione abaixo por quanto tempo deseja assinar sua verificação:\n"
-                + "\n🔒 O processo é seguro e automatizado, além de feito diretamente com o desenvolvedor do bot.\n\n"
-                + "Após a escolha, enviaremos o código PIX para pagamento. Qualquer dúvida, basta perguntar aqui!"
+        const container = new ContainerBuilder()
+            .setAccentColor(14492795)
+            .addMediaGalleryComponents(
+                new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL("https://imgur.com/yTEFZAt.png"),
+                    ),
             )
-            .setColor(0xDD247B)
-            .setFooter({ text: "Momento App" })
-            .setThumbnail("https://imgur.com/OfdUb2R.png");
+            .addSeparatorComponents(
+                new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+            )
+            .addMediaGalleryComponents(
+                new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL("https://imgur.com/WfkIAa1.png"),
+                    ),
+            )
+            .addMediaGalleryComponents(
+                new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL("https://imgur.com/JGAQalc.png"),
+                    ),
+            )
+            .addMediaGalleryComponents(
+                new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL("https://imgur.com/HFHnseC.png"),
+                    ),
+            )
 
         const subscriptionSelect = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
             new StringSelectMenuBuilder()
@@ -82,27 +197,27 @@ export class HubService {
                     {
                         label: '1 mês – R$19,90',
                         value: '1',
-                        emoji: "🎫",
+                        emoji: "👑",
                         description: 'Assinatura padrão mensal.'
                     },
                     {
                         label: '2 meses – R$29,90',
                         value: '2',
-                        emoji: "🎫",
+                        emoji: "👑",
                         description: 'R$14,95/mês, desconto de 25%!'
                     },
                     {
                         label: '3 meses – R$39,90',
                         value: '3',
-                        emoji: "🎫",
+                        emoji: "👑",
                         description: 'R$13,30/mês, desconto de 33%!'
                     }
                 ])
         );
 
         await newTicketChannel.send({
-            embeds: [subscriptionTypeEmbed],
-            components: [subscriptionSelect]
+            flags: MessageFlags.IsComponentsV2,
+            components: [container, subscriptionSelect]
         })
 
         await interaction.deferUpdate();
@@ -144,10 +259,20 @@ Nossa equipe irá validar o quanto antes.`)
                 { name: '🏷️ Referência', value: `Matheus William Sathler Lima`, inline: false },
                 { name: '🏦 Banco', value: 'NuBank', inline: true },
                 { name: '💰 Valor', value: String(valueInBRL), inline: true },
-                { name: '🎫 Meses de Verificado', value: `${String(subscriptionType)} mes(es)` }
+                { name: '🎫 Meses de Verificado', value: `${String(subscriptionType)} mes(es)` },
+                { name: 'id', value: interaction.user.id },
+                { name: 'subscription', value: String(subscriptionType) }
             )
             .setImage(qrcodelink.attachments.first()!.url)
             .setFooter({ text: 'Envie o comprovante neste canal assim que concluir o pagamento que o desenvolvedor entrará em contato.' });
+
+        const confirmPaymentButton: ButtonBuilder = new ButtonBuilder()
+            .setCustomId("confirmPayment")
+            .setEmoji("💵")
+            .setLabel("Confirmar Pagamento")
+            .setStyle(ButtonStyle.Success)
+        const AR: ActionRowBuilder<ButtonBuilder> = new ActionRowBuilder<ButtonBuilder>();
+        AR.addComponents(confirmPaymentButton);
 
         try {
             await interaction.message.delete()
@@ -155,6 +280,96 @@ Nossa equipe irá validar o quanto antes.`)
 
         await channel.send({
             embeds: [pixEmbed],
+            components: [AR]
         })
+    }
+
+    public async confirmPayment(client: Client, interaction: ButtonInteraction, mongoservice: MongoService): Promise<void> {
+        if (interaction.user.id !== process.env.OWNER_ID) {
+            await interaction.reply({ content: "Opa! Esse botão é apenas para administradores...", flags: MessageFlags.Ephemeral });
+            return;
+        }
+
+        await interaction.reply({ content: "Confirmando pagamento...", flags: MessageFlags.Ephemeral });
+
+        const fields = interaction.message.embeds[0].fields;
+        const subscriptionType = fields.find(field => field.name === "subscription")?.value;
+        const userId = fields.find(field => field.name === "id")?.value;
+
+        const user = await mongoservice.getOne("users", { userId: userId }) as User;
+
+        if (!subscriptionType || !userId) {
+            throw new Error("Invalid subscriptiontype or userId");
+        }
+
+        const now = new Date();
+
+        const currentVerification = user.stats.isVerified ? new Date(user.stats.isVerified) : null;
+        const baseDate = currentVerification && currentVerification > now ? currentVerification : now;
+
+        const newVerificationExpirationDate = new Date(
+            baseDate.getFullYear(),
+            baseDate.getMonth() + Number(subscriptionType),
+            baseDate.getDate()
+        );
+
+        await mongoservice.patch("users", { userId: userId }, {
+            'stats.isVerified': newVerificationExpirationDate
+        });
+
+        const date = newVerificationExpirationDate.toLocaleDateString("pt-BR", {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        const component = new ContainerBuilder()
+            .setAccentColor(14492795)
+            .addMediaGalleryComponents(
+                new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL("https://imgur.com/yTEFZAt.png"),
+                    ),
+            )
+            .addSeparatorComponents(
+                new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+            )
+            .addMediaGalleryComponents(
+                new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL("https://imgur.com/TsiGHts.png"),
+                    ),
+            )
+            .addSeparatorComponents(
+                new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+            )
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(`📅 **Válido até: **${date}\n\n*Obrigado por apoiar o universo do Momento. Nos vemos entre as luzes do palco e as sombras do roleplay. 🎭*`),
+            )
+
+        const channel: TextChannel = interaction.channel as TextChannel;
+        await interaction.message.delete();
+        await channel.send({
+            flags: MessageFlags.IsComponentsV2,
+            components: [component]
+        })
+
+        await channel.send(`<@${interaction.user.id}>`)
+            .then((msg: Message) => {
+                msg.delete().then(() => {
+                }).catch((error) => {
+                    console.error("Error deleting ping message:", error);
+                });
+            })
+            .catch((error) => console.error("Error sending ping message:", error));
+
+        await channel.permissionOverwrites.edit(interaction.user.id, {
+            SendMessages: false
+        });
+
+        return;
     }
 }

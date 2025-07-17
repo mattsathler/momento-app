@@ -49,7 +49,7 @@ export const verify: ICommand = {
                     \nMas nem tudo são flores! Agora que seu perfil está chegando mais longe, terá que redobrar a sua atenção em relação ao que se compartilha em nossa plataforma.
                     \nSempre lembre-se de seguir nossas **diretrizes de comunidade** para não haver problemas! 
                     \n\n**Bem vindo(a)! Veja abaixo o que mudará a partir de agora...**`,
-                    pictureUrl: "https://i.imgur.com/TvJJmjx.png",
+                    pictureUrl: "https://i.imgur.com/as03K0u.png",
                     thumbnail: 'https://imgur.com/cWBlUCh.png',
                     fields: [
                         {

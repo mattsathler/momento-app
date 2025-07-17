@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, EmbedBuilder, Guild, Message, TextChannel } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, ContainerBuilder, EmbedBuilder, Guild, MediaGalleryBuilder, MediaGalleryItemBuilder, Message, MessageFlags, SeparatorBuilder, SeparatorSpacingSize, TextChannel, TextDisplayBuilder } from "discord.js";
 import { Action } from "rxjs/internal/scheduler/Action";
 import { Collage } from "src/shared/models/Collage";
 import { DefaultUser } from "src/shared/models/DefaultUser";
@@ -37,11 +37,39 @@ export class ThemeService {
     }
 
     public async createThemeMessage(message: Message): Promise<void> {
-        const embed = new EmbedBuilder();
-        embed.setDescription("Personalize o perfil do seu personagem com um tema único ou compartilhe sua criação com outros usuários usando a ferramenta de criação de temas do momento!\n\nPara usar um tema criado, basta ir no perfil do seu personagem, personalizar e digitar o nome do tema desejado no campo \"tema\".\n\n*🎫 A criação e utilização de temas personalizados é restrita somente a usuários verificados na plataforma, confira! <#1390674632016658585>*")
-        embed.setColor('#DD247B');
-        embed.setTitle('TEMA PERSONALIZADO');
-        embed.setThumbnail("https://imgur.com/ZWx9A3N.png");
+        const container =
+            new ContainerBuilder()
+                .setAccentColor(14492795)
+                .addMediaGalleryComponents(
+                    new MediaGalleryBuilder()
+                        .addItems(
+                            new MediaGalleryItemBuilder()
+                                .setURL("https://imgur.com/yTEFZAt.png"),
+                        ),
+                )
+                .addSeparatorComponents(
+                    new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+                )
+                .addMediaGalleryComponents(
+                    new MediaGalleryBuilder()
+                        .addItems(
+                            new MediaGalleryItemBuilder()
+                                .setURL("https://imgur.com/qiMeGbn.png"),
+                        ),
+                )
+                .addMediaGalleryComponents(
+                    new MediaGalleryBuilder()
+                        .addItems(
+                            new MediaGalleryItemBuilder()
+                                .setURL("https://imgur.com/wf4Bnb0.png"),
+                        ),
+                )
+                .addSeparatorComponents(
+                    new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+                )
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`*🎫 A criação e utilização de temas personalizados é restrita somente a usuários verificados na plataforma, confira: <#1390674632016658585>*`),
+                )
 
         const channel = message.channel as TextChannel;
         const newThemeButton = new ButtonBuilder()
@@ -53,8 +81,8 @@ export class ThemeService {
         const ar = new ActionRowBuilder() as ActionRowBuilder<ButtonBuilder>;
         ar.addComponents(newThemeButton);
         await channel.send({
-            components: [ar],
-            embeds: [embed]
+            flags: MessageFlags.IsComponentsV2,
+            components: [container, ar],
         });
     }
 
@@ -85,11 +113,39 @@ export class ThemeService {
     }
 
     public async createCollageMessage(message: Message): Promise<void> {
-        const embed = new EmbedBuilder();
-        embed.setDescription("Personalize o perfil do seu personagem com uma Collage ou compartilhe sua criação com outros usuários usando a ferramenta de criação de collage do momento!\n\nPara usar um collage criado, basta ir no perfil do seu personagem, personalizar e digitar o id da collge desejada no campo \"Estilo de Collage\".\n\n*🎫 A criação e utilização de temas & collages personalizados é restrita somente a usuários verificados na plataforma, confira! <#1390674632016658585>*")
-        embed.setColor('#DD247B');
-        embed.setTitle('COLLAGE PERSONALIZADO');
-        embed.setThumbnail("https://imgur.com/ZWx9A3N.png");
+        const container =
+            new ContainerBuilder()
+                .setAccentColor(14492795)
+                .addMediaGalleryComponents(
+                    new MediaGalleryBuilder()
+                        .addItems(
+                            new MediaGalleryItemBuilder()
+                                .setURL("https://imgur.com/yTEFZAt.png"),
+                        ),
+                )
+                .addSeparatorComponents(
+                    new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+                )
+                .addMediaGalleryComponents(
+                    new MediaGalleryBuilder()
+                        .addItems(
+                            new MediaGalleryItemBuilder()
+                                .setURL("https://imgur.com/rw5qgBs.png"),
+                        ),
+                )
+                .addMediaGalleryComponents(
+                    new MediaGalleryBuilder()
+                        .addItems(
+                            new MediaGalleryItemBuilder()
+                                .setURL("https://imgur.com/siuwdIi.png"),
+                        ),
+                )
+                .addSeparatorComponents(
+                    new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+                )
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`*🎫 A criação e utilização de collages personalizados é restrita somente a usuários verificados na plataforma, confira: <#1390674632016658585>*`),
+                )
 
         const channel = message.channel as TextChannel;
         const newThemeButton = new ButtonBuilder()
@@ -101,8 +157,8 @@ export class ThemeService {
         const ar = new ActionRowBuilder() as ActionRowBuilder<ButtonBuilder>;
         ar.addComponents(newThemeButton);
         await channel.send({
-            components: [ar],
-            embeds: [embed]
+            flags: MessageFlags.IsComponentsV2,
+            components: [container, ar],
         });
     }
 }

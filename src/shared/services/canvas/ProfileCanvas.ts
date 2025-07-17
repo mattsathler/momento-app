@@ -6,7 +6,6 @@ import { calculateSizes, Sizes, Styles } from "../../models/Style";
 import { LinkService } from "../LinkService";
 import { User } from "../../models/User";
 import { defaultTheme, Theme } from "../../models/Theme";
-import { fontsPaths } from "assets-paths";
 import { MomentoService } from "../MomentoService";
 
 export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, theme: Theme, momentos: number, trendings: number): Promise<Canvas> {
@@ -66,11 +65,6 @@ export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, 
         profileImageSize
     );
     y += profileImageSize * 1.5 + sizes.big;
-
-    // INFO ===========================================
-    registerFont(fontsPaths.SFPROBOLD, { family: 'sfpro-bold' })
-    registerFont(fontsPaths.SFPROMEDIUM, { family: 'sfpro-medium' })
-    registerFont(fontsPaths.SFPROREGULAR, { family: 'sfpro-regular' })
     
     ctx.textAlign = 'center';
     ctx.fillStyle = theme.colors.secondary;

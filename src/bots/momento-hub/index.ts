@@ -33,7 +33,7 @@ async function main(): Promise<void> {
 
     client.on("interactionCreate", async (interaction) => {
       if (!interaction.isButton() && !interaction.isSelectMenu()) return;
-      onInteractionCreate(client, interaction);
+      onInteractionCreate(client, interaction, mongoservice);
     });
 
     client.on("ready", async () => onReady(client));
