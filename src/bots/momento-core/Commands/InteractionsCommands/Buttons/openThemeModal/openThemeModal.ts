@@ -1,14 +1,22 @@
-import { ActionRowBuilder, ButtonInteraction, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
+import { ActionRowBuilder, ButtonInteraction, MessageFlags, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { IContext } from "../../../../Interfaces/IContext";
 import { ICommand } from "../../../../Interfaces/ICommand";
 import { Permission } from "../../../../Interfaces/IPermission";
+import { User } from "src/shared/models/user";
+import { MomentoService } from "src/shared/services/MomentoService";
 
 export const openThemeModal: ICommand = {
     permission: Permission.user,
     isProfileCommand: false,
     exec: async (ctx: IContext, interaction: ButtonInteraction) => {
-        const modal = createThemeModal()
-        await interaction.showModal(modal)
+        const user: User = await ctx.mongoService.getOne("users", { userId: interaction.user.id }) as User;
+
+        if (MomentoService.isUserVerified(user.stats.isVerified)) {
+            const modal = createThemeModal()
+            await interaction.showModal(modal)
+        } else {
+            await interaction.reply({ content: "Esse conteúdo é exclusivo apenas para verificados no momento! Confira: <#1390674632016658585>", flags: MessageFlags.Ephemeral });
+        }
     }
 }
 

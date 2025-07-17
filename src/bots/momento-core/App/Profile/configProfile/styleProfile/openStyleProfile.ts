@@ -4,6 +4,7 @@ import { ActionRowBuilder, ModalBuilder, TextInputBuilder } from "@discordjs/bui
 import { ICommand } from "../../../../Interfaces/ICommand";
 import { Permission } from "../../../../Interfaces/IPermission";
 import { User } from "src/shared/models/User";
+import { MomentoService } from "src/shared/services/MomentoService";
 
 export const openStyleProfileModal: ICommand = {
     permission: Permission.user,
@@ -39,7 +40,7 @@ function createStyleProfileModal(author: User, collagesCount: number): ModalBuil
 
     const themeField = new TextInputBuilder()
         .setCustomId('theme_field')
-        .setPlaceholder(author.styles.theme)
+        .setPlaceholder(MomentoService.isUserVerified(author.stats.isVerified) ? author.styles.theme : "Apenas para verificados 👑")
         .setRequired(false)
         .setStyle(TextInputStyle.Short)
         .setLabel('Tema do Perfil')

@@ -125,6 +125,7 @@ export class ProfileServices {
         const styleProfileButton = new ButtonBuilder()
             .setCustomId('openStyleProfileModal')
             .setLabel('Estilizar')
+            .setEmoji('👑')
             .setStyle(ButtonStyle.Secondary);
 
         const nofiticationToggler = new ButtonBuilder()
@@ -135,8 +136,8 @@ export class ProfileServices {
         const importFollowersButton = new ButtonBuilder()
             .setCustomId('createImportFollowersMessage')
             .setLabel('Importar Seguidores')
+            .setEmoji('👑')
             .setStyle(ButtonStyle.Success)
-            .setEmoji("⚠️")
 
 
         ProfileButtons.addComponents(editProfileButton, styleProfileButton, nofiticationToggler);

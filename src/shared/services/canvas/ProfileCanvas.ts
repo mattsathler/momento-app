@@ -1,4 +1,4 @@
-import { createCanvas, loadImage, Canvas, registerFont, Image } from "canvas";
+import { createCanvas, loadImage, Canvas, Image } from "canvas";
 import { cropCirclePicture, cropImage } from "./CanvasService";
 import { TextChannel } from "discord.js";
 import { StringService } from "../StringService";
