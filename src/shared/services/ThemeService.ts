@@ -1,4 +1,4 @@
-import { Client, EmbedBuilder, Guild, TextChannel } from "discord.js";
+import { Client, ContainerBuilder, EmbedBuilder, Guild, MediaGalleryBuilder, MediaGalleryItemBuilder, MessageFlags, SeparatorBuilder, SeparatorSpacingSize, TextChannel, TextDisplayBuilder } from "discord.js";
 import { defaultTheme, Theme } from "../models/Theme";
 import { Collage } from "../models/Collage";
 import { MomentoService } from "./MomentoService";
@@ -27,31 +27,6 @@ export function generateSurface(background: string): string {
     const adjustment = avg > 127 ? -16 : 16;
     const adjusted = adjustLightness(rgb, adjustment);
     return rgbToHex(...adjusted);
-}
-
-export function createThemeEmbed(username: string, theme: Theme): EmbedBuilder {
-    const embed = new EmbedBuilder()
-        .setColor('#DD247B')
-        .setTitle('TEMA')
-        .setThumbnail('https://imgur.com/ZWx9A3N.png')
-        .setDescription("Para usar, cole o nome do tema na personalização do seu perfil de usuário.")
-
-        .addFields([
-            {
-                name: 'Nome',
-                value: theme.name
-            },
-            {
-                name: 'Cores',
-                value: `Primária: ${theme.colors.primary}\nSecundária: ${theme.colors.secondary}\nFundo: ${theme.colors.background}`,
-            }
-        ])
-        .setFooter({
-            text: `Criado por: ${username}`,
-            iconURL: 'https://imgur.com/ZWx9A3N.png'
-        })
-
-    return embed
 }
 
 export function createCollageEmbed(username: string, collage: Collage): EmbedBuilder {
@@ -86,9 +61,27 @@ export async function displayThemeInCatalogue(client: Client, guild: Guild, them
     const newThemeProfile = await drawProfileCanvas(DefaultUser, uploadChannel, theme, postCount, trendingCount);
     const themeLink = await LinkService.uploadImageToMomento(uploadChannel, newThemeProfile.toBuffer());
 
-    const themeEmbed = createThemeEmbed(guild.members.cache.get(theme.creatorId)?.displayName || 'Indisponível', theme).setImage(themeLink.attachments.first()?.url || '')
+    const components = [
+        new ContainerBuilder()
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(`# ${theme.name}`),
+            )
+            .addSeparatorComponents(
+                new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+            )
+            .addMediaGalleryComponents(
+                new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL(themeLink.attachments.first()?.url!),
+                    ),
+            )
+    ];
 
-    await themeUploaderChannel.send({ embeds: [themeEmbed] });
+    await themeUploaderChannel.send({
+        flags: MessageFlags.IsComponentsV2,
+        components: components
+    });
 }
 
 export async function displayCollageInCatalogue(client: Client, author: string, collage: Collage) {

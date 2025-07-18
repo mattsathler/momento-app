@@ -1,5 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, ContainerBuilder, EmbedBuilder, Guild, MediaGalleryBuilder, MediaGalleryItemBuilder, Message, MessageFlags, SeparatorBuilder, SeparatorSpacingSize, TextChannel, TextDisplayBuilder } from "discord.js";
-import { Action } from "rxjs/internal/scheduler/Action";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, ContainerBuilder, MediaGalleryBuilder, MediaGalleryItemBuilder, Message, MessageFlags, SeparatorBuilder, SeparatorSpacingSize, TextChannel, TextDisplayBuilder } from "discord.js";
 import { Collage } from "src/shared/models/Collage";
 import { DefaultUser } from "src/shared/models/DefaultUser";
 import { defaultTheme, Theme } from "src/shared/models/Theme";
@@ -8,7 +7,6 @@ import { drawProfileCanvas } from "src/shared/services/canvas/ProfileCanvas";
 import { LinkService } from "src/shared/services/LinkService";
 import { MomentoService } from "src/shared/services/MomentoService";
 import { MongoService } from "src/shared/services/MongoService";
-import { createCollageEmbed, createThemeEmbed } from "src/shared/services/ThemeService";
 
 export class ThemeService {
     public async createThemeList(client: Client, channel: TextChannel, mongoservice: MongoService): Promise<void> {
@@ -18,13 +16,30 @@ export class ThemeService {
 
         themes.forEach(async (theme) => {
             try {
-                const themeEmbed = createThemeEmbed("Desconhecido", theme);
                 const drawedProfile = await drawProfileCanvas(DefaultUser, uploadChannel, theme, 0, 0);
                 const themeImageUrl = await LinkService.uploadImageToMomento(uploadChannel, drawedProfile.toBuffer());
-                themeEmbed.setImage(themeImageUrl.attachments.first()?.url!);
+
+                const components = [
+                    new ContainerBuilder()
+                        .addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent(`# ${theme.name}`),
+                        )
+                        .addSeparatorComponents(
+                            new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+                        )
+                        .addMediaGalleryComponents(
+                            new MediaGalleryBuilder()
+                                .addItems(
+                                    new MediaGalleryItemBuilder()
+                                        .setURL(themeImageUrl.attachments.first()?.url!),
+                                ),
+                        )
+                ];
+
                 if (drawedProfile) {
                     await channel.send({
-                        embeds: [themeEmbed]
+                        flags: MessageFlags.IsComponentsV2,
+                        components: components
                     });
                 } else {
                     console.error(`Failed to draw profile for theme: ${theme.name}`);
@@ -93,13 +108,30 @@ export class ThemeService {
 
         collages.forEach(async (collage) => {
             try {
-                const collagesEmbed = createCollageEmbed("Desconhecido", collage);
                 const drawedProfile = await drawCollageCanvas(uploadChannel, DefaultUser, defaultTheme, collage);
                 const collagesImageUrl = await LinkService.uploadImageToMomento(uploadChannel, drawedProfile.toBuffer());
-                collagesEmbed.setImage(collagesImageUrl.attachments.first()?.url!);
+
+                const components = [
+                    new ContainerBuilder()
+                        .addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent(`# ${collage.id}`),
+                        )
+                        .addSeparatorComponents(
+                            new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+                        )
+                        .addMediaGalleryComponents(
+                            new MediaGalleryBuilder()
+                                .addItems(
+                                    new MediaGalleryItemBuilder()
+                                        .setURL(collagesImageUrl.attachments.first()?.url!),
+                                ),
+                        )
+                ];
+
                 if (drawedProfile) {
                     await channel.send({
-                        embeds: [collagesEmbed]
+                        flags: MessageFlags.IsComponentsV2,
+                        components: components
                     });
                 } else {
                     console.error(`Failed to draw profile for collage: ${collage.id}`);

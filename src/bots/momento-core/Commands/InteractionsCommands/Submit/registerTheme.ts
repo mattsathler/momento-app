@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, EmbedBuilder, Guild, ModalSubmitInteraction, TextChannel } from "discord.js"
+import { ComponentType, ContainerBuilder, Guild, MediaGalleryBuilder, MediaGalleryItemBuilder, MessageFlags, ModalSubmitInteraction, SeparatorBuilder, SeparatorSpacingSize, TextChannel, TextDisplayBuilder } from "discord.js"
 import { ICommand } from "../../../Interfaces/ICommand"
 import { IContext } from "../../../Interfaces/IContext"
 import { Permission } from "../../../Interfaces/IPermission"
@@ -6,10 +6,7 @@ import { StringValidator } from "../../../Utils/StringValidator"
 import { Theme } from "src/shared/models/Theme"
 import { MomentoService } from "src/shared/services/MomentoService"
 import { drawProfileCanvas } from "src/shared/services/canvas/ProfileCanvas"
-import { drawCollageCanvas } from "src/shared/services/canvas/CollageCanvas"
-import { defaultCollage } from "src/shared/models/Collage"
 import { LinkService } from "src/shared/services/LinkService"
-import { createThemeEmbed } from "src/shared/services/ThemeService"
 import { DefaultUser } from "src/shared/models/DefaultUser"
 
 interface IFormFields {
@@ -130,8 +127,8 @@ function fetchFormFields(interaction: ModalSubmitInteraction): IFormFields {
 }
 
 async function checkThemeNameAvailability(ctx: IContext, name: string): Promise<boolean> {
-    const theme = await ctx.mongoService.getOne('themes', { name: name });
-    return theme ? false : true
+    const theme = await ctx.mongoService.get('themes', { name: name });
+    return theme.length > 0 ? false : true
 }
 
 async function createTheme(ctx: IContext, guild: Guild, theme: Theme) {
@@ -151,9 +148,26 @@ export async function displayThemeInCatalogue(ctx: IContext, guild: Guild, theme
     const newThemeProfile = await drawProfileCanvas(DefaultUser, uploadChannel, theme, postCount, trendingCount);
     const themeLink = await LinkService.uploadImageToMomento(uploadChannel, newThemeProfile.toBuffer());
 
-    const themeEmbed = createThemeEmbed(guild.members.cache.get(theme.creatorId)?.displayName || 'Indisponível', theme).setImage(themeLink.attachments.first()?.url || '')
-
-    await themeUploaderChannel.send({ embeds: [themeEmbed] });
+    const components = [
+        new ContainerBuilder()
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(`# ${theme.name}`),
+            )
+            .addSeparatorComponents(
+                new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+            )
+            .addMediaGalleryComponents(
+                new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL(themeLink.attachments.first()?.url!),
+                    ),
+            )
+    ];
+    await themeUploaderChannel.send({
+        flags: MessageFlags.IsComponentsV2,
+        components: components
+    });
 }
 
 

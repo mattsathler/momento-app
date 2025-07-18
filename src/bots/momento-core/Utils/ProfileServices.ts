@@ -12,7 +12,6 @@ import { drawCollageCanvas } from "src/shared/services/canvas/CollageCanvas";
 import { drawProfileCanvas } from "src/shared/services/canvas/ProfileCanvas";
 import { User } from "src/shared/models/user";
 import { Theme } from "src/shared/models/Theme";
-import { displayCollageInCatalogue } from "src/shared/services/ThemeService";
 
 export class ProfileServices {
     public async updateProfilePictures(
@@ -158,48 +157,5 @@ export class ProfileServices {
 
     public async pingUser(userId: string, channel: TextChannel | ThreadChannel) {
         await channel.send(`<@${userId}>`).then(async (message) => { tryDeleteMessage(message) })
-    }
-
-    public async createCollage(ctx: IContext, username: string, collage: Collage): Promise<void> {
-        const isCollageValid = this.validateGrid(collage.positions);
-        if (!isCollageValid) throw new Error('Collage inválido! Verifique o guia para a criação de collages.')
-
-
-        await ctx.mongoService.post('collages', collage);
-        displayCollageInCatalogue(ctx.client, username, collage);
-        return;
-    }
-
-    public validateGrid(positions: string[]): boolean {
-        if (positions.length > 25) {
-            return false;
-        }
-
-        let totalOccupiedCells = 0;
-        const occupiedCellsMap: boolean[][] = Array.from({ length: 5 }, () => Array(5).fill(false));
-
-        for (const position of positions) {
-            const [rowStart, colStart, rowEnd, colEnd] = position.split(' / ').map(Number);
-
-            if (rowStart === 0 && colStart === 0 && rowEnd === 0 && colEnd === 0) {
-                continue;
-            }
-
-            if (rowStart < 1 || rowEnd > 24 || colStart < 1 || colEnd > 24) {
-                return false;
-            }
-
-            for (let row = rowStart; row < rowEnd; row++) {
-                for (let col = colStart; col < colEnd; col++) {
-                    if (occupiedCellsMap[row - 1][col - 1]) {
-                        return false;
-                    }
-                    occupiedCellsMap[row - 1][col - 1] = true;
-                    totalOccupiedCells++;
-                }
-            }
-        }
-
-        return true;
     }
 }

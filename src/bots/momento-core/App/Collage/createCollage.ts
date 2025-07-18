@@ -4,7 +4,7 @@ import { Permission } from "../../Interfaces/IPermission";
 import { IContext } from "../../Interfaces/IContext";
 import { ProfileServices } from "../../Utils/ProfileServices";
 import { Collage } from "src/shared/models/Collage";
-import { User } from "src/shared/models/User";
+import { CollageService } from "src/shared/services/CollageService";
 
 export const createCollage: ICommand = {
     permission: Permission.user,
@@ -22,10 +22,9 @@ async function createNewCollage(ctx: IContext, interaction: ModalSubmitInteracti
     if (interaction.isRepliable()) {
         await interaction.reply({ content: 'Criando seu collage...', ephemeral: true })
     }
-
-    const profileServices: ProfileServices = new ProfileServices();
     try {
-        await profileServices.createCollage(ctx, interaction.user.username, collage);
+        const collageService: CollageService = new CollageService();
+        await collageService.createCollage(ctx.client, ctx.mongoService, interaction.user.username, collage);
         if (interaction.isRepliable()) {
             await interaction.editReply({ content: 'Collage criado com sucesso!' })
         }
@@ -46,7 +45,6 @@ async function fetchFormFields(ctx: IContext, interaction: ModalSubmitInteractio
 
     if (positions.length > 25 || positions.length < 1) throw new Error('Informações inválidas! Consulte o guia para a criação de collages!')
     const dimensions = getCollageDimensions(positions)
-
     const collage: Collage = {
         id: collageLimit + 1,
         authorId: interaction.user.id,

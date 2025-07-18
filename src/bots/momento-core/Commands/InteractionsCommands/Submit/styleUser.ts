@@ -63,7 +63,7 @@ async function styleUserProfile(ctx: IContext, interaction: ModalSubmitInteracti
 
 
 
-    const isEdittingProfile = formField.styles.theme || formField.styles.theme || formField.styles.fonts.primary || formField.styles.fonts.secondary ? true : false;
+    const isEdittingProfile = formField.styles.theme || formField.styles.fonts.primary || formField.styles.fonts.secondary ? true : false;
     const isEdittingCollage = formField.styles?.collage || formField.styles.theme || formField.styles.fonts.primary || formField.styles.fonts.secondary ? true : false;
 
     if (newUserInfo.styles.collage !== String(author.styles.collage)) {
