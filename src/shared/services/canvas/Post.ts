@@ -9,9 +9,10 @@ import { User } from "src/shared/models/user";
 import { defaultTheme, Theme } from "src/shared/models/Theme";
 import { calculateSizes, Styles } from "src/shared/models/Style";
 import { LinkService } from "src/shared/services/LinkService";
-import { assetPaths } from "assets-paths";
+import { assetPaths, fontsPaths } from "assets-paths";
 import { drawTextInCanvas } from "src/shared/services/canvas/TextCanvas";
 import { MomentoService } from "../MomentoService";
+import { Fonts } from "src/shared/models/Fonts";
 
 
 export async function drawPostCanvas(context: IContext, user: User, theme: Theme, post: IPost): Promise<Canvas> {
@@ -25,8 +26,8 @@ export async function drawPostCanvas(context: IContext, user: User, theme: Theme
 
     const userImage = await loadImage(profileImageUrl);
 
-    const postHeader = await drawNotificationHeader(theme, userImage, user.username, `${user.name} ${user.surname}`, post.content.music, postWidth, MomentoService.isUserVerified(user.stats.isVerified));
-    const postBar = await drawPostActionBar(postWidth, post, theme);
+    const postHeader = await drawNotificationHeader(theme, user.styles.fonts, userImage, user.username, `${user.name} ${user.surname}`, post.content.music, postWidth, MomentoService.isUserVerified(user.stats.isVerified));
+    const postBar = await drawPostActionBar(postWidth, post, theme, user.styles.fonts);
 
     let y = 0;
     let x = 0;
@@ -46,8 +47,7 @@ export async function drawPostCanvas(context: IContext, user: User, theme: Theme
     }
 
     if (post.content.description) {
-        const font = `SFPRODISPLAYMEDIUM`;
-        const textDescriptionCanvas = drawTextInCanvas(post.content.description, theme, font, postWidth - (sizes.huge * 2), sizes.big);
+        const textDescriptionCanvas = drawTextInCanvas(post.content.description, theme, user.styles.fonts.secondary, postWidth - (sizes.huge * 2), sizes.big);
         x += sizes.huge;
         ctx.drawImage(textDescriptionCanvas, x, y);
         y += textDescriptionCanvas.height;
@@ -61,7 +61,8 @@ export async function drawPostCanvas(context: IContext, user: User, theme: Theme
 }
 
 
-export async function drawPostActionBar(width: number, post: IPost | null, theme: Theme = defaultTheme) {
+export async function drawPostActionBar(width: number, post: IPost | null, theme: Theme = defaultTheme, fonts: Fonts) {
+
     const likeIcon = await loadImage(assetPaths.likeIcon);
     const commentIcon = await loadImage(assetPaths.commentIcon);
     const shareIcon = await loadImage(assetPaths.shareIcon);
@@ -98,7 +99,7 @@ export async function drawPostActionBar(width: number, post: IPost | null, theme
 
     if (post?.content.location) {
         ctx.fillStyle = theme.colors.secondary;
-        ctx.font = `${sizes.big}px sfpro-regular`;
+        ctx.font = `${sizes.big}px ${fonts.secondary}-regular`;
         ctx.textAlign = 'right';
 
         let isCutted = false;
@@ -131,8 +132,8 @@ export async function drawPostFrame(uploadChannel: TextChannel, user: User, post
 
     const userImage = await loadImage(profileImageUrl);
 
-    const postHeader = await drawNotificationHeader(theme, userImage, user.username, `${user.name} ${user.surname}`, null, postWidth, MomentoService.isUserVerified(user.stats.isVerified));
-    const postBar = await drawPostActionBar(postWidth, post || null, theme);
+    const postHeader = await drawNotificationHeader(theme, user.styles.fonts, userImage, user.username, `${user.name} ${user.surname}`, null, postWidth, MomentoService.isUserVerified(user.stats.isVerified));
+    const postBar = await drawPostActionBar(postWidth, post || null, theme, user.styles.fonts);
 
     let y: number;
     let x: number = 0;
@@ -145,8 +146,7 @@ export async function drawPostFrame(uploadChannel: TextChannel, user: User, post
 
     y += Styles.sizes.large.post.height + sizes.medium;
     if (post?.content.description) {
-        const font = `SFPRODISPLAYMEDIUM`
-        const textDescriptionCanvas = drawTextInCanvas(post.content.description, theme, font, canvas.width - (sizes.huge * 2), sizes.big);
+        const textDescriptionCanvas = drawTextInCanvas(post.content.description, theme, user.styles.fonts.secondary, canvas.width - (sizes.huge * 2), sizes.big);
         x += sizes.huge;
         ctx.drawImage(textDescriptionCanvas, x, y);
         y += textDescriptionCanvas.height;
@@ -178,8 +178,8 @@ export async function drawMultiplePostsCanvas(uploadChannel: TextChannel, user: 
 
     const userImage = await loadImage(profileImageUrl);
 
-    const postHeader = await drawNotificationHeader(theme, userImage, user.username, `${user.name} ${user.surname}`, post.content.music, postWidth, MomentoService.isUserVerified(user.stats.isVerified));
-    const postBar = await drawPostActionBar(postWidth, post, theme);
+    const postHeader = await drawNotificationHeader(theme, user.styles.fonts, userImage, user.username, `${user.name} ${user.surname}`, post.content.music, postWidth, MomentoService.isUserVerified(user.stats.isVerified));
+    const postBar = await drawPostActionBar(postWidth, post, theme, user.styles.fonts);
 
     let y: number;
     let x: number = 0;
@@ -193,8 +193,7 @@ export async function drawMultiplePostsCanvas(uploadChannel: TextChannel, user: 
     y += Styles.sizes.large.post.height + sizes.medium;
     let descriptionHeight = 0;
     if (post.content.description) {
-        const font = `SFPRODISPLAYMEDIUM`
-        const textDescriptionCanvas = drawTextInCanvas(post.content.description, theme, font, canvas.width - (sizes.huge * 2), sizes.big);
+        const textDescriptionCanvas = drawTextInCanvas(post.content.description, theme, user.styles.fonts.secondary, canvas.width - (sizes.huge * 2), sizes.big);
         x += sizes.huge;
         ctx.drawImage(textDescriptionCanvas, x, y);
         y += textDescriptionCanvas.height;

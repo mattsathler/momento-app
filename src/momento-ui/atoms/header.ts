@@ -1,15 +1,15 @@
-import { assetPaths } from "assets-paths";
+import { assetPaths, fontsPaths } from "assets-paths";
 import { Canvas, loadImage } from "canvas";
 import { calculateSizes, Sizes } from "src/shared/models/Style";
 import { cropCirclePicture } from "src/shared/services/canvas/CanvasService";
 import { ImageCropper } from "src/shared/services/ImageCropper";
-import { LinkService } from "src/shared/services/LinkService";
 import { drawCard } from "./cards";
 import { Theme } from "src/shared/models/Theme";
 import { MomentoService } from "src/shared/services/MomentoService";
 import { Client, TextChannel } from "discord.js";
+import { Fonts } from "src/shared/models/Fonts";
 
-export async function drawHeader(client: Client, title: string, width: number, theme: Theme, description?: string, icon?: string, userIcon?: string): Promise<Canvas> {
+export async function drawHeader(client: Client, title: string, width: number, theme: Theme, fonts: Fonts, description?: string, icon?: string, userIcon?: string): Promise<Canvas> {
     const sizes = calculateSizes(width);
     const uploadChannel = await MomentoService.getUploadChannel(client) as TextChannel;
 
@@ -45,7 +45,7 @@ export async function drawHeader(client: Client, title: string, width: number, t
 
     x += 40 + sizes.medium;
 
-    ctx.font = '24px sfpro-bold';
+    ctx.font = `24px ${fonts.primary}-bold`;
     const titleSize = ctx.measureText('Analytics');
     ctx.textBaseline = "middle";
     y += sizes.medium;
@@ -53,7 +53,7 @@ export async function drawHeader(client: Client, title: string, width: number, t
     ctx.fillText(title, x, y);
 
     if (description) {
-        ctx.font = '20px sfpro-medium';
+        ctx.font = `20px ${fonts.secondary}-medium`;
         ctx.fillText('Confira o alcance do seu momento!', (x + sizes.medium + titleSize.width), y);
     }
 

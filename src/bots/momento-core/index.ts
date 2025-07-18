@@ -12,6 +12,8 @@ import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
+import { updateUsers } from "scripts/updateUsers";
+import { loadFonts } from "src/shared/services/canvas/FontsService";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -25,6 +27,8 @@ let ctx: IContext;
 
 let interactors: string[] = []
 let activePostList: IPost[] = []
+
+loadFonts();
 
 async function createContext(): Promise<IContext> {
 	if (!process.env.API_GUILD_ID) throw new Error('ID da API inválida!');

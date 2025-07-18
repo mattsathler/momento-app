@@ -1,16 +1,16 @@
-import { Canvas, registerFont } from "canvas";
+import { Canvas } from "canvas";
 import { Theme } from "../../models/Theme";
-import { fontsPaths } from "assets-paths";
 
 export function drawTextInCanvas(
     text: string,
     theme: Theme,
-    fontName: string,
+    font: string,
     maxWidth: number,
     size: number,
     textAlign = 'left',
     maxHeight?: number
 ): Canvas {
+
     let canvas = new Canvas(maxWidth, 4000);
     const ctx = canvas.getContext('2d');
 
@@ -23,8 +23,9 @@ export function drawTextInCanvas(
 
     ctx.textAlign = 'left';
     ctx.fillStyle = theme.colors.primary;
-    registerFont(fontsPaths.SFPROMEDIUM, { family: fontName });
-    ctx.font = `${size}px ${fontName}`;
+
+
+    ctx.font = `${size}px ${font}-regular`;
 
     const words = text.split(' ');
     let currentLine = '';
@@ -38,7 +39,7 @@ export function drawTextInCanvas(
             if (maxHeight && y + size > maxHeight) {
                 const ellipsis = '...';
                 let trimmed = currentLine;
-
+                
                 while (ctx.measureText(trimmed + ellipsis).width > maxWidth && trimmed.length > 0) {
                     trimmed = trimmed.slice(0, -1);
                 }

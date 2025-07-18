@@ -1,4 +1,4 @@
-import { createCanvas, loadImage, Canvas, registerFont, Image } from "canvas";
+import { createCanvas, loadImage, Canvas, Image } from "canvas";
 import { ImageCropper } from "../../../bots/momento-core/Utils/ImageCropper";
 import { cropCirclePicture } from "../../../bots/momento-core/Utils/Pictures";
 import { IContext } from "../../../bots/momento-core/Interfaces/IContext";
@@ -9,11 +9,9 @@ import { User } from "src/shared/models/User";
 import { assetPaths, fontsPaths } from "assets-paths";
 import { drawTextInCanvas } from "src/shared/services/canvas/TextCanvas";
 import { MomentoService } from "../MomentoService";
+import { Fonts } from "src/shared/models/Fonts";
 
-export async function drawAnswerCanvas(context: IContext, question: string, answer: string, questionAuthor: string, user: User, theme: Theme): Promise<Canvas> {
-    registerFont(fontsPaths.SFPROBOLD, { family: 'sfpro-bold' })
-    registerFont(fontsPaths.SFPROMEDIUM, { family: 'sfpro-medium' })
-    registerFont(fontsPaths.SFPROREGULAR, { family: 'sfpro-regular' })
+export async function drawAnswerCanvas(context: IContext, question: string, answer: string, questionAuthor: string, user: User, theme: Theme, fonts: Fonts): Promise<Canvas> {
 
     const asktheme: Theme = {
         name: 'AskTheme',
@@ -54,12 +52,12 @@ export async function drawAnswerCanvas(context: IContext, question: string, answ
     x += 35;
 
     ctx.textAlign = 'center';
-    ctx.font = `${sizes.big}px sfpro-bold`;
+    ctx.font = `${sizes.big}px ${fonts.secondary}-bold`;
     ctx.fillStyle = asktheme.colors.secondary;
     ctx.fillText(questionAuthor, x, y);
 
     y += sizes.medium;
-    const questionCanvas = drawTextInCanvas(question, asktheme, 'SFPRODISPLAYMEDIUM', questionBoxSize.width - (2 * sizes.huge), sizes.big, 'center');
+    const questionCanvas = drawTextInCanvas(question, asktheme, fonts, questionBoxSize.width - (2 * sizes.huge), sizes.big, 'center');
     ctx.drawImage(questionCanvas, sizes.huge * 2, y);
 
     // ANSWER ========================================
@@ -76,7 +74,7 @@ export async function drawAnswerCanvas(context: IContext, question: string, answ
     y += sizes.huge;
     const profileImageUrl: string | undefined = await LinkService.readImageOfMomento(context.uploadChannel, user.imagesUrl.profilePicture);
     if (!profileImageUrl) { throw new Error('Erro ao carregar imagem de perfil') }
-    
+
     const profilePicture = await loadImage(profileImageUrl);
     if (!profilePicture) { throw new Error('Invalid profile picture') }
     const circlePicture = cropCirclePicture(ImageCropper.cropImage(profilePicture, 150, 150, true), 150, 150);
@@ -90,7 +88,7 @@ export async function drawAnswerCanvas(context: IContext, question: string, answ
         answerSize = sizes.huge;
     }
 
-    const answerCanvas = drawTextInCanvas(answer, theme, 'SFPRODISPLAYREGULAR', canvas.width - (4 * sizes.huge), answerSize, 'center');
+    const answerCanvas = drawTextInCanvas(answer, theme, fonts, canvas.width - (4 * sizes.huge), answerSize, 'center');
     ctx.drawImage(answerCanvas, sizes.huge * 2, y);
 
     ctx.fillStyle = theme.colors.primary;

@@ -1,4 +1,4 @@
-import { createCanvas, loadImage, Canvas, registerFont, Image } from "canvas";
+import { createCanvas, loadImage, Canvas, Image } from "canvas";
 import { TextChannel } from "discord.js";
 import { calculateSizes, Styles } from "../../models/Style";
 import { cropImage } from "./CanvasService";
@@ -6,7 +6,6 @@ import { LinkService } from "../LinkService";
 import { User } from "../../models/User";
 import { defaultTheme, Theme } from "../../models/Theme";
 import { Collage } from "../../models/Collage";
-import { fontsPaths } from "assets-paths";
 import { MomentoService } from "../MomentoService";
 
 export async function drawCollageCanvas(uploadChannel: TextChannel, user: User, theme: Theme, userCollageStyle: Collage): Promise<Canvas> {
@@ -23,20 +22,16 @@ export async function drawCollageCanvas(uploadChannel: TextChannel, user: User, 
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // HEADER ========================================
-    registerFont(fontsPaths.SFPROBOLD, { family: 'sfpro-bold' })
-    registerFont(fontsPaths.SFPROMEDIUM, { family: 'sfpro-medium' })
-    registerFont(fontsPaths.SFPROREGULAR, { family: 'sfpro-regular' })
-
     ctx.textAlign = 'center';
 
     ctx.fillStyle = theme.colors.primary;
-    ctx.font = `${sizes.medium}px sfpro-bold`;
-    ctx.fillText('COLLAGES', canvas.width / 2 - (sizes.big * 4), y);
+    ctx.font = `${sizes.medium}px ${user.styles.fonts.secondary}-bold`;
+    ctx.fillText('Collages', canvas.width / 2 - (sizes.big * 4), y);
 
     ctx.fillStyle = theme.colors.secondary;
-    ctx.font = `${sizes.medium}px sfpro-regular`;
-    ctx.fillText('MOMENTOS', canvas.width / 2, y);
-    ctx.fillText('TRENDS', canvas.width / 2 + (sizes.big * 4), y);
+    ctx.font = `${sizes.medium}px ${user.styles.fonts.secondary}-regular`;
+    ctx.fillText('Momentos', canvas.width / 2, y);
+    ctx.fillText('Trends', canvas.width / 2 + (sizes.big * 4), y);
 
     y += sizes.medium;
 

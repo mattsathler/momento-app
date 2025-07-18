@@ -21,11 +21,20 @@ export const assetPaths = {
     questionIcon: path.join(assetsRoot, 'images/question.png'),
 };
 
-export const fontsPaths = {
-    SFPROBOLD: path.join(assetsRoot, 'fonts/SFPRODISPLAYBOLD.OTF'),
-    SFPROMEDIUM: path.join(assetsRoot, 'fonts/SFPRODISPLAYMEDIUM.OTF'),
-    SFPROREGULAR: path.join(assetsRoot, 'fonts/SFPRODISPLAYREGULAR.OTF'),
-}
+export const fontsPaths: { name: string; path: string }[] = [
+    { name: 'sfpro-bold', path: path.join(assetsRoot, 'fonts/sfpro/sfpro-bold.OTF') },
+    { name: 'sfpro-medium', path: path.join(assetsRoot, 'fonts/sfpro/sfpro-medium.OTF') },
+    { name: 'sfpro-regular', path: path.join(assetsRoot, 'fonts/sfpro/sfpro-regular.OTF') },
+
+    { name: 'dancing-bold', path: path.join(assetsRoot, 'fonts/dancing/dancing-bold.ttf') },
+    { name: 'dancing-medium', path: path.join(assetsRoot, 'fonts/dancing/dancing-medium.ttf') },
+    { name: 'dancing-regular', path: path.join(assetsRoot, 'fonts/dancing/dancing-regular.ttf') },
+
+    { name: 'worksans-bold', path: path.join(assetsRoot, 'fonts/worksans/worksans-bold.ttf') },
+    { name: 'worksans-medium', path: path.join(assetsRoot, 'fonts/worksans/worksans-medium.ttf') },
+    { name: 'worksans-regular', path: path.join(assetsRoot, 'fonts/worksans/worksans-regular.ttf') },
+];
+
 
 export const toolsPaths = {
     ffmpeg: path.join(root, 'tools/ffmpeg.exe'),

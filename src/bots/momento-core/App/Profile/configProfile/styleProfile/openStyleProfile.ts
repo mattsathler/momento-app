@@ -47,13 +47,33 @@ function createStyleProfileModal(author: User, collagesCount: number): ModalBuil
         .setMinLength(4)
         .setMaxLength(14)
 
+    const primaryFontField = new TextInputBuilder()
+        .setCustomId('primary_font_field')
+        .setPlaceholder(MomentoService.isUserVerified(author.stats.isVerified) ? author.styles.fonts.primary : "Apenas para verificados 👑")
+        .setRequired(false)
+        .setStyle(TextInputStyle.Short)
+        .setLabel('Fonte Primária')
+        .setMinLength(4)
+        .setMaxLength(14)
+
+    const secondaryFontField = new TextInputBuilder()
+        .setCustomId('secondary_font_field')
+        .setPlaceholder(MomentoService.isUserVerified(author.stats.isVerified) ? author.styles.fonts.secondary : "Apenas para verificados 👑")
+        .setRequired(false)
+        .setStyle(TextInputStyle.Short)
+        .setLabel('Fonte Secundária')
+        .setMinLength(4)
+        .setMaxLength(14)
+
     const AR1 = new ActionRowBuilder<TextInputBuilder>().addComponents(collageStyleField)
     const AR2 = new ActionRowBuilder<TextInputBuilder>().addComponents(themeField)
+    const AR3 = new ActionRowBuilder<TextInputBuilder>().addComponents(primaryFontField)
+    const AR4 = new ActionRowBuilder<TextInputBuilder>().addComponents(secondaryFontField)
 
     const modal = new ModalBuilder()
         .setTitle('Estilizar Perfil')
         .setCustomId('styleUser')
-        .addComponents(AR2, AR1)
+        .addComponents(AR2, AR1, AR3, AR4)
 
     return modal
 }

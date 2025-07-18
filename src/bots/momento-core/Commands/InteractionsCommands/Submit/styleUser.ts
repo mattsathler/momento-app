@@ -3,11 +3,19 @@ import { ICommand } from "../../../Interfaces/ICommand";
 import { Permission } from "../../../Interfaces/IPermission";
 import { IContext } from "../../../Interfaces/IContext";
 import { ProfileServices } from "../../../Utils/ProfileServices";
+import { Theme } from "src/shared/models/Theme";
+import { Fonts } from "src/shared/models/Fonts";
+import { fontsPaths } from "assets-paths";
+import { User } from "src/shared/models/user";
 
 interface IEditableFields {
     styles: {
         theme: string | null,
-        collage: string | null
+        collage: string | null,
+        fonts: {
+            primary: string | null,
+            secondary: string | null
+        }
     }
 }
 
@@ -20,7 +28,7 @@ export const styleUser: ICommand = {
 }
 
 async function styleUserProfile(ctx: IContext, interaction: ModalSubmitInteraction) {
-    const author = await ctx.mongoService.getOne('users', { userId: interaction.user.id, guildId: interaction.guildId });
+    const author = await ctx.mongoService.getOne('users', { userId: interaction.user.id, guildId: interaction.guildId }) as User;
     if (!author) { throw new Error('Invalid author') }
 
     const formField = fetchFormFields(interaction);
@@ -29,21 +37,43 @@ async function styleUserProfile(ctx: IContext, interaction: ModalSubmitInteracti
     let newUserInfo: IEditableFields = {
         styles: {
             theme: formField.styles.theme ?? author.styles.theme,
-            collage: formField.styles?.collage ?? author.styles.collage
+            collage: formField.styles?.collage ?? String(author.styles.collage),
+            fonts: formField.styles?.fonts ?? author.styles.fonts
         }
     };
 
-    const isEdittingProfile = formField.styles.theme ? true : false;
-    const isEdittingCollage = formField.styles?.collage || formField.styles.theme ? true : false;
+    if (newUserInfo.styles.theme) {
+        const newTheme = await ctx.mongoService.getOne("themes", { name: newUserInfo.styles.theme || '' }) as Theme;
+        if (!newTheme) { newUserInfo.styles.theme = author.styles.theme }
+    }
 
-    if (newUserInfo.styles.collage !== author.styles.collage) {
+    if (newUserInfo.styles.fonts.primary) {
+        const hasFont = fontsPaths.some(font => font.name === `${newUserInfo.styles.fonts.primary}-bold`);
+        newUserInfo.styles.fonts.primary = hasFont ? newUserInfo.styles.fonts.primary : author.styles.fonts.primary;
+    } else {
+        newUserInfo.styles.fonts.primary = author.styles.fonts.primary;
+    }
+
+    if (newUserInfo.styles.fonts.secondary) {
+        const hasFont = fontsPaths.some(font => font.name === `${newUserInfo.styles.fonts.secondary}-bold`);
+        newUserInfo.styles.fonts.secondary = hasFont ? newUserInfo.styles.fonts.secondary : author.styles.fonts.secondary;
+    } else {
+        newUserInfo.styles.fonts.secondary = author.styles.fonts.secondary;
+    }
+
+
+
+    const isEdittingProfile = formField.styles.theme ? true : false;
+    const isEdittingCollage = formField.styles?.collage || formField.styles.theme || formField.styles.fonts.primary || formField.styles.fonts.secondary ? true : false;
+
+    if (newUserInfo.styles.collage !== String(author.styles.collage)) {
         const collagesCount = await ctx.mongoService.count('collages', {});
         if (isNaN(Number(newUserInfo.styles.collage)) || Number(newUserInfo.styles.collage) > collagesCount || Number(newUserInfo.styles.collage) < 1) { throw new Error(`Esse estilo de colagem não existe. Escolha um número entre 1 e ${collagesCount}.`) }
     }
 
     await ctx.mongoService.patch('users', { userId: interaction.user.id, guildId: interaction.guildId }, newUserInfo);
     author.styles.theme = newUserInfo.styles.theme ?? author.styles.theme;
-    author.styles.collage = newUserInfo.styles?.collage ?? author.styles.collage;
+    author.styles.collage = Number(newUserInfo.styles?.collage) ?? author.styles.collage;
 
     const profileServices: ProfileServices = new ProfileServices();
     await interaction.reply({ content: 'Estilizando seu perfil...', ephemeral: true })
@@ -55,17 +85,25 @@ async function styleUserProfile(ctx: IContext, interaction: ModalSubmitInteracti
 }
 
 function fetchFormFields(interaction: ModalSubmitInteraction): IEditableFields | null {
-    const themeField = interaction.fields.getField('theme_field', ComponentType.TextInput).value
-    const collageStyleField = interaction.fields.getField('collage_style_field', ComponentType.TextInput).value
+    const themeField = interaction.fields.getField('theme_field', ComponentType.TextInput).value;
+    const collageStyleField = interaction.fields.getField('collage_style_field', ComponentType.TextInput).value;
+    const primaryFontField = interaction.fields.getField('primary_font_field', ComponentType.TextInput).value;
+    const secondaryFontField = interaction.fields.getField('secondary_font_field', ComponentType.TextInput).value;
+
 
     const theme = themeField.length > 0 ? themeField : null;
     const collage = collageStyleField.length > 0 ? (collageStyleField).toString() : null;
+    const fonts = {
+        primary: primaryFontField.length > 0 ? (primaryFontField).toString() : null,
+        secondary: secondaryFontField.length > 0 ? (secondaryFontField).toString() : null,
+    }
 
-    if (!theme && !collage) { return null }
+    if (!theme && !collage && !fonts.primary && !fonts.secondary) { return null }
     return {
         styles: {
             theme,
-            collage
+            collage,
+            fonts
         }
     }
 }

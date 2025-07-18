@@ -1,3 +1,4 @@
+import { Fonts } from "./Fonts";
 import { Permission } from "./Permission";
 
 export interface User {
@@ -17,6 +18,7 @@ export interface User {
     styles: {
         collage: number;
         theme: string;
+        fonts: Fonts
     }
     imagesUrl: {
         profilePicture: string;

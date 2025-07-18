@@ -7,11 +7,11 @@ import { LinkService } from "../LinkService";
 import { User } from "../../models/User";
 import { defaultTheme, Theme } from "../../models/Theme";
 import { MomentoService } from "../MomentoService";
+import { assetPaths } from "assets-paths";
 
 export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, theme: Theme, momentos: number, trendings: number): Promise<Canvas> {
     const canvas = createCanvas(Styles.sizes.large.profile.stats.width, Styles.sizes.large.profile.stats.height);
     const ctx = canvas.getContext('2d');
-
     theme = MomentoService.isUserVerified(user.stats.isVerified) ? theme : defaultTheme;
 
     ctx.fillStyle = theme.colors.background;
@@ -69,25 +69,25 @@ export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, 
     ctx.textAlign = 'center';
     ctx.fillStyle = theme.colors.secondary;
 
-    ctx.font = `${sizes.medium}px sfpro-medium`;
+    ctx.font = `${sizes.medium}px ${user.styles.fonts.secondary}-medium`;
     ctx.fillText(`@${user.username}`, canvas.width / 2, y);
     y += sizes.big;
 
 
     ctx.fillStyle = theme.colors.primary;
-    ctx.font = `${sizes.big}px sfpro-bold`;
+    ctx.font = `${sizes.big}px ${user.styles.fonts.primary}-bold`;
     ctx.fillText(`${user.name} ${user.surname}`, canvas.width / 2, y);
 
     if (MomentoService.isUserVerified(user.stats.isVerified)) {
         const measureGap = canvas.width / 2 + sizes.tiny + ((ctx.measureText(user.name).width + ctx.measureText(user.surname).width + sizes.small) / 2);
-        const verifiedIcon = await loadImage('src/assets/images/verified.png')
+        const verifiedIcon = await loadImage(assetPaths.verifiedIcon)
         ctx.drawImage(verifiedIcon, measureGap, y - 40, 40, 40);
     }
 
     y += sizes.medium;
 
     ctx.fillStyle = theme.colors.secondary;
-    ctx.font = `${sizes.medium}px sfpro-regular`;
+    ctx.font = `${sizes.medium}px ${user.styles.fonts.secondary}-regular`;
     ctx.fillText(user.bio, canvas.width / 2, y);
     y += sizes.big;
 
@@ -120,7 +120,7 @@ export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, 
     // STATS ===========================================
     ctx.textAlign = 'center';
     ctx.fillStyle = theme.colors.primary;
-    ctx.font = `${sizes.big}px sfpro-bold`;
+    ctx.font = `${sizes.big}px ${user.styles.fonts.primary}-bold`;
 
     ctx.fillText(momentos.toString(), canvas.width / 2 - (sizes.big * 5), y);
     ctx.fillText(trendings.toString(), canvas.width / 2, y);
@@ -130,7 +130,7 @@ export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, 
 
     // STATS LABELS ====================================
     ctx.fillStyle = theme.colors.secondary;
-    ctx.font = `${sizes.medium}px sfpro-medium`;
+    ctx.font = `${sizes.medium}px ${user.styles.fonts.secondary}-medium`;
     ctx.fillText('momentos', canvas.width / 2 - (sizes.big * 5), y);
     ctx.fillText('trends', canvas.width / 2, y);
     ctx.fillText('followers', canvas.width / 2 + (sizes.big * 5), y);
@@ -138,7 +138,7 @@ export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, 
     y = canvas.height - sizes.small;
 
     ctx.textAlign = "left";
-    ctx.font = `${sizes.small}px sfpro-bold`;
+    ctx.font = `${sizes.small}px ${user.styles.fonts.secondary}-bold`;
     ctx.fillText(`Último momento: ${StringService.formatDate(user.stats.lastOnline || 'Indisponível', 'DD/MM/YYYY')}`, sizes.small, y);
     return canvas
 }

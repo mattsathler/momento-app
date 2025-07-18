@@ -1,4 +1,4 @@
-import { Canvas, Image, loadImage, registerFont } from "canvas";
+import { Canvas, Image, loadImage } from "canvas";
 import { Post } from "../../models/Post";
 import { Log } from "../../models/Log";
 import { LinkService } from "../LinkService";
@@ -13,10 +13,10 @@ import { defaultTheme, Theme } from "../../models/Theme";
 import { assetPaths, fontsPaths } from "assets-paths";
 import { generateSurface } from "../ThemeService";
 import { drawCard } from "src/momento-ui/atoms/cards";
+import { Fonts } from "src/shared/models/Fonts";
 
-export async function drawPostAnalytics(uploadChannel: TextChannel, post: Post, author: User, likesLogs: Log[], newFollowers: number, theme: Theme) {
-    registerFont(fontsPaths.SFPROBOLD, { family: 'sfpro-bold' })
-    registerFont(fontsPaths.SFPROMEDIUM, { family: 'sfpro-medium' })
+export async function drawPostAnalytics(uploadChannel: TextChannel, post: Post, author: User, likesLogs: Log[], newFollowers: number, theme: Theme, fonts: Fonts) {
+
     const analyticsWidth = Styles.sizes.large.post.width;
     theme = theme ?? defaultTheme;
     theme.colors.surface = generateSurface(theme.colors.background);
@@ -52,13 +52,13 @@ export async function drawPostAnalytics(uploadChannel: TextChannel, post: Post, 
 
     x += 40 + sizes.medium;
 
-    ctx.font = '24px sfpro-bold';
+    ctx.font = `24px ${fonts.primary}-bold`;
     const titleSize = ctx.measureText('Analytics');
     ctx.textBaseline = "middle";
     y += sizes.medium;
     ctx.fillStyle = theme.colors.primary;
     ctx.fillText('Analytics', x, y);
-    ctx.font = '20px sfpro-medium';
+    ctx.font = `20px ${fonts.secondary}-medium`;
     ctx.fillText('Confira o alcance do seu momento!', (x + sizes.medium + titleSize.width), y);
 
     x = sizes.medium;
@@ -85,7 +85,7 @@ export async function drawPostAnalytics(uploadChannel: TextChannel, post: Post, 
     if (post.content.description) {
         const descriptionWidth = cardWidth;
         drawCard(ctx, x, canvas.height - sizes.medium - ((canvas.height - y - sizes.medium) / 3), cardWidth, (canvas.height - y - sizes.medium) / 3, 24, theme.colors.background);
-        const description = drawTextInCanvas(post.content.description || '', theme, '', descriptionWidth - x - sizes.medium, sizes.medium, 'left', ((canvas.height - y - sizes.medium) / 3) - sizes.medium * 2);
+        const description = drawTextInCanvas(post.content.description || '', theme, author.styles.fonts.secondary, descriptionWidth - x - sizes.medium, sizes.medium, 'left', ((canvas.height - y - sizes.medium) / 3) - sizes.medium * 2);
         y = canvas.height - sizes.medium - ((canvas.height - y - sizes.medium) / 3);
         y += sizes.medium;
 
@@ -118,11 +118,11 @@ export async function drawPostAnalytics(uploadChannel: TextChannel, post: Post, 
     ctx.textAlign = "center";
 
     ctx.fillStyle = theme.colors.primary;
-    ctx.font = '20px sfpro-bold';
+    ctx.font = `20px ${fonts.primary}-bold`;
     ctx.fillText(`+${String(newFollowers)}`, x, y);
 
     ctx.fillStyle = theme.colors.secondary;
-    ctx.font = '20px sfpro-medium';
+    ctx.font = `20px ${fonts.secondary}-medium`;
     y += sizes.medium;
     ctx.fillText(`Novos Seguidores`, x, y);
 
@@ -147,11 +147,11 @@ export async function drawPostAnalytics(uploadChannel: TextChannel, post: Post, 
     ctx.textAlign = "center";
 
     ctx.fillStyle = theme.colors.primary;
-    ctx.font = '20px sfpro-bold';
+    ctx.font = `20px ${fonts.primary}-bold`;
     ctx.fillText(`${String(likesLogs.length || 0)}`, x, y);
 
     ctx.fillStyle = theme.colors.secondary;
-    ctx.font = '20px sfpro-medium';
+    ctx.font = `20px ${fonts.secondary}-medium`;
     y += sizes.medium;
     ctx.fillText(`Curtidas`, x, y);
 

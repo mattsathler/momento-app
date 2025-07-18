@@ -64,7 +64,6 @@ export class ProfileUpdaterService {
             'stats.status': { $in: ['active', 'inactive'] },
             'stats.type': { $in: ['image', 'carousel', 'video'] }
         })
-
         if (profile) {
             const profileMessage = await profileChannel.messages.fetch(user.references.statsId);
             if (!profileMessage) throw new Error("Invalid Profile Channel");

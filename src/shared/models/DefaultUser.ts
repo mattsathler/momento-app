@@ -18,6 +18,10 @@ export const DefaultUser: User = {
     styles: {
         collage: 1,
         theme: 'light',
+        fonts: {
+            primary: 'sfpro',
+            secondary: 'sfpro'
+        }
     },
     imagesUrl: {
         profilePicture: 'https://discord.com/channels/1084823963974246414/1210763625250291772/1210763928473436180',

@@ -17,6 +17,12 @@ export const UserSchema = new Schema({
     styles: {
         collage: { type: Schema.Types.Number, required: true },
         theme: { type: String, required: true },
+        fonts: {
+            type: {
+                primary: { type: String, required: true },
+                secondary: { type: String, required: true },
+            }, required: true
+        }
     },
     imagesUrl: {
         profilePicture: { type: String, required: true },

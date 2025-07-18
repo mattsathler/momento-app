@@ -7,8 +7,10 @@ import { validateToken } from "../../../../shared/middlewares/validateToken";
 import { handleMessage } from "../../../../shared/handlers/messageHandler";
 import { MongoService } from "../../../../shared/services/MongoService";
 import { ProfileUpdateQueue } from "../queues/profileUpdateQueue";
+import { loadFonts } from "src/shared/services/canvas/FontsService";
 
 export async function onReady(client: Client) {
+    loadFonts()
     const channel = await client.channels.fetch(process.env.PROFILE_UPDATER_WEBHOOK_CHANNEL_ID!) as TextChannel;
     const messages = await channel.messages.fetch({ limit: 100 });
 

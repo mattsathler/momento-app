@@ -1,11 +1,12 @@
-import { loadImage, Canvas, registerFont, Image } from "canvas";
+import { loadImage, Canvas, Image } from "canvas";
 import { ImageCropper } from "../../../Utils/ImageCropper";
 import { cropCirclePicture, resizeCanvas } from "../../../Utils/Pictures";
 import { defaultTheme, Theme } from "src/shared/models/Theme";
 import { calculateSizes, Sizes } from "src/shared/models/Style";
 import { assetPaths, fontsPaths } from "assets-paths";
+import { Fonts } from "src/shared/models/Fonts";
 
-export async function drawNotificationHeader(theme: Theme = defaultTheme, authorPicture: Image, authorUsername?: string, authorName?: string, music: string | null = null, width = 400, isVerified: boolean = false): Promise<Canvas> {
+export async function drawNotificationHeader(theme: Theme = defaultTheme, fonts: Fonts, authorPicture: Image, authorUsername?: string, authorName?: string, music: string | null = null, width = 400, isVerified: boolean = false): Promise<Canvas> {
     let canvas = new Canvas(width, 2000);
     const ctx = canvas.getContext('2d');
 
@@ -26,10 +27,6 @@ export async function drawNotificationHeader(theme: Theme = defaultTheme, author
     ctx.drawImage(croppedImg, x, y);
 
     // AUTHOR NAME
-    registerFont(fontsPaths.SFPROBOLD, { family: 'sfpro-bold' })
-    registerFont(fontsPaths.SFPROMEDIUM, { family: 'sfpro-medium' })
-    registerFont(fontsPaths.SFPROREGULAR, { family: 'sfpro-regular' })
-
     ctx.textAlign = 'center';
     ctx.fillStyle = theme.colors.secondary;
 
@@ -38,7 +35,7 @@ export async function drawNotificationHeader(theme: Theme = defaultTheme, author
 
     ctx.textAlign = 'left';
     ctx.fillStyle = theme.colors.primary;
-    ctx.font = `${sizes.big}px sfpro-bold`;
+    ctx.font = `${sizes.big}px ${fonts.primary}-bold`;
     ctx.fillText(authorName ?? 'MOMENTO APP', x, y);
 
     if (isVerified) {
@@ -51,13 +48,13 @@ export async function drawNotificationHeader(theme: Theme = defaultTheme, author
 
     y += sizes.big;
     ctx.fillStyle = theme.colors.secondary;
-    ctx.font = `${sizes.big}px sfpro-regular`;
+    ctx.font = `${sizes.big}px ${fonts.secondary}-regular`;
     const author = authorUsername ? `@${authorUsername}` : '@momentoapp';
     ctx.fillText(author, x, y);
     if (music) {
         const musicIcon = await loadImage(assetPaths.musicIcon);
         if (!musicIcon) { throw new Error('Erro ao carregar icone de musica') }
-        ctx.font = `${sizes.big}px sfpro-bold`;
+        ctx.font = `${sizes.big}px ${fonts.primary}-bold`;
         ctx.fillStyle = theme.colors.primary;
 
         let treatedMusicName = music;
