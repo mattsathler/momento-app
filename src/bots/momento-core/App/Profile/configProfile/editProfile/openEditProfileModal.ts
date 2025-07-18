@@ -68,6 +68,7 @@ function createEditProfileModal(author: User): ModalBuilder {
     const AR3 = new ActionRowBuilder<TextInputBuilder>().addComponents(usernameField)
     const AR4 = new ActionRowBuilder<TextInputBuilder>().addComponents(bioField)
 
+
     const modal = new ModalBuilder()
         .setTitle('Editar Perfil')
         .setCustomId('editUser')

@@ -35,7 +35,7 @@ export async function drawNotificationHeader(theme: Theme = defaultTheme, fonts:
 
     ctx.textAlign = 'left';
     ctx.fillStyle = theme.colors.primary;
-    ctx.font = `${sizes.big}px ${fonts.primary}-bold`;
+    ctx.font = `${sizes.big}px ${fonts.primary}`;
     ctx.fillText(authorName ?? 'MOMENTO APP', x, y);
 
     if (isVerified) {
@@ -48,13 +48,13 @@ export async function drawNotificationHeader(theme: Theme = defaultTheme, fonts:
 
     y += sizes.big;
     ctx.fillStyle = theme.colors.secondary;
-    ctx.font = `${sizes.big}px ${fonts.secondary}-regular`;
+    ctx.font = `${sizes.big}px ${fonts.secondary}`;
     const author = authorUsername ? `@${authorUsername}` : '@momentoapp';
     ctx.fillText(author, x, y);
     if (music) {
         const musicIcon = await loadImage(assetPaths.musicIcon);
         if (!musicIcon) { throw new Error('Erro ao carregar icone de musica') }
-        ctx.font = `${sizes.big}px ${fonts.primary}-bold`;
+        ctx.font = `${sizes.big}px ${fonts.primary}`;
         ctx.fillStyle = theme.colors.primary;
 
         let treatedMusicName = music;

@@ -52,7 +52,7 @@ export async function drawAnswerCanvas(context: IContext, question: string, answ
     x += 35;
 
     ctx.textAlign = 'center';
-    ctx.font = `${sizes.big}px ${fonts.secondary}-bold`;
+    ctx.font = `${sizes.big}px ${fonts.secondary}`;
     ctx.fillStyle = asktheme.colors.secondary;
     ctx.fillText(questionAuthor, x, y);
 

@@ -1,6 +1,10 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelType, Client, ContainerBuilder, EmbedBuilder, MediaGalleryBuilder, MediaGalleryItemBuilder, Message, MessageFlags, PermissionOverwrites, SelectMenuBuilder, SelectMenuInteraction, SeparatorBuilder, SeparatorSpacingSize, StringSelectMenuBuilder, TextChannel, TextDisplayBuilder } from "discord.js";
+import { fontsPaths } from "assets-paths";
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelType, Client, ContainerBuilder, EmbedBuilder, MediaGalleryBuilder, MediaGalleryItemBuilder, Message, MessageActionRowComponentBuilder, MessageFlags, PermissionOverwrites, SelectMenuBuilder, SelectMenuInteraction, SeparatorBuilder, SeparatorSpacingSize, StringSelectMenuBuilder, TextChannel, TextDisplayBuilder } from "discord.js";
 import { QrCodePix, QrCodePixParams } from "qrcode-pix";
+import { DefaultUser } from "src/shared/models/DefaultUser";
+import { defaultTheme } from "src/shared/models/Theme";
 import { User } from "src/shared/models/user";
+import { drawProfileCanvas } from "src/shared/services/canvas/ProfileCanvas";
 import { LinkService } from "src/shared/services/LinkService";
 import { MomentoService } from "src/shared/services/MomentoService";
 import { MongoService } from "src/shared/services/MongoService";
@@ -371,5 +375,44 @@ Nossa equipe irá validar o quanto antes.`)
         });
 
         return;
+    }
+
+    public async createFontList(client: Client, channel: TextChannel): Promise<void> {
+        console.log("Creating font list...");
+        const fonts = fontsPaths;
+        for (const font of fonts) {
+            try {
+                const defaultUser = { ...DefaultUser };
+                defaultUser.styles.fonts.primary = font.name;
+                defaultUser.styles.fonts.secondary = font.name;
+
+                const uploadChannel = await MomentoService.getUploadChannel(client);
+
+                const drawedProfile = await drawProfileCanvas(defaultUser, uploadChannel, defaultTheme, 0, 0);
+                const themeImageUrl = await LinkService.uploadImageToMomento(uploadChannel, drawedProfile.toBuffer());
+
+                const components = [
+                    new ContainerBuilder()
+                        .addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent(`# ${font.name}`),
+                        )
+                        .addSeparatorComponents(
+                            new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+                        )
+                        .addMediaGalleryComponents(
+                            new MediaGalleryBuilder()
+                                .addItems(
+                                    new MediaGalleryItemBuilder()
+                                        .setURL(themeImageUrl.attachments.first()?.url!),
+                                ),
+                        )
+                ];
+
+                await channel.send({ flags: MessageFlags.IsComponentsV2, components });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
     }
 }

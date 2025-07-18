@@ -103,7 +103,10 @@ export class AnalyticsService {
                 name: postAuthor.styles.theme
             }) as Theme;
 
-            const canvas = await drawPostAnalytics(uploadChannel, post, postAuthor, likesLogs, postFollowers, theme);
+            const canvas = await drawPostAnalytics(uploadChannel, post, postAuthor, likesLogs, postFollowers, theme, {
+                primary: 'sfpro',
+                secondary: 'sfpro'
+            });
             const buffer = canvas.toBuffer('image/png');
             const link = await LinkService.uploadImageToMomento(uploadChannel, buffer);
 

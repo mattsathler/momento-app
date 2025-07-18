@@ -6,11 +6,13 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { MongoService } from "../../shared/services/MongoService";
 import { onInteractionCreate, onMessageCreate, onReady } from "./src/commands/events";
+import { loadFonts } from "src/shared/services/canvas/FontsService";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
+loadFonts();
 
 async function main(): Promise<void> {
   console.log("Initializing momento verify...");

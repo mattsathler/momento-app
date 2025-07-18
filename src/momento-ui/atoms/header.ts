@@ -45,7 +45,7 @@ export async function drawHeader(client: Client, title: string, width: number, t
 
     x += 40 + sizes.medium;
 
-    ctx.font = `24px ${fonts.primary}-bold`;
+    ctx.font = `24px ${fonts.primary}`;
     const titleSize = ctx.measureText('Analytics');
     ctx.textBaseline = "middle";
     y += sizes.medium;
@@ -53,7 +53,7 @@ export async function drawHeader(client: Client, title: string, width: number, t
     ctx.fillText(title, x, y);
 
     if (description) {
-        ctx.font = `20px ${fonts.secondary}-medium`;
+        ctx.font = `20px ${fonts.secondary}`;
         ctx.fillText('Confira o alcance do seu momento!', (x + sizes.medium + titleSize.width), y);
     }
 

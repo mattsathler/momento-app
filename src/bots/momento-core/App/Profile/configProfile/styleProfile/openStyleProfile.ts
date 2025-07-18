@@ -43,7 +43,7 @@ function createStyleProfileModal(author: User, collagesCount: number): ModalBuil
         .setPlaceholder(MomentoService.isUserVerified(author.stats.isVerified) ? author.styles.theme : "Apenas para verificados 👑")
         .setRequired(false)
         .setStyle(TextInputStyle.Short)
-        .setLabel('Tema do Perfil')
+        .setLabel('Tema do Perfil 👑')
         .setMinLength(4)
         .setMaxLength(14)
 
@@ -52,7 +52,7 @@ function createStyleProfileModal(author: User, collagesCount: number): ModalBuil
         .setPlaceholder(MomentoService.isUserVerified(author.stats.isVerified) ? author.styles.fonts.primary : "Apenas para verificados 👑")
         .setRequired(false)
         .setStyle(TextInputStyle.Short)
-        .setLabel('Fonte Primária')
+        .setLabel('Fonte Primária 👑')
         .setMinLength(4)
         .setMaxLength(14)
 
@@ -61,7 +61,7 @@ function createStyleProfileModal(author: User, collagesCount: number): ModalBuil
         .setPlaceholder(MomentoService.isUserVerified(author.stats.isVerified) ? author.styles.fonts.secondary : "Apenas para verificados 👑")
         .setRequired(false)
         .setStyle(TextInputStyle.Short)
-        .setLabel('Fonte Secundária')
+        .setLabel('Fonte Secundária 👑')
         .setMinLength(4)
         .setMaxLength(14)
 
@@ -73,7 +73,7 @@ function createStyleProfileModal(author: User, collagesCount: number): ModalBuil
     const modal = new ModalBuilder()
         .setTitle('Estilizar Perfil')
         .setCustomId('styleUser')
-        .addComponents(AR2, AR1, AR3, AR4)
+        .addComponents(AR1, AR2, AR3, AR4)
 
     return modal
 }

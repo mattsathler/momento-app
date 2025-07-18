@@ -99,7 +99,7 @@ export async function drawPostActionBar(width: number, post: IPost | null, theme
 
     if (post?.content.location) {
         ctx.fillStyle = theme.colors.secondary;
-        ctx.font = `${sizes.big}px ${fonts.secondary}-regular`;
+        ctx.font = `${sizes.big}px ${fonts.secondary}`;
         ctx.textAlign = 'right';
 
         let isCutted = false;

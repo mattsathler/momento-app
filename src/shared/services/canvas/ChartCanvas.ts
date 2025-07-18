@@ -28,7 +28,7 @@ export function drawChart(postHour: number, logs: Log[], width: number, height: 
     let canvas = new Canvas(width, height);
     let ctx = canvas.getContext('2d');
 
-    ctx.font = '12px bold sfpro-medium';
+    ctx.font = '12px regular sfpro';
     ctx.fillStyle = theme.colors.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 

@@ -68,6 +68,10 @@ export async function onMessageCreate(client: Client, message: Message, mongoser
             case "!createCommandsMessage":
                 await hubService.createCommandsMessage(message.channel as TextChannel);
                 return;
+
+            case "!createFontList":
+                await hubService.createFontList(client, message.channel as TextChannel);
+                return;
         }
         return;
     }
@@ -83,7 +87,7 @@ export async function onInteractionCreate(client: Client, interaction: ButtonInt
 
             case "selectSubscriptionType": await hubService.createPaymentQRCode(client, interaction as SelectMenuInteraction);
                 break;
-            
+
             case "confirmPayment": await hubService.confirmPayment(client, interaction as ButtonInteraction, mongoservice);
                 break;
         }

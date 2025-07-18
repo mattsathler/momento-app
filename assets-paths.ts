@@ -1,4 +1,5 @@
 import path from 'path';
+import * as fs from 'fs';
 
 /**
  * Caminho absoluto para o diretório 'assets/' na raiz do monorepo.
@@ -21,19 +22,15 @@ export const assetPaths = {
     questionIcon: path.join(assetsRoot, 'images/question.png'),
 };
 
-export const fontsPaths: { name: string; path: string }[] = [
-    { name: 'sfpro-bold', path: path.join(assetsRoot, 'fonts/sfpro/sfpro-bold.OTF') },
-    { name: 'sfpro-medium', path: path.join(assetsRoot, 'fonts/sfpro/sfpro-medium.OTF') },
-    { name: 'sfpro-regular', path: path.join(assetsRoot, 'fonts/sfpro/sfpro-regular.OTF') },
 
-    { name: 'dancing-bold', path: path.join(assetsRoot, 'fonts/dancing/dancing-bold.ttf') },
-    { name: 'dancing-medium', path: path.join(assetsRoot, 'fonts/dancing/dancing-medium.ttf') },
-    { name: 'dancing-regular', path: path.join(assetsRoot, 'fonts/dancing/dancing-regular.ttf') },
+const fontsDir = path.join(assetsRoot, 'fonts');
 
-    { name: 'worksans-bold', path: path.join(assetsRoot, 'fonts/worksans/worksans-bold.ttf') },
-    { name: 'worksans-medium', path: path.join(assetsRoot, 'fonts/worksans/worksans-medium.ttf') },
-    { name: 'worksans-regular', path: path.join(assetsRoot, 'fonts/worksans/worksans-regular.ttf') },
-];
+export const fontsPaths: { name: string; path: string }[] = fs.readdirSync(fontsDir)
+    .filter(file => /\.(otf|ttf)$/i.test(file)) // filtra apenas fontes
+    .map(file => ({
+        name: path.parse(file).name.toLowerCase(), // remove extensão
+        path: path.join(fontsDir, file),
+    }));
 
 
 export const toolsPaths = {

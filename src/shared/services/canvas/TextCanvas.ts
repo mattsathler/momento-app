@@ -25,7 +25,7 @@ export function drawTextInCanvas(
     ctx.fillStyle = theme.colors.primary;
 
 
-    ctx.font = `${size}px ${font}-regular`;
+    ctx.font = `${size}px ${font}`;
 
     const words = text.split(' ');
     let currentLine = '';

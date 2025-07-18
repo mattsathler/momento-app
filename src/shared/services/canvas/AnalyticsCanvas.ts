@@ -52,13 +52,13 @@ export async function drawPostAnalytics(uploadChannel: TextChannel, post: Post, 
 
     x += 40 + sizes.medium;
 
-    ctx.font = `24px ${fonts.primary}-bold`;
+    ctx.font = `24px ${fonts.primary}`;
     const titleSize = ctx.measureText('Analytics');
     ctx.textBaseline = "middle";
     y += sizes.medium;
     ctx.fillStyle = theme.colors.primary;
     ctx.fillText('Analytics', x, y);
-    ctx.font = `20px ${fonts.secondary}-medium`;
+    ctx.font = `20px ${fonts.secondary}`;
     ctx.fillText('Confira o alcance do seu momento!', (x + sizes.medium + titleSize.width), y);
 
     x = sizes.medium;
@@ -118,11 +118,11 @@ export async function drawPostAnalytics(uploadChannel: TextChannel, post: Post, 
     ctx.textAlign = "center";
 
     ctx.fillStyle = theme.colors.primary;
-    ctx.font = `20px ${fonts.primary}-bold`;
+    ctx.font = `20px ${fonts.primary}`;
     ctx.fillText(`+${String(newFollowers)}`, x, y);
 
     ctx.fillStyle = theme.colors.secondary;
-    ctx.font = `20px ${fonts.secondary}-medium`;
+    ctx.font = `20px ${fonts.secondary}`;
     y += sizes.medium;
     ctx.fillText(`Novos Seguidores`, x, y);
 
@@ -147,11 +147,11 @@ export async function drawPostAnalytics(uploadChannel: TextChannel, post: Post, 
     ctx.textAlign = "center";
 
     ctx.fillStyle = theme.colors.primary;
-    ctx.font = `20px ${fonts.primary}-bold`;
+    ctx.font = `20px ${fonts.primary}`;
     ctx.fillText(`${String(likesLogs.length || 0)}`, x, y);
 
     ctx.fillStyle = theme.colors.secondary;
-    ctx.font = `20px ${fonts.secondary}-medium`;
+    ctx.font = `20px ${fonts.secondary}`;
     y += sizes.medium;
     ctx.fillText(`Curtidas`, x, y);
 

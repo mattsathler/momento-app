@@ -48,14 +48,14 @@ async function styleUserProfile(ctx: IContext, interaction: ModalSubmitInteracti
     }
 
     if (newUserInfo.styles.fonts.primary) {
-        const hasFont = fontsPaths.some(font => font.name === `${newUserInfo.styles.fonts.primary}-bold`);
+        const hasFont = fontsPaths.some(font => font.name === `${newUserInfo.styles.fonts.primary}`);
         newUserInfo.styles.fonts.primary = hasFont ? newUserInfo.styles.fonts.primary : author.styles.fonts.primary;
     } else {
         newUserInfo.styles.fonts.primary = author.styles.fonts.primary;
     }
 
     if (newUserInfo.styles.fonts.secondary) {
-        const hasFont = fontsPaths.some(font => font.name === `${newUserInfo.styles.fonts.secondary}-bold`);
+        const hasFont = fontsPaths.some(font => font.name === `${newUserInfo.styles.fonts.secondary}`);
         newUserInfo.styles.fonts.secondary = hasFont ? newUserInfo.styles.fonts.secondary : author.styles.fonts.secondary;
     } else {
         newUserInfo.styles.fonts.secondary = author.styles.fonts.secondary;
@@ -63,7 +63,7 @@ async function styleUserProfile(ctx: IContext, interaction: ModalSubmitInteracti
 
 
 
-    const isEdittingProfile = formField.styles.theme ? true : false;
+    const isEdittingProfile = formField.styles.theme || formField.styles.theme || formField.styles.fonts.primary || formField.styles.fonts.secondary ? true : false;
     const isEdittingCollage = formField.styles?.collage || formField.styles.theme || formField.styles.fonts.primary || formField.styles.fonts.secondary ? true : false;
 
     if (newUserInfo.styles.collage !== String(author.styles.collage)) {

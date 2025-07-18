@@ -25,13 +25,13 @@ export async function drawCollageCanvas(uploadChannel: TextChannel, user: User, 
     ctx.textAlign = 'center';
 
     ctx.fillStyle = theme.colors.primary;
-    ctx.font = `${sizes.medium}px ${user.styles.fonts.secondary}-bold`;
+    ctx.font = `${sizes.medium}px ${user.styles.fonts.secondary}`;
     ctx.fillText('Collages', canvas.width / 2 - (sizes.big * 4), y);
 
     ctx.fillStyle = theme.colors.secondary;
-    ctx.font = `${sizes.medium}px ${user.styles.fonts.secondary}-regular`;
+    ctx.font = `${sizes.medium}px ${user.styles.fonts.secondary}`;
     ctx.fillText('Momentos', canvas.width / 2, y);
-    ctx.fillText('Trends', canvas.width / 2 + (sizes.big * 4), y);
+    ctx.fillText('Tagged', canvas.width / 2 + (sizes.big * 4), y);
 
     y += sizes.medium;
 
@@ -64,7 +64,7 @@ export async function drawCollageCanvas(uploadChannel: TextChannel, user: User, 
     const cellHeight = ((canvas.height - y) / numRows) - sizes.tiny / 2;
 
     let i = 0;
-    const defaultPic = await LinkService.readImageOfMomento(uploadChannel, 'https://discord.com/channels/1084823963974246414/1210763625250291772/1210763928473436180')
+    const defaultPic = await LinkService.readImageOfMomento(uploadChannel, 'https://discord.com/channels/1084823963974246414/1210763625250291772/1395762289898029178')
     if (!defaultPic) throw new Error('Invalid default picture!')
     const image = await loadImage(defaultPic)
 
