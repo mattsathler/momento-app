@@ -196,47 +196,6 @@ export class AnalyticsService {
         })
     }
 
-    public async requestUpdateProfile(author: User): Promise<void> {
-        const axiosService: AxiosService = new AxiosService();
-        const notificationWebhook = process.env.PROFILE_UPDATER_WEBHOOK as string;
-        if (!notificationWebhook) throw new Error("Invalid Webhook URL");
-        await axiosService.postWebhook(notificationWebhook, {
-            "content": null,
-            "embeds": [
-                {
-                    "color": 14492795,
-                    "fields": [
-                        {
-                            "name": "guild_id",
-                            "value": author.guildId
-                        },
-                        {
-                            "name": "target_user_id",
-                            "value": author.userId
-                        },
-                        {
-                            "name": "update_profile",
-                            "value": "true"
-                        },
-                        {
-                            "name": "update_collage",
-                            "value": false
-                        },
-                        {
-                            "name": "sent_from",
-                            "value": "momento_analytics"
-                        },
-                        {
-                            "name": "token",
-                            "value": getSecureToken(process.env.SECRET_TOKEN || '')
-                        }
-                    ]
-                }
-            ],
-            "attachments": []
-        })
-    }
-
     private calculateNewFollowers(post: Post, author: User) {
         const randomMultiplier = Math.random() * 0.5 + 1;
         const constantFollowers = 100;

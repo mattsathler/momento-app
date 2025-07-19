@@ -300,7 +300,7 @@ Nossa equipe irá validar o quanto antes.`)
         const subscriptionType = fields.find(field => field.name === "subscription")?.value;
         const userId = fields.find(field => field.name === "id")?.value;
 
-        const user = await mongoservice.getOne("users", { userId: userId }) as User;
+        const users = await mongoservice.get("users", { userId: userId }) as User[];
 
         if (!subscriptionType || !userId) {
             throw new Error("Invalid subscriptiontype or userId");
@@ -308,7 +308,7 @@ Nossa equipe irá validar o quanto antes.`)
 
         const now = new Date();
 
-        const currentVerification = user.stats.isVerified ? new Date(user.stats.isVerified) : null;
+        const currentVerification = users[0].stats.isVerified ? new Date(users[0].stats.isVerified) : null;
         const baseDate = currentVerification && currentVerification > now ? currentVerification : now;
 
         const newVerificationExpirationDate = new Date(
@@ -373,6 +373,10 @@ Nossa equipe irá validar o quanto antes.`)
         await channel.permissionOverwrites.edit(interaction.user.id, {
             SendMessages: false
         });
+
+        users.forEach(async user => {
+            await MomentoService.requestUpdateProfile(user);
+        })
 
         return;
     }
