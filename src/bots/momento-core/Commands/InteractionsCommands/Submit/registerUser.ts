@@ -35,7 +35,7 @@ async function registerNewUser(ctx: IContext, interaction: ModalSubmitInteractio
 
     const serverConfig = await ctx.mongoService.getOne('servers', { id: interaction.guildId }) as IServer;
     ctx.serverConfig = serverConfig;
-    let newUser: User = DefaultUser;
+    let newUser: User = {...DefaultUser};
     newUser.userId = interaction.user.id;
     newUser.username = response.username.toLowerCase();
     newUser.name = response.name;

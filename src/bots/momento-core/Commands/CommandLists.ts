@@ -53,6 +53,7 @@ export const textList: { [key: string]: ICommand } = {
     capa: capa,
     collage: collage,
     highlight: highlight,
+    destaque: highlight,
     addfollowers: addFollowers,
     verify: verify,
     reload: reloadPosts

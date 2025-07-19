@@ -55,7 +55,7 @@ async function createNewComment(ctx: IContext, message: Message) {
     const userMentions = await postService.fetchUsersMentionsFromText(message.content, message.guildId);
     if (!userMentions?.parsedDescription) { throw new Error('Invalid user mentions') }
 
-    const commentImg = await drawCommentCanvas(ctx, user, userMentions.parsedDescription, theme);
+    const commentImg = await drawCommentCanvas(ctx, user, userMentions.parsedDescription, theme, user.styles.fonts);
 
     const deleteCommentButton: ButtonBuilder = new ButtonBuilder()
         .setCustomId('deleteMessage')

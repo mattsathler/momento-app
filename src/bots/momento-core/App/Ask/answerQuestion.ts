@@ -26,7 +26,7 @@ async function answerQuestionExec(ctx: IContext, interaction: ModalSubmitInterac
     const user = await ctx.mongoService.getOne('users', { userId: interaction.user.id, guildId: interaction.guildId }) as User;
     if (!user) { throw new Error('Invalid user') }
     const theme = await ctx.mongoService.getOne('themes', { name: user.styles.theme }) || defaultTheme;
-    const answerCanvas = await drawAnswerCanvas(ctx, fields.question, fields.answer, fields.author, user, theme);
+    const answerCanvas = await drawAnswerCanvas(ctx, fields.question, fields.answer, fields.author, user, theme, user.styles.fonts);
     const uploadChannel = await MomentoService.getUploadChannel(ctx.client);
     const imageUrl = await LinkService.uploadImageToMomento(uploadChannel, answerCanvas.toBuffer('image/png'));
     if (!imageUrl) { throw new Error('Invalid image url') }

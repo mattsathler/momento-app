@@ -18,6 +18,9 @@ export const createRegister: ICommand = {
 
 async function createRegisterMessage(ctx: IContext, message: Message) {
     if (message.author.id !== process.env.OWNER_ID) { return; }
+
+    const discordInviteURL: string = "https://discord.gg/CEr63w8vSb";
+
     const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder()
             .setCustomId('openRegisterModal')
@@ -30,7 +33,7 @@ async function createRegisterMessage(ctx: IContext, message: Message) {
             .setStyle(ButtonStyle.Secondary)
             .setEmoji('🔧'),
         new ButtonBuilder()
-            .setURL('https://discord.gg/7DbwUcufMx')
+            .setURL(discordInviteURL)
             .setLabel('HUB DO MOMENTO')
             .setStyle(ButtonStyle.Link)
             .setEmoji('🌐')
@@ -51,7 +54,7 @@ async function createRegisterMessage(ctx: IContext, message: Message) {
             new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
         )
         .addTextDisplayComponents(
-            new TextDisplayBuilder().setContent("# BEM VINDO AO MOMENTO!\n\nClique em **Registrar-se** para criar sua conta nesse RPG ou em **Perdi acesso ao meu perfil** caso não veja mais seu perfil entre os usuários!\n\nAcesse a HUB do momento para ver o catálogo de temas, collages e se tornar verificado na plataforma, além de ficar por dentro de novidades e avisos sobre o bot!\n\n🔗  https://discord.gg/7DbwUcufMx\\n\\n"),
+            new TextDisplayBuilder().setContent(`# BEM VINDO AO MOMENTO!\n\nClique em **Registrar-se** para criar sua conta nesse RPG ou em **Perdi acesso ao meu perfil** caso não veja mais seu perfil entre os usuários!\n\nAcesse a HUB do momento para ver o catálogo de temas, collages e se tornar verificado na plataforma, além de ficar por dentro de novidades e avisos sobre o bot!\n\n🔗 ${discordInviteURL}`),
         )
         .addSeparatorComponents(
             new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),

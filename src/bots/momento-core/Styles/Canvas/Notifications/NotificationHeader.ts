@@ -67,8 +67,12 @@ export async function drawNotificationHeader(theme: Theme = defaultTheme, fonts:
             treatedMusicName = treatedMusicName.slice(0, treatedMusicName.length - 3);
             treatedMusicName += '...';
         }
-        ctx.fillText(`• ${treatedMusicName}`, x + ctx.measureText(author).width, y);
+        ctx.font = `${sizes.big}px ${fonts.secondary}`;
+        const gap = x + ctx.measureText(author).width;
+
+        ctx.fillText(`• ${treatedMusicName}`, gap, y);
         ctx.drawImage(musicIcon, x + ctx.measureText(author).width + ctx.measureText(`• ${treatedMusicName}`).width + sizes.small, y - 40, 50, 50);
+        ctx.font = `${sizes.big}px ${fonts.primary}`;
     };
 
     y = authorPictureSize + sizes.huge;

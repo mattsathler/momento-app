@@ -29,7 +29,7 @@ async function registerNewUser(ctx: IContext, interaction: ModalSubmitInteractio
     const isUsernameAvailable = await checkUsernameAvailability(ctx, response.username)
     if (!isUsernameAvailable) { throw new Error('Usuário já cadastrado! Tente escolher outro usuário.') }
 
-    let newUser: User = DefaultUser;
+    let newUser: User = {...DefaultUser};
     newUser.userId = interaction.user.id;
     newUser.username = response.username.toLowerCase();
     newUser.name = response.name;

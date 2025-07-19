@@ -52,12 +52,12 @@ export async function drawAnswerCanvas(context: IContext, question: string, answ
     x += 35;
 
     ctx.textAlign = 'center';
-    ctx.font = `${sizes.big}px ${fonts.secondary}`;
+    ctx.font = `${sizes.big}px ${fonts.primary}`;
     ctx.fillStyle = asktheme.colors.secondary;
     ctx.fillText(questionAuthor, x, y);
 
     y += sizes.medium;
-    const questionCanvas = drawTextInCanvas(question, asktheme, fonts, questionBoxSize.width - (2 * sizes.huge), sizes.big, 'center');
+    const questionCanvas = drawTextInCanvas(question, asktheme, fonts.secondary, questionBoxSize.width - (2 * sizes.huge), sizes.big, 'center');
     ctx.drawImage(questionCanvas, sizes.huge * 2, y);
 
     // ANSWER ========================================
@@ -88,7 +88,7 @@ export async function drawAnswerCanvas(context: IContext, question: string, answ
         answerSize = sizes.huge;
     }
 
-    const answerCanvas = drawTextInCanvas(answer, theme, fonts, canvas.width - (4 * sizes.huge), answerSize, 'center');
+    const answerCanvas = drawTextInCanvas(answer, theme, fonts.primary, canvas.width - (4 * sizes.huge), answerSize, 'center');
     ctx.drawImage(answerCanvas, sizes.huge * 2, y);
 
     ctx.fillStyle = theme.colors.primary;

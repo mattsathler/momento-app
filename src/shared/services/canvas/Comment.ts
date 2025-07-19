@@ -9,7 +9,6 @@ import { LinkService } from "src/shared/services/LinkService";
 import { drawTextInCanvas } from "src/shared/services/canvas/TextCanvas";
 import { drawNotificationHeader } from "src/bots/momento-core/Styles/Canvas/Notifications/NotificationHeader";
 import { MomentoService } from "../MomentoService";
-import { fontsPaths } from "assets-paths";
 import { Fonts } from "src/shared/models/Fonts";
 
 
@@ -30,7 +29,7 @@ export async function drawCommentCanvas(context: IContext, user: User, text: str
     y = postHeader.height;
     ctx.drawImage(textCanvas, sizes.huge, y);
     y += textCanvas.height;
-    const actionBar = await drawPostActionBar(canvas.width, null, theme, user.styles.fonts);
+    const actionBar = await drawPostActionBar(canvas.width, null, theme, fonts);
     ctx.drawImage(actionBar, 0, y);
     y += actionBar.height;
 
