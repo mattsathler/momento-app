@@ -46,15 +46,6 @@ export const momento: ICommand = {
 async function configureServer(ctx: IContext, message: Message) {
     if (!message.guild) throw new Error('Não foi possível encontrar o servidor.')
 
-    const themeCatalogue = await message.guild.channels.create({
-        name: 'temas',
-        type: ChannelType.GuildText,
-        permissionOverwrites: [{
-            id: message.guild.roles.everyone.id,
-            deny: ['SendMessages', 'AttachFiles'],
-        }],
-    });
-
     const trendsChannel = await message.guild.channels.create({
         name: 'trends',
         type: ChannelType.GuildText,
@@ -69,18 +60,11 @@ async function configureServer(ctx: IContext, message: Message) {
         avatar: "https://imgur.com/eRYLRQ4.png",
     })
 
-    if (!themeCatalogue) throw new Error('Não foi possível criar os canais.');
 
     const serverConfig: IServer = {
         id: message.guild.id,
-        channelsId: {
-            themeCatalogue: themeCatalogue.id,
-        },
         analytics: {
             likesToTrend: 10,
-            momentosToVerify: 10,
-            followersToVerify: 10,
-            trendsToVerify: 10,
             momentosTimeout: 10,
             followersMultiplier: 1,
         },
@@ -95,7 +79,5 @@ async function configureServer(ctx: IContext, message: Message) {
         ],
     };
 
-    const service = new MomentoService();
-    await service.configureGuild(message.guild);
     await ctx.mongoService.post('servers', serverConfig);
 }

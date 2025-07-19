@@ -4,6 +4,7 @@ import { Permission } from "../../../Interfaces/IPermission";
 import { IContext } from "../../../Interfaces/IContext";
 import { ProfileServices } from "../../../Utils/ProfileServices";
 import { User } from "src/shared/models/User";
+import { StringValidator } from "src/bots/momento-core/Utils/StringValidator";
 
 interface IEditableFields {
     username: string | null,
@@ -51,6 +52,9 @@ async function editUserProfile(ctx: IContext, interaction: ModalSubmitInteractio
                 await profileChannel.setName(formField.username);
                 const member = interaction.member as GuildMember;
                 if (!member) { throw new Error('Invalid member') }
+                if (StringValidator.hasEmoji(formField.username)) {
+                    throw new Error("O nome de usuário não pode conter emojis!");
+                }
                 await member.setNickname(formField.username);
             }
             catch (err) {

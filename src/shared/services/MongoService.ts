@@ -38,6 +38,10 @@ export class MongoService {
         return await mongo.model(collection).findOneAndUpdate(query, update, { returnOriginal: false });
     }
 
+    async patchMany(collection: string, query: {}, update: {}): Promise<any> {
+        return await mongo.model(collection).updateMany(query, update, { returnOriginal: false });
+    }
+
     async delete(collection: string, query: {}): Promise<any> {
         if (!mongo.connection || !mongo.connection.db) {
             return;

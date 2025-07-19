@@ -35,6 +35,11 @@ async function registerNewUser(ctx: IContext, interaction: ModalSubmitInteractio
     newUser.name = response.name;
     newUser.surname = response.surname;
 
+    const hasAccount = await ctx.mongoService.getOne("users", {userId: newUser.userId}) as User;
+    if (hasAccount) {
+        newUser.stats.isVerified = hasAccount.stats.isVerified;
+    }
+
     await interaction.reply({ content: 'Criando seu perfil, aguarde...', ephemeral: true });
     await createUser(ctx, newUser, interaction.guild);
     const member = interaction.member as GuildMember;

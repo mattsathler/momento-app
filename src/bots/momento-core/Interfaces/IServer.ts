@@ -2,7 +2,6 @@ import { payment } from "./IPayment";
 
 export interface IServer {
     id: string,
-    channelsId: channelsId,
     analytics: analyticsConfig,
     emojisId: emojis,
     trendWebhooks?: String[]
@@ -14,9 +13,6 @@ export interface channelsId {
 
 export interface analyticsConfig {
     likesToTrend: number,
-    momentosToVerify: number,
-    followersToVerify: number,
-    trendsToVerify: number,
     momentosTimeout: number,
     followersMultiplier: number,
 }

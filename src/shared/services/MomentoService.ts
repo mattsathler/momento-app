@@ -28,7 +28,7 @@ export class MomentoService {
     }
 
 
-    public static async requestUpdateProfile(author: User): Promise<void> {
+    public static async requestUpdateProfile(author: User, updateCollage: boolean = false): Promise<void> {
         const axiosService: AxiosService = new AxiosService();
         const notificationWebhook = process.env.PROFILE_UPDATER_WEBHOOK as string;
         if (!notificationWebhook) throw new Error("Invalid Webhook URL");
@@ -52,7 +52,7 @@ export class MomentoService {
                         },
                         {
                             "name": "update_collage",
-                            "value": false
+                            "value": updateCollage ? 'true' : 'false'
                         },
                         {
                             "name": "sent_from",

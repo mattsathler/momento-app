@@ -12,7 +12,6 @@ import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
-import { updateUsers } from "scripts/updateUsers";
 import { loadFonts } from "src/shared/services/canvas/FontsService";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -50,18 +49,18 @@ async function createContext(): Promise<IContext> {
 
 client.once('ready', async () => {
 	ctx = await createContext();
-});
 
-const events: EventHandler = new EventHandler();
-for (let event of EventList) {
-	client.on(event, async (...args) => {
-		try {
-			events[event](ctx, ...args)
-		}
-		catch (err) {
-			console.log(err)
-		}
-	})
-}
+	const events: EventHandler = new EventHandler();
+	for (let event of EventList) {
+		client.on(event, async (...args) => {
+			try {
+				events[event](ctx, ...args)
+			}
+			catch (err) {
+				console.log(err)
+			}
+		})
+	}
+});
 
 client.login(process.env.TOKEN);

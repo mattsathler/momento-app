@@ -317,7 +317,7 @@ Nossa equipe irá validar o quanto antes.`)
             baseDate.getDate()
         );
 
-        await mongoservice.patch("users", { userId: userId }, {
+        await mongoservice.patchMany("users", { userId: userId }, {
             'stats.isVerified': newVerificationExpirationDate
         });
 
@@ -410,6 +410,12 @@ Nossa equipe irá validar o quanto antes.`)
                                         .setURL(themeImageUrl.attachments.first()?.url!),
                                 ),
                         )
+                        .addSeparatorComponents(
+                            new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+                        )
+                        .addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent("👑 *Para usar a fonte, vá nas configurações no perfil do seu personagem, estilizar e escreva o nome da fonte no campo \"Fonte Primária ou Secundária\". É necessário ter uma assinatura de verificado válida. Confira! <#1390674632016658585>*"),
+                        ),
                 ];
 
                 await channel.send({ flags: MessageFlags.IsComponentsV2, components });

@@ -16,7 +16,10 @@ export class ThemeService {
 
         themes.forEach(async (theme) => {
             try {
-                const drawedProfile = await drawProfileCanvas(DefaultUser, uploadChannel, theme, 0, 0);
+                const user = { ...DefaultUser };
+                user.styles.theme = theme.name;
+                user.stats.isVerified = new Date();
+                const drawedProfile = await drawProfileCanvas(user, uploadChannel, theme, 0, 0);
                 const themeImageUrl = await LinkService.uploadImageToMomento(uploadChannel, drawedProfile.toBuffer());
 
                 const components = [
@@ -34,6 +37,12 @@ export class ThemeService {
                                         .setURL(themeImageUrl.attachments.first()?.url!),
                                 ),
                         )
+                        .addSeparatorComponents(
+                            new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
+                        )
+                        .addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent("👑 *Para usar o tema, vá nas configurações no perfil do seu personagem, estilizar e escreva o nome do tema no campo \"Tema\". É necessário ter uma assinatura de verificado válida. Confira! <#1390674632016658585>*"),
+                        ),
                 ];
 
                 if (drawedProfile) {

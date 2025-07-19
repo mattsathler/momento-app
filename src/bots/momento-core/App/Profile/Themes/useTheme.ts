@@ -1,4 +1,4 @@
-import { ButtonInteraction } from "discord.js";
+import { ButtonInteraction, MessageFlags } from "discord.js";
 import { IContext } from "../../../Interfaces/IContext";
 import { TextChannel } from "discord.js";
 import { ICommand } from "../../../Interfaces/ICommand";
@@ -24,30 +24,7 @@ export const useTheme: ICommand = {
             throw new Error('Esse tema não está mais disponível')
         }
 
-        await interaction.reply({
-            content: 'Aplicando o tema, aguarde...',
-            ephemeral: true
-        })
-
-        const user = await ctx.mongoService.getOne('users', { userId: interaction.user.id, guildId: interaction.guildId }) as User;
-        if (!user) { throw new Error('Invalid user') }
-
-        const updatedUser = await ctx.mongoService.patch('users', { userId: user.userId, guildId: user.guildId }, { 'styles.theme': theme.name }) as User;
-        const profileServices = new ProfileServices();
-        const notificationService = new NotificationService(ctx);
-        await profileServices.updateProfilePictures(ctx, updatedUser, true, true);
-        await notificationService.sendNotification(user,
-            {
-                type: NotificationType.Embed,
-                targetUser: user,
-                message: 'Tema aplicado com sucesso!'
-            }, true
-        )
-        if (interaction.isRepliable()) {
-            await interaction.editReply({
-                content: 'Tema aplicado com sucesso!',
-            })
-        }
+        await interaction.reply({content: "Esse método está defasado! Acesse o HUB do momento para alterar o tema.", flags: MessageFlags.Ephemeral});
         return;
     }
 }
