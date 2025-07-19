@@ -34,7 +34,7 @@
   },
   "scripts": {
     "pm2": "pm2 start ecosystem.config.js",
-    "token": "node generateToken.ts",
+    "token": "node generateToken.js",
     "start:core": "npm run start --workspace momento-core",
     "start:notifications": "npm run start --workspace momento-notifications",
     "start:profile-updater": "npm run start --workspace momento-profile-updater",
