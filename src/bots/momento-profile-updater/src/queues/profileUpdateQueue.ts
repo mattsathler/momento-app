@@ -4,7 +4,7 @@ import { GenericQueueProcessor, QueueItem } from "../../../../shared/queue/Gener
 
 export class ProfileUpdateQueue extends GenericQueueProcessor<QueueItem> {
   protected getKey(item: QueueItem): string {
-    return item.request.target_user_id;
+    return `${item.request.guild_id}:${item.request.target_user_id}`;
   }
 
   protected onDuplicate(item: QueueItem): void {
@@ -23,10 +23,10 @@ export class ProfileUpdateQueue extends GenericQueueProcessor<QueueItem> {
       await item.message?.react("☑️").catch(console.error);
     } catch (e: any) {
       await item.message?.startThread({
-          name: e.message,
-          autoArchiveDuration: 60,
-          reason: e.message,
-        })
+        name: e.message,
+        autoArchiveDuration: 60,
+        reason: e.message,
+      })
         .then((thread) => {
           thread.send({
             embeds: [

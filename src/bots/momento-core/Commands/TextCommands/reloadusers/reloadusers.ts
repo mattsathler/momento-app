@@ -5,6 +5,7 @@ import { Permission } from "../../../Interfaces/IPermission";
 import { IPost } from "../../../Interfaces/IPost";
 import { MomentoService } from "src/shared/services/MomentoService";
 import { User } from "src/shared/models/user";
+import { ProfileServices } from "src/bots/momento-core/Utils/ProfileServices";
 
 export const reloadUsers: ICommand
     = {
@@ -16,12 +17,13 @@ export const reloadUsers: ICommand
     deleteReply: true,
 
     exec: async function (ctx: IContext, message: Message): Promise<void> {
-        const channelId = message.content[2];
-        const profiles = await ctx.mongoService.get("users", { 'references.channelId': channelId }) as User[];
-
-        const uploadChannel = await MomentoService.getUploadChannel(ctx.client);
+        const split = message.content.trim().split(/\s+/); // separa por espaço
+        const userId = split[1];
+        const profiles = await ctx.mongoService.get("users", { 'userId': userId }) as User[];
+        const profileService: ProfileServices = new ProfileServices();
         profiles.forEach(async profile => {
-            await MomentoService.requestUpdateProfile(profile);
+            console.log("Updating user", profile.username);
+            await profileService.updateProfilePictures(ctx, profile, true, true);
         })
 
         return;
