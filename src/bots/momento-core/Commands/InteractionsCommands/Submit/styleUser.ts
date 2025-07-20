@@ -36,7 +36,7 @@ async function styleUserProfile(ctx: IContext, interaction: ModalSubmitInteracti
 
     let newUserInfo: IEditableFields = {
         styles: {
-            theme: formField.styles.theme ?? author.styles.theme,
+            theme: formField.styles.theme?.toLocaleLowerCase() ?? author.styles.theme,
             collage: formField.styles?.collage ?? String(author.styles.collage),
             fonts: formField.styles?.fonts ?? author.styles.fonts
         }
@@ -49,16 +49,16 @@ async function styleUserProfile(ctx: IContext, interaction: ModalSubmitInteracti
 
     if (newUserInfo.styles.fonts.primary) {
         const hasFont = fontsPaths.some(font => font.name === `${newUserInfo.styles.fonts.primary}`);
-        newUserInfo.styles.fonts.primary = hasFont ? newUserInfo.styles.fonts.primary : author.styles.fonts.primary;
+        newUserInfo.styles.fonts.primary = hasFont ? newUserInfo.styles.fonts.primary.toLocaleLowerCase() : author.styles.fonts.primary.toLocaleLowerCase();
     } else {
-        newUserInfo.styles.fonts.primary = author.styles.fonts.primary;
+        newUserInfo.styles.fonts.primary = author.styles.fonts.primary.toLocaleLowerCase();
     }
 
     if (newUserInfo.styles.fonts.secondary) {
         const hasFont = fontsPaths.some(font => font.name === `${newUserInfo.styles.fonts.secondary}`);
-        newUserInfo.styles.fonts.secondary = hasFont ? newUserInfo.styles.fonts.secondary : author.styles.fonts.secondary;
+        newUserInfo.styles.fonts.secondary = hasFont ? newUserInfo.styles.fonts.secondary.toLocaleLowerCase() : author.styles.fonts.secondary.toLocaleLowerCase();
     } else {
-        newUserInfo.styles.fonts.secondary = author.styles.fonts.secondary;
+        newUserInfo.styles.fonts.secondary = author.styles.fonts.secondary.toLocaleLowerCase();
     }
 
 
