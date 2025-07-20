@@ -317,7 +317,7 @@ Nossa equipe irá validar o quanto antes.`)
             baseDate.getDate()
         );
 
-        await mongoservice.patch("users", { userId: userId }, {
+        await mongoservice.updateMany("users", { userId: userId }, {
             'stats.isVerified': newVerificationExpirationDate
         });
 
