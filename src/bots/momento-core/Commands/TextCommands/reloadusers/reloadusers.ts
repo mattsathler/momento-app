@@ -16,8 +16,8 @@ export const reloadUsers: ICommand
     deleteReply: true,
 
     exec: async function (ctx: IContext, message: Message): Promise<void> {
-        const userId = message.content[2];
-        const profiles = await ctx.mongoService.get("users", { userId: userId }) as User[];
+        const channelId = message.content[2];
+        const profiles = await ctx.mongoService.get("users", { 'references.channelId': channelId }) as User[];
 
         const uploadChannel = await MomentoService.getUploadChannel(ctx.client);
         profiles.forEach(async profile => {
