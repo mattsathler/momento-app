@@ -361,7 +361,7 @@ Nossa equipe irá validar o quanto antes.`)
             components: [component]
         })
 
-        await channel.send(`<@${interaction.user.id}>`)
+        await channel.send(`<@${userId}>`)
             .then((msg: Message) => {
                 msg.delete().then(() => {
                 }).catch((error) => {
@@ -370,7 +370,7 @@ Nossa equipe irá validar o quanto antes.`)
             })
             .catch((error) => console.error("Error sending ping message:", error));
 
-        await channel.permissionOverwrites.edit(interaction.user.id, {
+        await channel.permissionOverwrites.edit(userId, {
             SendMessages: false
         });
 
