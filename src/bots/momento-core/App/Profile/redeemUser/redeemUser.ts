@@ -66,6 +66,8 @@ export const redeemUser: ICommand = {
             if (!newUserChannel) { throw new Error('Invalid user channel') }
 
             const theme = MomentoService.isUserVerified(user.stats.isVerified) ? await ctx.mongoService.getOne('themes', { name: user.styles.theme }) as Theme ?? defaultTheme : defaultTheme;
+            user.styles.fonts = MomentoService.isUserVerified(user.stats.isVerified) ? user.styles.fonts : { primary: 'sfpro', secondary: 'sfpro' };
+
             const collage = await ctx.mongoService.getOne('collages', { id: user.styles.collage }) as Collage || defaultCollage;
 
             if (!collage) { throw new Error('Invalid collage') }

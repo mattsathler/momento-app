@@ -24,7 +24,7 @@ export async function drawAnswerCanvas(context: IContext, question: string, answ
     }
 
     theme = MomentoService.isUserVerified(user.stats.isVerified) ? theme : defaultTheme;
-
+    user.styles.fonts = MomentoService.isUserVerified(user.stats.isVerified) ? user.styles.fonts : { primary: 'sfpro', secondary: 'sfpro' };
 
     const canvas = createCanvas(Styles.sizes.large.post.width, Styles.sizes.large.post.height);
     const ctx = canvas.getContext('2d');

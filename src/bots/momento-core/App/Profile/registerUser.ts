@@ -29,7 +29,7 @@ async function registerNewUser(ctx: IContext, interaction: ModalSubmitInteractio
     const isUsernameAvailable = await checkUsernameAvailability(ctx, response.username)
     if (!isUsernameAvailable) { throw new Error('Usuário já cadastrado! Tente escolher outro usuário.') }
 
-    let newUser: User = {...DefaultUser};
+    let newUser: User = { ...DefaultUser };
     newUser.userId = interaction.user.id;
     newUser.username = response.username.toLowerCase();
     newUser.name = response.name;
@@ -73,6 +73,8 @@ async function createUser(ctx: IContext, newUser: User, guild: Guild) {
     const profileService = new ProfileServices();
     const createdUser = { ...newUser };
     const theme = MomentoService.isUserVerified(createdUser.stats.isVerified) ? await ctx.mongoService.getOne('themes', { name: createdUser.styles.theme }) as Theme ?? defaultTheme : defaultTheme;
+    createdUser.styles.fonts = MomentoService.isUserVerified(createdUser.stats.isVerified) ? createdUser.styles.fonts : { primary: 'sfpro', secondary: 'sfpro' };
+
     const collageStyle = await ctx.mongoService.getOne('collages', { id: createdUser.styles.collage }) || defaultCollage;
     const images = await profileService.drawProfilePictures(ctx, createdUser, theme, collageStyle, 0, 0);
     const userChannel = await profileService.createUserChannel(guild, createdUser.username, createdUser.userId);

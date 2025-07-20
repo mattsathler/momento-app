@@ -98,6 +98,9 @@ export async function messageCreate(ctx: IContext, message: Message) {
 
             let postImagesURL: string[] = [];
             const theme = MomentoService.isUserVerified(author.stats.isVerified) ? await ctx.mongoService.getOne('themes', { name: author.styles.theme }) as Theme ?? defaultTheme : defaultTheme;
+            author.styles.fonts = MomentoService.isUserVerified(author.stats.isVerified) ? author.styles.fonts : { primary: 'sfpro', secondary: 'sfpro' };
+
+
             await message.react('📸');
 
             const isVideo = message.attachments.first()?.contentType === 'video/mp4' || message.attachments.first()?.contentType === 'video/quicktime'

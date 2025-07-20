@@ -7,6 +7,7 @@ import { Theme } from "src/shared/models/Theme";
 import { Fonts } from "src/shared/models/Fonts";
 import { fontsPaths } from "assets-paths";
 import { User } from "src/shared/models/user";
+import { MomentoService } from "src/shared/services/MomentoService";
 
 interface IEditableFields {
     styles: {
@@ -47,20 +48,21 @@ async function styleUserProfile(ctx: IContext, interaction: ModalSubmitInteracti
         if (!newTheme) { newUserInfo.styles.theme = author.styles.theme }
     }
 
-    if (newUserInfo.styles.fonts.primary) {
-        const hasFont = fontsPaths.some(font => font.name === `${newUserInfo.styles.fonts.primary}`);
-        newUserInfo.styles.fonts.primary = hasFont ? newUserInfo.styles.fonts.primary.toLocaleLowerCase() : author.styles.fonts.primary.toLocaleLowerCase();
-    } else {
-        newUserInfo.styles.fonts.primary = author.styles.fonts.primary.toLocaleLowerCase();
-    }
+    if (MomentoService.isUserVerified(author.stats.isVerified)) {
+        if (newUserInfo.styles.fonts.primary) {
+            const hasFont = fontsPaths.some(font => font.name === `${newUserInfo.styles.fonts.primary}`);
+            newUserInfo.styles.fonts.primary = hasFont ? newUserInfo.styles.fonts.primary.toLocaleLowerCase() : author.styles.fonts.primary.toLocaleLowerCase();
+        } else {
+            newUserInfo.styles.fonts.primary = author.styles.fonts.primary.toLocaleLowerCase();
+        }
 
-    if (newUserInfo.styles.fonts.secondary) {
-        const hasFont = fontsPaths.some(font => font.name === `${newUserInfo.styles.fonts.secondary}`);
-        newUserInfo.styles.fonts.secondary = hasFont ? newUserInfo.styles.fonts.secondary.toLocaleLowerCase() : author.styles.fonts.secondary.toLocaleLowerCase();
-    } else {
-        newUserInfo.styles.fonts.secondary = author.styles.fonts.secondary.toLocaleLowerCase();
+        if (newUserInfo.styles.fonts.secondary) {
+            const hasFont = fontsPaths.some(font => font.name === `${newUserInfo.styles.fonts.secondary}`);
+            newUserInfo.styles.fonts.secondary = hasFont ? newUserInfo.styles.fonts.secondary.toLocaleLowerCase() : author.styles.fonts.secondary.toLocaleLowerCase();
+        } else {
+            newUserInfo.styles.fonts.secondary = author.styles.fonts.secondary.toLocaleLowerCase();
+        }
     }
-
 
 
     const isEdittingProfile = formField.styles.theme || formField.styles.fonts.primary || formField.styles.fonts.secondary ? true : false;

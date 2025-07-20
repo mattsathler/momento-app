@@ -38,6 +38,7 @@ async function createNewPost(ctx: IContext, interaction: ModalSubmitInteraction)
     if (!author) { throw new Error('Invalid author') }
 
     const theme = MomentoService.isUserVerified(author.stats.isVerified) ? await ctx.mongoService.getOne('themes', { name: author.styles.theme }) as Theme ?? defaultTheme : defaultTheme;
+    author.styles.fonts = MomentoService.isUserVerified(author.stats.isVerified) ? author.styles.fonts : { primary: 'sfpro', secondary: 'sfpro' };
 
     const formField = fetchFormFields(interaction);
     let imageMsg: Message | null = null;

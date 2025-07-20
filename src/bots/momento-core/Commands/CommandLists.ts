@@ -43,7 +43,7 @@ import { openConfigureTrendsWebhooksModal } from "../App/Server/openTrendWebhook
 import { createImportFollowersMessage } from "../App/Profile/configProfile/importFollowers/createImportFollowersMessage";
 import { repostPost } from "../App/Post/repostPost";
 import { verify } from "./TextCommands/verify/verify";
-import { reloadPosts } from "./TextCommands/reloadposts/reloadposts";
+import { reloadUsers } from "./TextCommands/reloadusers/reloadusers";
 
 export const textList: { [key: string]: ICommand } = {
     momento: momento,
@@ -56,7 +56,7 @@ export const textList: { [key: string]: ICommand } = {
     destaque: highlight,
     addfollowers: addFollowers,
     verify: verify,
-    reload: reloadPosts
+    reload: reloadUsers
 }
 
 export const submitList: { [key: string]: ICommand } = {
