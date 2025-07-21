@@ -8,6 +8,7 @@ export const UserSchema = new Schema({
     name: { type: String, required: true },
     surname: { type: String, required: true },
     bio: { type: String, required: true },
+    pronouns: { type: String, required: false },
     references: {
         channelId: { type: String, default: '' },
         statsId: { type: String, required: true },

@@ -23,13 +23,6 @@ export const toggleNotifications: ICommand = {
             const profileService = new ProfileServices();
             const newButtons = await profileService.createEditProfileButtons(author);
 
-            const cancelButton = new ButtonBuilder()
-                .setCustomId('backButton')
-                .setLabel('Voltar')
-                .setStyle(ButtonStyle.Secondary)
-
-            newButtons.components.push(cancelButton);
-
             await interaction.update(
                 {
                     components: [newButtons]

@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, ModalSubmitInteraction } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, MessageFlags, ModalSubmitInteraction } from "discord.js";
 import { ICommand } from "../../../Interfaces/ICommand";
 import { Permission } from "../../../Interfaces/IPermission";
 import { IContext } from "../../../Interfaces/IContext";
@@ -17,28 +17,18 @@ async function openProfileConfigurationsMenu(ctx: IContext, interaction: ButtonI
     const profileService = new ProfileServices;
     const profileButtonsActionRow = await profileService.createEditProfileButtons(interactionAuthor);
     try {
-        const cancelButton = new ButtonBuilder()
-            .setCustomId('backButton')
-            .setLabel('Voltar')
-            .setStyle(ButtonStyle.Secondary)
-
-        profileButtonsActionRow.addComponents(cancelButton)
-
         const embed = new EmbedBuilder()
             .setColor('#DD247B')
             .setTitle('Configurações do perfil')
             .setDescription('Selecione uma opção abaixo para editar seu perfil.')
 
         if (interaction && !interaction.deferred && interaction.isRepliable()) {
-            const reply = await interaction.message.reply({
+            const reply = await interaction.reply({
                 embeds: [embed],
                 components: [profileButtonsActionRow],
+                flags: MessageFlags.Ephemeral
             })
             await interaction.deferUpdate();
-
-            setTimeout(() => {
-                tryDeleteMessage(reply);
-            }, 6000);
         }
     }
     catch (err) {

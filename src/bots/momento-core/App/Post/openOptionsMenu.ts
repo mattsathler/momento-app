@@ -1,4 +1,4 @@
-import { ButtonBuilder, ButtonInteraction, ButtonStyle, ModalSubmitInteraction } from "discord.js";
+import { ButtonBuilder, ButtonInteraction, ButtonStyle, MessageFlags, ModalSubmitInteraction } from "discord.js";
 import { ICommand } from "../../Interfaces/ICommand";
 import { IContext } from "../../Interfaces/IContext";
 import { Permission } from "../../Interfaces/IPermission";
@@ -19,12 +19,6 @@ async function openOptionsMenuMessage(ctx: IContext, interaction: ButtonInteract
         .setLabel('Apagar')
         .setStyle(ButtonStyle.Danger)
 
-
-    const cancelButton = new ButtonBuilder()
-        .setCustomId('backButton')
-        .setLabel('Voltar')
-        .setStyle(ButtonStyle.Secondary)
-
     const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(deleteButton)
     if (interactionAuthor.permission > Permission.moderator) {
         actionRow.addComponents(
@@ -34,19 +28,16 @@ async function openOptionsMenuMessage(ctx: IContext, interaction: ButtonInteract
                 .setStyle(ButtonStyle.Danger)
         )
     }
-    actionRow.addComponents(cancelButton)
 
     try {
-        const reply = await interaction.message.reply({
+        const reply = await interaction.reply({
             content: 'O que fazer com esse momento?',
             components: [actionRow],
+            flags: MessageFlags.Ephemeral
         })
-        if(interaction.isRepliable() && !interaction.deferred) { 
+        if (interaction.isRepliable() && !interaction.deferred) {
             await interaction.deferUpdate();
         }
-        setTimeout(() => {
-            tryDeleteMessage(reply);
-        }, 6000);
     }
     catch { return }
 }

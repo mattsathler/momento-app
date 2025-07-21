@@ -63,16 +63,26 @@ function createEditProfileModal(author: User): ModalBuilder {
         .setMinLength(3)
         .setMaxLength(50)
 
+    const pronounsField = new TextInputBuilder()
+        .setCustomId('pronouns_field')
+        .setPlaceholder(author.pronouns || "Nenhum pronome")
+        .setRequired(false)
+        .setStyle(TextInputStyle.Short)
+        .setLabel('Pronome')
+        .setMinLength(3)
+        .setMaxLength(10)
+
     const AR1 = new ActionRowBuilder<TextInputBuilder>().addComponents(nameField)
     const AR2 = new ActionRowBuilder<TextInputBuilder>().addComponents(surnameField)
     const AR3 = new ActionRowBuilder<TextInputBuilder>().addComponents(usernameField)
     const AR4 = new ActionRowBuilder<TextInputBuilder>().addComponents(bioField)
+    const AR5 = new ActionRowBuilder<TextInputBuilder>().addComponents(pronounsField)
 
 
     const modal = new ModalBuilder()
         .setTitle('Editar Perfil')
         .setCustomId('editUser')
-        .addComponents(AR1, AR2, AR3, AR4)
+        .addComponents(AR1, AR2, AR3, AR4, AR5)
 
     return modal
 }

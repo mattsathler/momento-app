@@ -9,6 +9,7 @@ export interface User {
     name: string;
     surname: string;
     bio: string;
+    pronouns: string | null;
     references: {
         channelId?: string;
         statsId: string;

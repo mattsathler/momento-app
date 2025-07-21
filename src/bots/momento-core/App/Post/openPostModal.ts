@@ -14,13 +14,6 @@ export const openPostModal: ICommand = {
 }
 
 function createPostModal(): ModalBuilder {
-    const pictureURLField = new TextInputBuilder()
-        .setCustomId('url_field')
-        .setPlaceholder('Coloque o link para sua imagem. (Precisa ter .png ou .jpg no final do link!)')
-        .setRequired(false)
-        .setStyle(TextInputStyle.Short)
-        .setLabel('Link para a Imagem')
-
     const descriptionField = new TextInputBuilder()
         .setCustomId('description_field')
         .setPlaceholder('No que está pensando?')
@@ -46,14 +39,13 @@ function createPostModal(): ModalBuilder {
 
 
     const AR1 = new ActionRowBuilder<TextInputBuilder>().addComponents(descriptionField)
-    const AR2 = new ActionRowBuilder<TextInputBuilder>().addComponents(pictureURLField)
     const AR3 = new ActionRowBuilder<TextInputBuilder>().addComponents(musicField)
     const AR4 = new ActionRowBuilder<TextInputBuilder>().addComponents(locationField)
 
     const modal = new ModalBuilder()
         .setTitle('Criar momento')
         .setCustomId('createPost')
-        .addComponents(AR1, AR2, AR3, AR4)
+        .addComponents(AR1, AR3, AR4)
 
     return modal
 }

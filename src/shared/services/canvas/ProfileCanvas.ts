@@ -68,12 +68,10 @@ export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, 
     y += profileImageSize * 1.5 + sizes.big;
 
     ctx.textAlign = 'center';
+
     ctx.fillStyle = theme.colors.secondary;
 
     ctx.font = `${sizes.medium}px ${user.styles.fonts.secondary}`;
-    ctx.fillText(`@${user.username}`, canvas.width / 2, y);
-    y += sizes.big;
-
 
     ctx.fillStyle = theme.colors.primary;
     ctx.font = `${sizes.big}px ${user.styles.fonts.primary}`;
@@ -86,6 +84,14 @@ export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, 
     }
 
     y += sizes.medium;
+
+    ctx.fillStyle = theme.colors.secondary;
+
+    if (user.pronouns) {
+        ctx.font = `${sizes.small}px ${user.styles.fonts.secondary}`;
+        ctx.fillText(`(${user.pronouns})`, canvas.width / 2, y);
+        y += sizes.big;
+    }
 
     ctx.fillStyle = theme.colors.secondary;
     ctx.font = `${sizes.medium}px ${user.styles.fonts.secondary}`;
