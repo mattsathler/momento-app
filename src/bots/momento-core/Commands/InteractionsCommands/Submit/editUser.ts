@@ -43,33 +43,33 @@ async function editUserProfile(ctx: IContext, interaction: ModalSubmitInteractio
             if (user) { await interaction.reply({ content: 'Esse nome de usuário já está em uso. =(', ephemeral: true }); return }
         }
 
-        await ctx.mongoService.patch('users', { userId: interaction.user.id, guildId: interaction.guildId }, newUserInfo);
-        if (formField.username) {
+        if (newUserInfo.username) {
             if (!ctx.serverConfig) { throw new Error('Invalid profile channel') }
             if (!author.references.channelId) { throw new Error('Invalid profile channel') }
             const profileChannel = await interaction.guild?.channels?.fetch(author.references.channelId) as TextChannel;
             if (!profileChannel) { throw new Error('Invalid profile channel') }
             try {
-                if (StringValidator.hasEmoji(formField.username)) {
+                if (StringValidator.hasEmoji(newUserInfo.username)) {
                     if (!MomentoService.isUserVerified(author.stats.isVerified)) {
+                        newUserInfo.username = author.username;
                         await interaction.reply(
                             {
                                 content: "Apenas verificados podem colocar emojis no nome de usuário!",
                                 flags: MessageFlags.Ephemeral
                             });
-                        formField.username = author.username;
                     }
                 }
-                await profileChannel.setName(formField.username);
+                await profileChannel.setName(newUserInfo.username!);
                 const member = interaction.member as GuildMember;
                 if (!member) { throw new Error('Invalid member') }
-                await member.setNickname(formField.username);
+                await member.setNickname(newUserInfo.username);
             }
             catch (err) {
                 console.log(err)
             }
         }
 
+        await ctx.mongoService.patch('users', { userId: interaction.user.id, guildId: interaction.guildId }, newUserInfo);
         const profileServices: ProfileServices = new ProfileServices();
         author.username = newUserInfo.username ?? author.username;
         author.name = newUserInfo.name ?? author.name;
