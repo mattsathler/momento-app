@@ -1,6 +1,6 @@
 {
   "name": "momento-app",
-  "version": "1.0.0",
+  "version": "3.0.1",
   "main": "generateToken.js",
   "private": true,
   "workspaces": [
@@ -40,7 +40,10 @@
     "start:notifications": "npm run start --workspace momento-notifications",
     "start:profile-updater": "npm run start --workspace momento-profile-updater",
     "start:analytics": "npm run start --workspace momento-analytics",
-    "start:hub": "npm run start --workspace momento-hub"
+    "start:hub": "npm run start --workspace momento-hub",
+    "update:major": "tsx scripts/updateVersion.ts major && git add package.json && git commit -m \"🏷️ - %npm_package_version%\" && git push origin master",
+    "update:minor": "tsx scripts/updateVersion.ts minor && git add package.json && git commit -m \"🏷️ - %npm_package_version%\" && git push origin master",
+    "update:patch": "tsx scripts/updateVersion.ts patch && git add package.json && git commit -m \"🏷️ - %npm_package_version%\" && git push origin master"
   },
   "author": "",
   "license": "ISC",
