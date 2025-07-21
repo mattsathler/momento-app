@@ -1,10 +1,11 @@
-import { ComponentType, GuildMember, ModalSubmitInteraction, TextChannel } from "discord.js";
+import { ComponentType, GuildMember, MessageFlags, ModalSubmitInteraction, TextChannel } from "discord.js";
 import { ICommand } from "../../../Interfaces/ICommand";
 import { Permission } from "../../../Interfaces/IPermission";
 import { IContext } from "../../../Interfaces/IContext";
 import { ProfileServices } from "../../../Utils/ProfileServices";
 import { User } from "src/shared/models/User";
 import { StringValidator } from "src/bots/momento-core/Utils/StringValidator";
+import { MomentoService } from "src/shared/services/MomentoService";
 
 interface IEditableFields {
     username: string | null,
@@ -49,10 +50,19 @@ async function editUserProfile(ctx: IContext, interaction: ModalSubmitInteractio
             const profileChannel = await interaction.guild?.channels?.fetch(author.references.channelId) as TextChannel;
             if (!profileChannel) { throw new Error('Invalid profile channel') }
             try {
+                if (StringValidator.hasEmoji(formField.username)) {
+                    if (!MomentoService.isUserVerified(author.stats.isVerified)) {
+                        await interaction.reply(
+                            {
+                                content: "Apenas verificados podem colocar emojis no nome de usuário!",
+                                flags: MessageFlags.Ephemeral
+                            });
+                        formField.username = author.username;
+                    }
+                }
                 await profileChannel.setName(formField.username);
                 const member = interaction.member as GuildMember;
                 if (!member) { throw new Error('Invalid member') }
-                if (StringValidator.hasEmoji(formField.username)) { throw new Error('O nome de usuário não pode conter emojis!') }
                 await member.setNickname(formField.username);
             }
             catch (err) {

@@ -1,4 +1,4 @@
-import { emojiRegex } from "./EmojiUnicode";
+import emojiRegex from "emoji-regex";
 
 export class StringValidator {
     static hasSpecialCharacters(str: string): boolean {
@@ -12,7 +12,7 @@ export class StringValidator {
     }
 
     static hasEmoji(str: string): boolean {
-        const emojis = emojiRegex;
+        const emojis = emojiRegex();
         return emojis.test(str);
     }
 
