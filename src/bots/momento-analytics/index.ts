@@ -7,8 +7,6 @@ import { fileURLToPath } from "url";
 import { MongoService } from "../../shared/services/MongoService";
 import { AnalyticsQueue } from "./src/queues/AnalyticsQueue";
 import { AnalyticsService } from "./services/AnalyticsService";
-import { onMessageCreate, onReady } from "./src/commands/events";
-import { getSecureToken } from "../../shared/services/TokenService";
 import { MomentoService } from "src/shared/services/MomentoService";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -41,12 +39,6 @@ async function main(): Promise<void> {
         service: analyticsService,
       }
     );
-    let activePostList = await mongoservice.get("posts", {
-      "stats.status": "active",
-    });
-    activePostList.forEach((post) => {
-      analyticsService.addPost(post);
-    });
 
     await analyticsService.initAnalyticsCron(
       client,
@@ -54,21 +46,6 @@ async function main(): Promise<void> {
       analyticsQueue,
       uploadChannel
     );
-
-    client.on("ready", (client: Client) =>
-      onReady(
-        client,
-        analyticsService,
-        mongoservice,
-        analyticsQueue,
-        uploadChannel
-      )
-    );
-    client.on("messageCreate", (message: Message) => {
-      if (message.channelId === process.env.ANALYTICS_WEBHOOK_CHANNEL_ID) {
-        onMessageCreate(client, message, mongoservice, analyticsService);
-      }
-    });
   } catch (error) {
     console.error("Error logging in to Discord:", error);
   }

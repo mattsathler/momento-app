@@ -30,6 +30,9 @@ export class AnalyticsService {
         const cron = require('node-cron');
         console.log("Starting Cronjob...");
         cron.schedule('0 */5 * * * *', async () => {
+            this.activePosts = await mongoService.get("posts", {
+                "stats.status": "active",
+            }) as Post[];
             const now = new Date();
 
             //CHANGE TO 24HRS! = 86400000 =========================

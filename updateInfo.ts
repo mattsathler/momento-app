@@ -10,5 +10,6 @@ export const updateInfo = {
     fixes: [
         "🔧 Remove a necessidade de verificar a todo momento se o usuário é verificado ou não;",
         "🔧 Remove campos de estilização de verificados para usuários não verificados;",
+        "🔧 Muda a forma que lidamos com analytics. Ao invés de um cache, verificamos no banco a cada 5min. Isso mitigará os posts que bugam e ficam para sempre no perfil. Mas no futuro trarei uma solução mais robusta;",
     ]
 }

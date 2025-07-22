@@ -123,8 +123,6 @@ async function execRepostPost(ctx: IContext, message: Message, author: User): Pr
         'stats.lastOnline': new Date()
     });
 
-    await postService.addPostToAnalytics(post, "add");
-
     const profileService = new ProfileServices();
     await profileService.updateProfilePictures(ctx, authorUser, true, false);
 }

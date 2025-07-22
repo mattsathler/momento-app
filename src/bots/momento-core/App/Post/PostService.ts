@@ -201,7 +201,6 @@ export class PostService {
                             if (!hashtags.includes('#ask')) {
                                 await postMessage.react('🔁');
                             }
-                            await postService.addPostToAnalytics(post, "add");
                             const profileService = new ProfileServices();
                             await profileService.updateProfilePictures(ctx, author, true, false);
 
@@ -341,8 +340,6 @@ export class PostService {
         if (!disableRepost && !hashtags.includes('#ask')) {
             await postMessage.react('🔁');
         }
-
-        await postService.addPostToAnalytics(post, "add");
 
         const profileService = new ProfileServices();
         await this.ctx.mongoService.patch('users', {
@@ -584,46 +581,5 @@ export class PostService {
             output: `${screenshotsFolderPath} /0_ % d.png`
         })
         return;
-    }
-
-    public async addPostToAnalytics(post: IPost, method: string): Promise<void> {
-        const body = {
-            content: null,
-            embeds: [
-                {
-                    color: 14492795,
-                    fields: [
-                        {
-                            name: 'guild_id',
-                            value: post.references.guildId
-                        },
-                        {
-                            name: 'target_profile_channel_id',
-                            value: post.references.channelId
-                        },
-                        {
-                            name: 'post_message_id',
-                            value: post.references.messageId || ''
-                        },
-                        {
-                            name: 'method',
-                            value: method
-                        },
-                        {
-                            name: 'sent_from',
-                            value: 'momento_core'
-                        },
-                        {
-                            name: "token",
-                            value: getSecureToken(process.env.SECRET_TOKEN || "")
-                        }
-                    ]
-                }
-            ]
-        };
-
-
-        const axiosService: AxiosService = new AxiosService();
-        await axiosService.postWebhook(process.env.ANALYTICS_WEBHOOK || '', body)
     }
 }

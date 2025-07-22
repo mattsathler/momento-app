@@ -43,7 +43,6 @@ async function confirmDeletePost(ctx: IContext, interaction: ButtonInteraction) 
         const post = await ctx.mongoService.getOne('posts', { 'references.messageId': postMessage.id, 'references.guildId': postMessage.guildId });
 
         await profileService.updateProfilePictures(ctx, user, true, false);
-        await postService.addPostToAnalytics(post, "remove");
 
         return
     }
