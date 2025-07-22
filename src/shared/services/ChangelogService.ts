@@ -1,14 +1,4 @@
-const updateInfo = {
-    description: "Essa atualização veio para dar mais customização para os perfis! Agora, é possível adicionar pronomes de tratamento que ficará exposto em seu perfil, sendo opcional. É um passo a mais para diversificação e personalização do seu usuário. Também trarei mais transparência das atualizações usando esse canal, de changelog, para falar o que estamos alterando e quais os próximos passos.",
-    features: [
-        "🔥 Possibilita a criação de pronomes de tratamento para o usuário. Ex.: Ele/Dele, Ela/Dela, etc;",
-        "🔥 Cria o changelog, canal próprio para transparência de atualizações. Automatizado e conectado com o projeto;",
-        "🔥 Transforma o uso de emojis no nome de usuários apenas para verificados no momento",
-    ],
-    fixes: [
-        "🔧 Corrige um problema de verificação de campos que impossibilitava a alteração do nome de usuário;"
-    ]
-}
+import { updateInfo } from "updateInfo"
 
 export function getUpdateInfo(version: string) {
     const json = {

@@ -96,6 +96,7 @@ export const registerTheme: ICommand = {
         const newTheme: Theme = {
             name: response.name.toLowerCase(),
             creatorId: interaction.user.id,
+            is_system_theme: interaction.user.id === process.env.OWNER_ID,
             colors: {
                 primary: `#${response.primary.toUpperCase()}`,
                 secondary: `#${response.secondary.toUpperCase()}`,
@@ -140,8 +141,9 @@ async function createTheme(ctx: IContext, guild: Guild, theme: Theme) {
 export async function displayThemeInCatalogue(ctx: IContext, guild: Guild, theme: Theme) {
     const hubGuildId = process.env.HUB_GUILD_ID;
     const hubGuild = await ctx.client.guilds.fetch(hubGuildId!);
+    const themeUploaderChannelId = theme.is_system_theme ? process.env.HUB_SYSTEM_THEMES_CHANNEL_themeUploaderChannelID : process.env.HUB_THEMES_CHANNEL_ID
 
-    const themeUploaderChannel = await hubGuild.channels.fetch(process.env.HUB_THEMES_CHANNEL_ID!) as TextChannel;
+    const themeUploaderChannel = await hubGuild.channels.fetch(themeUploaderChannelId!) as TextChannel;
     const uploadChannel = await MomentoService.getUploadChannel(ctx.client);
     const postCount = 0;
     const trendingCount = 0;

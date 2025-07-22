@@ -65,10 +65,10 @@ function createEditProfileModal(author: User): ModalBuilder {
 
     const pronounsField = new TextInputBuilder()
         .setCustomId('pronouns_field')
-        .setPlaceholder(author.pronouns || "Nenhum pronome")
+        .setPlaceholder(author.pronouns || "Nenhum apelido")
         .setRequired(false)
         .setStyle(TextInputStyle.Short)
-        .setLabel('Pronome')
+        .setLabel('Apelido')
         .setMinLength(3)
         .setMaxLength(10)
 

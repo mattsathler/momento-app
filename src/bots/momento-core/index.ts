@@ -50,7 +50,6 @@ async function createContext(): Promise<IContext> {
 
 client.once('ready', async () => {
 	ctx = await createContext();
-	
 	const events: EventHandler = new EventHandler();
 	for (let event of EventList) {
 		client.on(event, async (...args) => {

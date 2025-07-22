@@ -72,8 +72,8 @@ function fetchFormFields(interaction: ModalSubmitInteraction) {
 async function createUser(ctx: IContext, newUser: User, guild: Guild) {
     const profileService = new ProfileServices();
     const createdUser = { ...newUser };
-    const theme = MomentoService.isUserVerified(createdUser.stats.isVerified) ? await ctx.mongoService.getOne('themes', { name: createdUser.styles.theme }) as Theme ?? defaultTheme : defaultTheme;
-    createdUser.styles.fonts = MomentoService.isUserVerified(createdUser.stats.isVerified) ? createdUser.styles.fonts : { primary: 'sfpro', secondary: 'sfpro' };
+    const theme = await ctx.mongoService.getOne('themes', { name: createdUser.styles.theme }) as Theme ?? defaultTheme;
+    createdUser.styles.fonts = createdUser.styles.fonts;
 
     const collageStyle = await ctx.mongoService.getOne('collages', { id: createdUser.styles.collage }) || defaultCollage;
     const images = await profileService.drawProfilePictures(ctx, createdUser, theme, collageStyle, 0, 0);

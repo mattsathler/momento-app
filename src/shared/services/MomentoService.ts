@@ -68,4 +68,16 @@ export class MomentoService {
             "attachments": []
         })
     }
+
+    public static removeNullOrUndefined(obj: any): any {
+        const result: any = {};
+
+        for (const key in obj) {
+            if (obj[key] !== null && obj[key] !== undefined) {
+                result[key] = obj[key];
+            }
+        }
+
+        return result;
+    }
 }

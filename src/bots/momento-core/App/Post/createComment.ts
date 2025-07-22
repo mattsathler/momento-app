@@ -41,10 +41,8 @@ async function createNewComment(ctx: IContext, message: Message) {
         throw new Error('User not found!')
     }
 
-    const theme = MomentoService.isUserVerified(user.stats.isVerified) ? await ctx.mongoService.getOne('themes', {
-        name: postAuthorUser.styles.theme,
-    }) || defaultTheme : defaultTheme;
-    user.styles.fonts = MomentoService.isUserVerified(user.stats.isVerified) ? user.styles.fonts : { primary: 'sfpro', secondary: 'sfpro' };
+    const theme = await ctx.mongoService.getOne('themes', { name: postAuthorUser.styles.theme }) || defaultTheme;
+    user.styles.fonts = user.styles.fonts;
 
 
     const commentText = message.content;

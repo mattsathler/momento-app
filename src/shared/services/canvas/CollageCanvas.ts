@@ -15,9 +15,6 @@ export async function drawCollageCanvas(uploadChannel: TextChannel, user: User, 
     ctx.quality = "best";
     let y = sizes.medium * 2;
 
-    theme = MomentoService.isUserVerified(user.stats.isVerified) ? theme : defaultTheme;
-    user.styles.fonts = MomentoService.isUserVerified(user.stats.isVerified) ? user.styles.fonts : { primary: 'sfpro', secondary: 'sfpro' };
-
     ctx.fillStyle = theme.colors.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 

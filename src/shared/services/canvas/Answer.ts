@@ -16,15 +16,13 @@ export async function drawAnswerCanvas(context: IContext, question: string, answ
     const asktheme: Theme = {
         name: 'AskTheme',
         creatorId: 'system',
+        is_system_theme: true,
         colors: {
             primary: '#FFFFFF',
             secondary: '#EAEAEA',
             background: '#DD247B'
         }
     }
-
-    theme = MomentoService.isUserVerified(user.stats.isVerified) ? theme : defaultTheme;
-    user.styles.fonts = MomentoService.isUserVerified(user.stats.isVerified) ? user.styles.fonts : { primary: 'sfpro', secondary: 'sfpro' };
 
     const canvas = createCanvas(Styles.sizes.large.post.width, Styles.sizes.large.post.height);
     const ctx = canvas.getContext('2d');

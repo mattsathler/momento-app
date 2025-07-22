@@ -40,10 +40,10 @@ function createStyleProfileModal(author: User, collagesCount: number): ModalBuil
 
     const themeField = new TextInputBuilder()
         .setCustomId('theme_field')
-        .setPlaceholder(MomentoService.isUserVerified(author.stats.isVerified) ? author.styles.theme : "Apenas para verificados 👑")
+        .setPlaceholder(MomentoService.isUserVerified(author.stats.isVerified) ? author.styles.theme : "Apenas para temas do sistema")
         .setRequired(false)
         .setStyle(TextInputStyle.Short)
-        .setLabel('Tema do Perfil 👑')
+        .setLabel('Tema do Perfil')
         .setMinLength(4)
         .setMaxLength(14)
 
@@ -73,7 +73,11 @@ function createStyleProfileModal(author: User, collagesCount: number): ModalBuil
     const modal = new ModalBuilder()
         .setTitle('Estilizar Perfil')
         .setCustomId('styleUser')
-        .addComponents(AR1, AR2, AR3, AR4)
+        .addComponents(AR1, AR2)
+
+    if (MomentoService.isUserVerified(author.stats.isVerified)) {
+        modal.addComponents(AR3, AR4);
+    }
 
     return modal
 }

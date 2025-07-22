@@ -97,8 +97,7 @@ export async function messageCreate(ctx: IContext, message: Message) {
             const postService = new PostService(ctx);
 
             let postImagesURL: string[] = [];
-            const theme = MomentoService.isUserVerified(author.stats.isVerified) ? await ctx.mongoService.getOne('themes', { name: author.styles.theme }) as Theme ?? defaultTheme : defaultTheme;
-            author.styles.fonts = MomentoService.isUserVerified(author.stats.isVerified) ? author.styles.fonts : { primary: 'sfpro', secondary: 'sfpro' };
+            const theme = await ctx.mongoService.getOne('themes', { name: author.styles.theme }) as Theme ?? defaultTheme;
 
 
             await message.react('📸');

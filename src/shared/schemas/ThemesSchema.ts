@@ -9,6 +9,10 @@ export const ThemesSchema = new Schema({
         type: String,
         required: true,
     },
+    is_system_theme: {
+        type: Boolean,
+        required: true,
+    },
     colors: {
         primary: {
             type: String,

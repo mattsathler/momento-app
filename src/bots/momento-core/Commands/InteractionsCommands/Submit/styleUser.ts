@@ -4,20 +4,18 @@ import { Permission } from "../../../Interfaces/IPermission";
 import { IContext } from "../../../Interfaces/IContext";
 import { ProfileServices } from "../../../Utils/ProfileServices";
 import { Theme } from "src/shared/models/Theme";
-import { Fonts } from "src/shared/models/Fonts";
-import { fontsPaths } from "assets-paths";
+import { assetPaths, fontsPaths } from "assets-paths";
 import { User } from "src/shared/models/user";
 import { MomentoService } from "src/shared/services/MomentoService";
+import { Collage } from "src/shared/models/Collage";
 
 interface IEditableFields {
-    styles: {
-        theme: string | null,
-        collage: string | null,
-        fonts: {
-            primary: string | null,
-            secondary: string | null
-        }
-    }
+    theme: string | null,
+    collage: number | null,
+    fonts: {
+        primary: string | null,
+        secondary: string | null
+    } | null
 }
 
 export const styleUser: ICommand = {
@@ -32,50 +30,54 @@ async function styleUserProfile(ctx: IContext, interaction: ModalSubmitInteracti
     const author = await ctx.mongoService.getOne('users', { userId: interaction.user.id, guildId: interaction.guildId }) as User;
     if (!author) { throw new Error('Invalid author') }
 
-    const formField = fetchFormFields(interaction);
+    const isVerified = MomentoService.isUserVerified(author.stats.isVerified);
+
+    let formField = fetchFormFields(interaction);
+    formField = MomentoService.removeNullOrUndefined(formField);
     if (!formField) { await interaction.reply({ content: 'Nada alterado em seu perfil. =)', ephemeral: true }); return }
 
-    let newUserInfo: IEditableFields = {
-        styles: {
-            theme: formField.styles.theme?.toLocaleLowerCase() ?? author.styles.theme,
-            collage: formField.styles?.collage ?? String(author.styles.collage),
-            fonts: formField.styles?.fonts ?? author.styles.fonts
-        }
-    };
+    let newUserStyle = author.styles;
 
-    if (newUserInfo.styles.theme) {
-        const newTheme = await ctx.mongoService.getOne("themes", { name: newUserInfo.styles.theme || '' }) as Theme;
-        if (!newTheme) { newUserInfo.styles.theme = author.styles.theme }
-    }
+    let isEdittingProfile = false;
+    let isEdittingCollage = false;
 
-    if (MomentoService.isUserVerified(author.stats.isVerified)) {
-        if (newUserInfo.styles.fonts.primary) {
-            const hasFont = fontsPaths.some(font => font.name === `${newUserInfo.styles.fonts.primary}`);
-            newUserInfo.styles.fonts.primary = hasFont ? newUserInfo.styles.fonts.primary.toLocaleLowerCase() : author.styles.fonts.primary.toLocaleLowerCase();
-        } else {
-            newUserInfo.styles.fonts.primary = author.styles.fonts.primary.toLocaleLowerCase();
-        }
+    if (formField.theme) {
+        const theme = await ctx.mongoService.getOne("themes", { name: formField.theme }) as Theme;
+        if (theme && theme.name !== author.styles.theme) {
+            if (theme.is_system_theme) {
+                newUserStyle.theme = theme.name;
+            }
+            else {
+                newUserStyle.theme = isVerified ? newUserStyle.theme = theme.name : author.styles.theme;
+            }
 
-        if (newUserInfo.styles.fonts.secondary) {
-            const hasFont = fontsPaths.some(font => font.name === `${newUserInfo.styles.fonts.secondary}`);
-            newUserInfo.styles.fonts.secondary = hasFont ? newUserInfo.styles.fonts.secondary.toLocaleLowerCase() : author.styles.fonts.secondary.toLocaleLowerCase();
-        } else {
-            newUserInfo.styles.fonts.secondary = author.styles.fonts.secondary.toLocaleLowerCase();
+            isEdittingProfile = true;
+            isEdittingCollage = true;
         }
     }
 
-
-    const isEdittingProfile = formField.styles.theme || formField.styles.fonts.primary || formField.styles.fonts.secondary ? true : false;
-    const isEdittingCollage = formField.styles?.collage || formField.styles.theme || formField.styles.fonts.primary || formField.styles.fonts.secondary ? true : false;
-
-    if (newUserInfo.styles.collage !== String(author.styles.collage)) {
-        const collagesCount = await ctx.mongoService.count('collages', {});
-        if (isNaN(Number(newUserInfo.styles.collage)) || Number(newUserInfo.styles.collage) > collagesCount || Number(newUserInfo.styles.collage) < 1) { throw new Error(`Esse estilo de colagem não existe. Escolha um número entre 1 e ${collagesCount}.`) }
+    if (formField.collage && formField.collage !== author.styles.collage) {
+        const collage = await ctx.mongoService.getOne("collages", { id: formField.collage }) as Collage;
+        if (collage) {
+            newUserStyle.collage = formField.collage;
+            isEdittingCollage = true;
+        }
     }
 
-    await ctx.mongoService.patch('users', { userId: interaction.user.id, guildId: interaction.guildId }, newUserInfo);
-    author.styles.theme = newUserInfo.styles.theme ?? author.styles.theme;
-    author.styles.collage = Number(newUserInfo.styles?.collage) ?? author.styles.collage;
+    if (formField.fonts) {
+        const primaryFont = fontsPaths.find(font => font.name === formField.fonts?.primary)?.name;
+        const secondaryFont = fontsPaths.find(font => font.name === formField.fonts?.secondary)?.name;
+        newUserStyle.fonts = {
+            primary: primaryFont ?? newUserStyle.fonts.primary,
+            secondary: secondaryFont ?? newUserStyle.fonts.secondary
+        }
+        isEdittingProfile = newUserStyle.fonts !== author.styles.fonts ? true : isEdittingProfile;
+        isEdittingCollage = newUserStyle.fonts !== author.styles.fonts ? true : isEdittingCollage;
+    }
+
+    if (!isEdittingProfile && !isEdittingCollage) { await interaction.reply({ content: 'Nada alterado em seu perfil. =)', ephemeral: true }); return }
+
+    await ctx.mongoService.patch('users', { userId: interaction.user.id, guildId: interaction.guildId }, { styles: newUserStyle });
 
     const profileServices: ProfileServices = new ProfileServices();
     await interaction.reply({ content: 'Estilizando seu perfil...', ephemeral: true })
@@ -86,26 +88,30 @@ async function styleUserProfile(ctx: IContext, interaction: ModalSubmitInteracti
     return
 }
 
+function safeGetValue(interaction: ModalSubmitInteraction, id: string): string | null {
+    try {
+        const input = interaction.fields.getTextInputValue(id);
+        if (input && input.length > 0) {
+            return input
+        }
+        return null;
+    } catch {
+        return null;
+    }
+}
+
 function fetchFormFields(interaction: ModalSubmitInteraction): IEditableFields | null {
-    const themeField = interaction.fields.getField('theme_field', ComponentType.TextInput).value;
-    const collageStyleField = interaction.fields.getField('collage_style_field', ComponentType.TextInput).value;
-    const primaryFontField = interaction.fields.getField('primary_font_field', ComponentType.TextInput).value;
-    const secondaryFontField = interaction.fields.getField('secondary_font_field', ComponentType.TextInput).value;
-
-
-    const theme = themeField.length > 0 ? themeField : null;
-    const collage = collageStyleField.length > 0 ? (collageStyleField).toString() : null;
+    const theme = safeGetValue(interaction, 'theme_field');
+    const collage = Number(safeGetValue(interaction, 'collage_style_field'));
     const fonts = {
-        primary: primaryFontField.length > 0 ? (primaryFontField).toString() : null,
-        secondary: secondaryFontField.length > 0 ? (secondaryFontField).toString() : null,
+        primary: safeGetValue(interaction, 'primary_font_field'),
+        secondary: safeGetValue(interaction, 'secondary_font_field')
     }
 
     if (!theme && !collage && !fonts.primary && !fonts.secondary) { return null }
     return {
-        styles: {
-            theme,
-            collage,
-            fonts
-        }
+        theme,
+        collage,
+        fonts
     }
 }

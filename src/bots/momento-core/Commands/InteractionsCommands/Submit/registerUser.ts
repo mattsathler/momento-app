@@ -75,7 +75,7 @@ async function createUser(ctx: IContext, newUser: User, guild: Guild) {
     try {
         const profileService = new ProfileServices();
         const createdUser = { ...newUser };
-        const theme = MomentoService.isUserVerified(createdUser.stats.isVerified) ? await ctx.mongoService.getOne('themes', { name: createdUser.styles.theme }) as Theme ?? defaultTheme : defaultTheme;
+        const theme = await ctx.mongoService.getOne('themes', { name: createdUser.styles.theme }) as Theme ?? defaultTheme;
         const collageStyle = await ctx.mongoService.getOne('collages', { id: createdUser.styles.collage }) || defaultCollage;
 
         const userChannel = await profileService.createUserChannel(guild, createdUser.username, createdUser.userId);

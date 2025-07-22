@@ -43,10 +43,7 @@ export class MongoService {
     }
 
     async delete(collection: string, query: {}): Promise<any> {
-        if (!mongo.connection || !mongo.connection.db) {
-            return;
-        }
-        return mongo.connection.db.collection(collection).deleteMany(query)
+        return mongo.model(collection).deleteMany(query)
     }
 
     async count(collection: string, query: {}): Promise<any> {
