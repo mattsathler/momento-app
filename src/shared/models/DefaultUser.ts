@@ -9,6 +9,7 @@ export const DefaultUser: User = {
     name: 'Nome',
     surname: 'Sobrenome',
     bio: 'Esse é o seu momento!',
+    pronouns: null,
     references: {
         channelId: '',
         statsId: '',
@@ -44,7 +45,7 @@ export const DefaultUser: User = {
     },
     stats: {
         followers: 0,
-        isVerified: new Date(),
+        isVerified: new Date(Date.now() - 24 * 60 * 60 * 1000),
         notifications: true,
         influencyLevel: 1,
         lastOnline: new Date()

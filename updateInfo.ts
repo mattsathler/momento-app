@@ -1,8 +1,8 @@
 export const updateInfo = {
-    description: "Hotfix de otimização",
+    description: "Hotfix",
     features: [
     ],
     fixes: [
-        "🔧 Não atualiza perfis com mais de 15 seguidores em caso de novo seguidor;",
+        "🔧 Corrige um bug onde usuários novos são registrados com um dia de verificado;",
     ]
 }
