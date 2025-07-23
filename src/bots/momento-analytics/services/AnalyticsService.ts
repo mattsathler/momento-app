@@ -133,7 +133,13 @@ export class AnalyticsService {
         }
         catch (err) {
             console.log(err)
-            this.removePost(post);
+            await mongoService.patch('posts', {
+                'references.messageId': post.references.messageId,
+                'references.channelId': post.references.channelId
+            }, {
+                'stats.status': 'error'
+            })
+
             return;
         }
     }

@@ -8,8 +8,7 @@ import { MongoService } from 'src/shared/services/MongoService';
 
 export async function updateUsers(mongoService: MongoService): Promise<void> {
   console.log("Migrating verified");
-  await mongoService.patch('users', {}, {
-    'stats.isVerified': new Date(Date.now() + 24 * 60 * 60 * 1000),
+  await mongoService.updateMany('users', { 'styles.fonts.primary': null }, {
     'styles.fonts': {
       primary: 'sfpro',
       secondary: 'sfpro'

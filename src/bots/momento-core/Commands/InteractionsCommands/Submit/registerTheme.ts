@@ -8,6 +8,7 @@ import { MomentoService } from "src/shared/services/MomentoService"
 import { drawProfileCanvas } from "src/shared/services/canvas/ProfileCanvas"
 import { LinkService } from "src/shared/services/LinkService"
 import { DefaultUser } from "src/shared/models/DefaultUser"
+import "dotenv/config";
 
 interface IFormFields {
     name: string | null,
@@ -142,8 +143,8 @@ async function createTheme(ctx: IContext, guild: Guild, theme: Theme) {
 export async function displayThemeInCatalogue(ctx: IContext, guild: Guild, theme: Theme) {
     const hubGuildId = process.env.HUB_GUILD_ID;
     const hubGuild = await ctx.client.guilds.fetch(hubGuildId!);
-    const themeUploaderChannelId = theme.is_system_theme ? process.env.HUB_SYSTEM_THEMES_CHANNEL_themeUploaderChannelID : process.env.HUB_THEMES_CHANNEL_ID
 
+    const themeUploaderChannelId = theme.is_system_theme ? process.env.HUB_SYSTEM_THEMES_CHANNEL_ID : process.env.HUB_THEMES_CHANNEL_ID
     const themeUploaderChannel = await hubGuild.channels.fetch(themeUploaderChannelId!) as TextChannel;
     const uploadChannel = await MomentoService.getUploadChannel(ctx.client);
     const postCount = 0;
@@ -154,7 +155,7 @@ export async function displayThemeInCatalogue(ctx: IContext, guild: Guild, theme
     const components = [
         new ContainerBuilder()
             .addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`# ${theme.name}`),
+                new TextDisplayBuilder().setContent(`# ${theme.name} ${theme.is_system_theme ? "👑" : ""}`),
             )
             .addSeparatorComponents(
                 new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
