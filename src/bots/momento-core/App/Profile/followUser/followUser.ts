@@ -47,6 +47,8 @@ async function execFollowUser(ctx: IContext, message: Message, author: User): Pr
         userId: userFollowed.userId,
         guildId: userFollowed.guildId
     }, userFollowed);
+
+    if(userFollowed.stats.followers > 15) return;
     const profileService = new ProfileServices();
     await profileService.updateProfilePictures(ctx, userFollowed, true, false);
 }
