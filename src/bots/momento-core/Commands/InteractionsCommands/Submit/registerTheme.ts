@@ -97,6 +97,7 @@ export const registerTheme: ICommand = {
             name: response.name.toLowerCase(),
             creatorId: interaction.user.id,
             is_system_theme: interaction.user.id === process.env.OWNER_ID,
+            last_use: new Date(),
             colors: {
                 primary: `#${response.primary.toUpperCase()}`,
                 secondary: `#${response.secondary.toUpperCase()}`,

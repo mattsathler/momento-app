@@ -6,6 +6,7 @@ export const updateInfo = {
         "🔥 Transforma a mensagem de configuração do perfil em ephemeral, aparecendo apenas para o dono do perfil;",
         "🔥 Cria o canal de temas de sistema no HUB;",
         "🔥 Altera o campo pronome para apelido, facilitando o uso pelos jogadores;",
+        "🔥 Adiciona 'ultima vez usado' no tema para facilitar na limpeza futura de temas inutilizados;",
     ],
     fixes: [
         "🔧 Remove a necessidade de verificar a todo momento se o usuário é verificado ou não;",

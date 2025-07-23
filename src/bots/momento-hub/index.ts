@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import { MongoService } from "../../shared/services/MongoService";
 import { onInteractionCreate, onMessageCreate, onReady } from "./src/commands/events";
 import { loadFonts } from "src/shared/services/canvas/FontsService";
+import { updateThemes } from "scripts/updateThemes";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

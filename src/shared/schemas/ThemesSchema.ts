@@ -13,6 +13,10 @@ export const ThemesSchema = new Schema({
         type: Boolean,
         required: true,
     },
+    last_use: {
+        type: Date,
+        required: true
+    },
     colors: {
         primary: {
             type: String,

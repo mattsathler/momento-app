@@ -2,6 +2,7 @@ export interface Theme {
     name: string,
     creatorId: string,
     is_system_theme: boolean,
+    last_use: Date,
     colors: {
         primary: string
         secondary: string
@@ -14,6 +15,7 @@ export const defaultTheme: Theme = {
     name: 'light',
     creatorId: 'system',
     is_system_theme: true,
+    last_use: new Date(),
     colors: {
         primary: "#000000",
         secondary: "#3B3B3B",

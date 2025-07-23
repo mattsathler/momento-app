@@ -49,6 +49,7 @@ async function styleUserProfile(ctx: IContext, interaction: ModalSubmitInteracti
             }
             else {
                 newUserStyle.theme = isVerified ? newUserStyle.theme = theme.name : author.styles.theme;
+                ctx.mongoService.patch("themes", { name: formField.theme }, { last_use: new Date() });
             }
 
             isEdittingProfile = true;
