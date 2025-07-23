@@ -8,6 +8,7 @@ import { MongoService } from "../../shared/services/MongoService";
 import { AnalyticsQueue } from "./src/queues/AnalyticsQueue";
 import { AnalyticsService } from "./services/AnalyticsService";
 import { MomentoService } from "src/shared/services/MomentoService";
+import { loadFonts } from "src/shared/services/canvas/FontsService";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -21,6 +22,8 @@ async function main(): Promise<void> {
     console.error("DISCORD_TOKEN is not defined in .env");
     process.exit(1);
   }
+
+  loadFonts();
 
   const client = createDiscordClient();
 
