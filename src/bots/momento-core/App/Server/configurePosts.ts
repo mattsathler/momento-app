@@ -1,4 +1,4 @@
-import { ComponentType, ModalSubmitInteraction } from "discord.js";
+import { ComponentType, MessageFlags, ModalSubmitInteraction } from "discord.js";
 import { Permission } from "../../Interfaces/IPermission";
 import { IContext } from "../../Interfaces/IContext";
 import { ICommand } from "../../Interfaces/ICommand";
@@ -20,9 +20,9 @@ async function editPostsExec(ctx: IContext, interaction: ModalSubmitInteraction)
 
     const serverConfig = ctx.serverConfig;
     const formField = fetchFormFields(interaction);
-    if (!formField) { await interaction.reply({ content: 'Nada alterado em seu analytics. =)', ephemeral: true }); return }
+    if (!formField) { await interaction.reply({ content: 'Nada alterado em seu analytics. =)', flags: MessageFlags.Ephemeral }); return }
 
-    await interaction.reply({ content: "Alterando suas configurações do analytics...", ephemeral: true })
+    await interaction.reply({ content: "Alterando suas configurações do analytics...", flags: MessageFlags.Ephemeral })
     let newConfig: { analytics: IEditableFields } = {
         analytics: {
             likesToTrend: formField.likesToTrend ?? serverConfig.analytics.likesToTrend,
@@ -33,7 +33,7 @@ async function editPostsExec(ctx: IContext, interaction: ModalSubmitInteraction)
         await ctx.mongoService.patch('servers', { id: interaction.guildId }, newConfig);
         await interaction.editReply("Configurações alteradas com sucesso!");
     }
-    catch(err: any) {
+    catch (err: any) {
         await interaction.editReply(err.message)
     }
     return

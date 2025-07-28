@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, Embed, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, Embed, EmbedBuilder, MessageFlags, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import { ICommand } from "../../../../Interfaces/ICommand";
 import { IContext } from "../../../../Interfaces/IContext";
 import { Permission } from "../../../../Interfaces/IPermission";
@@ -19,12 +19,12 @@ export const createImportFollowersMessage: ICommand = {
         accounts = accounts.filter(account => account.guildId !== interaction.guildId);
 
         if (!user) {
-            await interaction.reply({ content: "Você não possui outras contas no momento.", ephemeral: true });
+            await interaction.reply({ content: "Você não possui outras contas no momento.", flags: MessageFlags.Ephemeral});
             return;
         }
 
         if (accounts.length < 1) {
-            await interaction.reply({ content: "Você não possui outras contas no momento.", ephemeral: true });
+            await interaction.reply({ content: "Você não possui outras contas no momento.", flags: MessageFlags.Ephemeral});
             return;
         }
         
@@ -33,7 +33,7 @@ export const createImportFollowersMessage: ICommand = {
         accounts = accounts.filter(account => account.stats.followers > checkedUser.stats.followers);
 
         if (accounts.length < 1) {
-            await interaction.reply({ content: "Só é possível importar seguidores caso possua uma conta com mais seguidores que essa.", ephemeral: true });
+            await interaction.reply({ content: "Só é possível importar seguidores caso possua uma conta com mais seguidores que essa.", flags: MessageFlags.Ephemeral });
             return;
         }
         const followersBefore: number = user.stats.followers;
@@ -75,7 +75,7 @@ export const createImportFollowersMessage: ICommand = {
             try {
                 const message = await response.fetch()
                 if (i.user.id !== user?.userId) {
-                    await i.reply({content: "Você não tem permissões para alterar esse perfil!", ephemeral: true})
+                    await i.reply({content: "Você não tem permissões para alterar esse perfil!", flags: MessageFlags.Ephemeral})
                 };
                 const selection = i.values[0];
 
@@ -93,7 +93,7 @@ export const createImportFollowersMessage: ICommand = {
 
 
                 if (!user || accounts.length < 1) {
-                    await interaction.reply({ content: "Você não possui outras contas no momento.", ephemeral: true });
+                    await interaction.reply({ content: "Você não possui outras contas no momento.",  flags: MessageFlags.Ephemeral });
                     return;
                 };
 

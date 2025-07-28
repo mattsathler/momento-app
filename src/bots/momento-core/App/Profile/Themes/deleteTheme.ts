@@ -1,4 +1,4 @@
-import { ButtonInteraction } from "discord.js";
+import { ButtonInteraction, MessageFlags } from "discord.js";
 import { IContext } from "../../../Interfaces/IContext";
 import { ICommand } from "../../../Interfaces/ICommand";
 import { Permission } from "../../../Interfaces/IPermission";
@@ -28,7 +28,7 @@ export const deleteTheme: ICommand = {
 
         await interaction.reply({
             content: 'Deletando o tema, aguarde...',
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
         await ctx.mongoService.delete('themes', { name: themeName });
         await tryDeleteMessage(interaction.message);

@@ -1,4 +1,4 @@
-import { ComponentType, ModalSubmitInteraction } from "discord.js";
+import { ComponentType, MessageFlags, ModalSubmitInteraction } from "discord.js";
 import { ICommand } from "../../../Interfaces/ICommand";
 import { Permission } from "../../../Interfaces/IPermission";
 import { IContext } from "../../../Interfaces/IContext";
@@ -34,7 +34,7 @@ async function styleUserProfile(ctx: IContext, interaction: ModalSubmitInteracti
 
     let formField = fetchFormFields(interaction);
     formField = MomentoService.removeNullOrUndefined(formField);
-    if (!formField) { await interaction.reply({ content: 'Nada alterado em seu perfil. =)', ephemeral: true }); return }
+    if (!formField) { await interaction.reply({ content: 'Nada alterado em seu perfil. =)', flags: MessageFlags.Ephemeral }); return }
 
     let newUserStyle = author.styles;
 
@@ -76,12 +76,12 @@ async function styleUserProfile(ctx: IContext, interaction: ModalSubmitInteracti
         isEdittingCollage = newUserStyle.fonts !== author.styles.fonts ? true : isEdittingCollage;
     }
 
-    if (!isEdittingProfile && !isEdittingCollage) { await interaction.reply({ content: 'Nada alterado em seu perfil. =)', ephemeral: true }); return }
+    if (!isEdittingProfile && !isEdittingCollage) { await interaction.reply({ content: 'Nada alterado em seu perfil. =)', flags: MessageFlags.Ephemeral }); return }
 
     await ctx.mongoService.patch('users', { userId: interaction.user.id, guildId: interaction.guildId }, { styles: newUserStyle });
 
     const profileServices: ProfileServices = new ProfileServices();
-    await interaction.reply({ content: 'Estilizando seu perfil...', ephemeral: true })
+    await interaction.reply({ content: 'Estilizando seu perfil...', flags: MessageFlags.Ephemeral })
     await profileServices.updateProfilePictures(ctx, author, isEdittingProfile, isEdittingCollage);
     if (interaction.isRepliable()) {
         await interaction.editReply('Seu perfil foi atualizado com sucesso!')

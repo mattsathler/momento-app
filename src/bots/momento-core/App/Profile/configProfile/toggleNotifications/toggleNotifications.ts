@@ -1,4 +1,4 @@
-import { ButtonBuilder, ButtonInteraction, ButtonStyle, Embed, EmbedBuilder } from "discord.js";
+import { ButtonBuilder, ButtonInteraction, ButtonStyle, Embed, EmbedBuilder, MessageFlags } from "discord.js";
 import { ICommand } from "../../../../Interfaces/ICommand";
 import { IContext } from "../../../../Interfaces/IContext";
 import { Permission } from "../../../../Interfaces/IPermission";
@@ -38,7 +38,7 @@ export const toggleNotifications: ICommand = {
             console.log(err)
             await interaction.reply({
                 content: 'A interação falhou! - ' + err.message,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
     }

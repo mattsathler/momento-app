@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, EmbedBuilder, InviteCreateOptions, ModalBuilder, ModalSubmitInteraction, TextInputBuilder, TextInputStyle } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, EmbedBuilder, InviteCreateOptions, MessageFlags, ModalBuilder, ModalSubmitInteraction, TextInputBuilder, TextInputStyle } from "discord.js";
 import { ICommand } from "../../Interfaces/ICommand";
 import { Permission } from "../../Interfaces/IPermission";
 import { IContext } from "../../Interfaces/IContext";
@@ -48,7 +48,7 @@ async function askUserExec(ctx: IContext, interaction: ModalSubmitInteraction) {
     )
 
     if (!interaction.isRepliable()) return;
-    await interaction.reply({ content: 'Pergunta enviada!', ephemeral: true })
+    await interaction.reply({ content: 'Pergunta enviada!', flags: MessageFlags.Ephemeral })
 }
 
 function fetchModalFields(interaction: ModalSubmitInteraction): { username: string, question: string } {

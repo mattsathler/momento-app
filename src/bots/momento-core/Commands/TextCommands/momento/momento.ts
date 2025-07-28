@@ -30,12 +30,12 @@ export const momento: ICommand = {
             const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(openConfigureTrendsWebhooksModal, openConfigurePostsModalButton)
 
             try {
-                const reply = await message.reply({
+                await message.reply({
                     content: 'Painel de configuração',
                     components: [actionRow],
                 })
             }
-            catch(err) { console.log(err) }
+            catch (err) { console.log(err) }
             return;
         };
 

@@ -1,4 +1,4 @@
-import { ButtonInteraction, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextInputStyle, UserSelectMenuBuilder } from "discord.js";
+import { ButtonInteraction, MessageFlags, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextInputStyle, UserSelectMenuBuilder } from "discord.js";
 import { IContext } from "../../../../Interfaces/IContext";
 import { ActionRowBuilder, ModalBuilder, TextInputBuilder } from "@discordjs/builders";
 import { ICommand } from "../../../../Interfaces/ICommand";
@@ -19,8 +19,7 @@ export const openEditProfileModal: ICommand = {
         catch (err: any) {
             console.log(err)
             await interaction.reply({
-                content: 'A interação falhou! - ' + err.message,
-                ephemeral: true
+                content: 'A interação falhou! - ' + err.message, flags: MessageFlags.Ephemeral
             })
         }
     }

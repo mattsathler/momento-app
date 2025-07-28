@@ -1,4 +1,4 @@
-import { ButtonInteraction, Interaction, ModalSubmitInteraction } from "discord.js";
+import { ButtonInteraction, Interaction, MessageFlags, ModalSubmitInteraction } from "discord.js";
 import { IContext } from "../../Interfaces/IContext";
 import { interactionList, submitList } from "../../Commands/CommandLists";
 import { IPost } from "../../Interfaces/IPost";
@@ -44,7 +44,7 @@ export async function interactionCreate(ctx: IContext, interaction: Interaction)
                 catch (err: any) {
                     if (interaction.isRepliable() && !interaction.deferred) {
                         try {
-                            await interaction.reply({ content: err.message || 'Ocorreu um erro inesperado!', ephemeral: true })
+                            await interaction.reply({ content: err.message || 'Ocorreu um erro inesperado!', flags: MessageFlags.Ephemeral })
                         }
                         catch {
                             return
@@ -83,7 +83,7 @@ export async function interactionCreate(ctx: IContext, interaction: Interaction)
     catch (err: any) {
         if (interaction.isRepliable() && !interaction.deferred) {
             try {
-                await interaction.reply({ content: err.message || 'Ocorreu um erro inesperado!', ephemeral: true })
+                await interaction.reply({ content: err.message || 'Ocorreu um erro inesperado!', flags: MessageFlags.Ephemeral })
             }
             catch {
                 return

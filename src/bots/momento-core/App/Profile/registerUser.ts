@@ -1,4 +1,4 @@
-import { ComponentType, Guild, GuildMember, Message, ModalSubmitInteraction, TextChannel } from "discord.js";
+import { ComponentType, Guild, GuildMember, Message, MessageFlags, ModalSubmitInteraction, TextChannel } from "discord.js";
 import { ICommand } from "../../Interfaces/ICommand";
 import { Permission } from "../../Interfaces/IPermission";
 import { IContext } from "../../Interfaces/IContext";
@@ -35,7 +35,7 @@ async function registerNewUser(ctx: IContext, interaction: ModalSubmitInteractio
     newUser.name = response.name;
     newUser.surname = response.surname;
 
-    await interaction.reply({ content: 'Criando seu perfil, aguarde...', ephemeral: true });
+    await interaction.reply({ content: 'Criando seu perfil, aguarde...', flags: MessageFlags.Ephemeral });
     await createUser(ctx, newUser, interaction.guild);
     const member = interaction.member as GuildMember;
     if (!member) { throw new Error('Invalid member') }

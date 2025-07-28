@@ -1,4 +1,4 @@
-import { ButtonInteraction } from "discord.js";
+import { ButtonInteraction, MessageFlags } from "discord.js";
 import { IContext } from "../../../Interfaces/IContext";
 import { TextChannel } from "discord.js";
 import { ICommand } from "../../../Interfaces/ICommand";
@@ -16,7 +16,7 @@ export const redeemUser: ICommand = {
     exec: async (ctx: IContext, interaction: ButtonInteraction) => {
         await interaction.reply({
             content: 'Aguarde enquanto verificamos seu perfil',
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
 
         const user = await ctx.mongoService.getOne('users', {

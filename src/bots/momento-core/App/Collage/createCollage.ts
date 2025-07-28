@@ -1,4 +1,4 @@
-import { ComponentType, Message, ModalSubmitInteraction } from "discord.js";
+import { ComponentType, Message, MessageFlags, ModalSubmitInteraction } from "discord.js";
 import { ICommand } from "../../Interfaces/ICommand";
 import { Permission } from "../../Interfaces/IPermission";
 import { IContext } from "../../Interfaces/IContext";
@@ -20,7 +20,7 @@ async function createNewCollage(ctx: IContext, interaction: ModalSubmitInteracti
     const collage = await fetchFormFields(ctx, interaction);
     if (!collage) { throw new Error('Informações inválidas! Consulte o guia para a criação de collages!') }
     if (interaction.isRepliable()) {
-        await interaction.reply({ content: 'Criando seu collage...', ephemeral: true })
+        await interaction.reply({ content: 'Criando seu collage...', flags: MessageFlags.Ephemeral })
     }
     try {
         const collageService: CollageService = new CollageService();

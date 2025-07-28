@@ -1,4 +1,4 @@
-import { ComponentType, Message, ModalSubmitInteraction } from "discord.js";
+import { ComponentType, Message, MessageFlags, ModalSubmitInteraction } from "discord.js";
 import { ICommand } from "../../Interfaces/ICommand";
 import { Permission } from "../../Interfaces/IPermission";
 import { IContext } from "../../Interfaces/IContext";
@@ -59,7 +59,7 @@ async function createNewPost(ctx: IContext, interaction: ModalSubmitInteraction)
         }
     }
     if (interaction.isRepliable()) {
-        await interaction.reply({ content: 'Criando seu momento...', ephemeral: true })
+        await interaction.reply({ content: 'Criando seu momento...', flags: MessageFlags.Ephemeral })
     }
     const postService = new PostService(ctx);
 

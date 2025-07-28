@@ -35,18 +35,15 @@ export async function messageCreate(ctx: IContext, message: Message) {
 
             if (cmd) {
                 let replyText: string;
-                const alias = await message.reply(cmd.reply ? `${cmd.reply}, aguarde...` : 'Aguarde...');
+                await message.react("🫡");
                 if (cmd.permission > author?.permission || (!author && message.author.id !== process.env.OWNER_ID)) {
-                    await tryDeleteMessage(alias)
                     throw new Error('Você não tem permissão para executar esse comando!');
                 }
                 if (cmd.isProfileCommand) {
                     if (!author || !author.references.channelId) {
-                        await tryDeleteMessage(alias)
                         throw new Error('Você não pode executar comandos de perfil sem estar registrado!');
                     }
                     if (message.channelId !== author.references.channelId) {
-                        await tryDeleteMessage(alias)
                         throw new Error('Você não pode executar comandos de perfil em outros canais!');
                     }
                 }
@@ -59,13 +56,6 @@ export async function messageCreate(ctx: IContext, message: Message) {
                 }
 
                 try {
-                    await alias.fetch()
-                    await alias.edit(replyText);
-                    if (cmd.deleteReply) {
-                        setTimeout(() => {
-                            tryDeleteMessage(alias);
-                        }, 4000);
-                    }
                     if (cmd.deleteMessage) {
                         tryDeleteMessage(message);
                     }

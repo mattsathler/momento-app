@@ -1,4 +1,4 @@
-import { ComponentType, Guild, Message, ModalSubmitInteraction, TextChannel } from "discord.js";
+import { ComponentType, Guild, Message, MessageFlags, ModalSubmitInteraction, TextChannel } from "discord.js";
 import { ICommand } from "../../../Interfaces/ICommand";
 import { Permission } from "../../../Interfaces/IPermission";
 import { IContext } from "../../../Interfaces/IContext";
@@ -35,13 +35,13 @@ async function registerNewUser(ctx: IContext, interaction: ModalSubmitInteractio
 
     const serverConfig = await ctx.mongoService.getOne('servers', { id: interaction.guildId }) as IServer;
     ctx.serverConfig = serverConfig;
-    let newUser: User = {...DefaultUser};
+    let newUser: User = { ...DefaultUser };
     newUser.userId = interaction.user.id;
     newUser.username = response.username.toLowerCase();
     newUser.name = response.name;
     newUser.surname = response.surname;
 
-    await interaction.reply({ content: 'Criando seu perfil, aguarde...', ephemeral: true });
+    await interaction.reply({ content: 'Criando seu perfil, aguarde...', flags: MessageFlags.Ephemeral });
     await createUser(ctx, newUser, interaction.guild);
     if (interaction.isRepliable()) {
         await interaction.editReply({ content: 'Seu perfil foi criado com sucesso!' });

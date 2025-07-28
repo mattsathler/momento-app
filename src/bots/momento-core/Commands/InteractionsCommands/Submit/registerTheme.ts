@@ -26,7 +26,7 @@ export const registerTheme: ICommand = {
     deleteReply: false,
 
     exec: async function (ctx: IContext, interaction: ModalSubmitInteraction): Promise<void> {
-        await interaction.reply({ content: 'Criando seu tema, aguarde...', ephemeral: true });
+        await interaction.reply({ content: 'Criando seu tema, aguarde...', flags: MessageFlags.Ephemeral });
 
         if (!interaction) { throw new Error('Invalid interaction type') }
         if (!interaction.guild) { throw new Error('Invalid guild') }
@@ -150,7 +150,7 @@ export async function displayThemeInCatalogue(ctx: IContext, guild: Guild, theme
     const postCount = 0;
     const trendingCount = 0;
     const newThemeProfile = await drawProfileCanvas(DefaultUser, uploadChannel, theme, postCount, trendingCount);
-    const themeLink = await LinkService.uploadImageToMomento(uploadChannel, newThemeProfiletoBuffer('jpeg'));
+    const themeLink = await LinkService.uploadImageToMomento(uploadChannel, await newThemeProfile.toBuffer('jpeg'));
 
     const components = [
         new ContainerBuilder()

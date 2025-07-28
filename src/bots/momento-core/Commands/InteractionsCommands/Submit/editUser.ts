@@ -30,7 +30,7 @@ async function editUserProfile(ctx: IContext, interaction: ModalSubmitInteractio
         if (!author) { throw new Error('Invalid author') }
 
         const formField = fetchFormFields(interaction);
-        if (!formField) { await interaction.reply({ content: 'Nada alterado em seu perfil. =)', ephemeral: true }); return }
+        if (!formField) { await interaction.reply({ content: 'Nada alterado em seu perfil. =)', flags: MessageFlags.Ephemeral }); return }
 
         let newUserInfo: IEditableFields = {
             username: formField.username?.toLowerCase() ?? author.username,
@@ -42,7 +42,7 @@ async function editUserProfile(ctx: IContext, interaction: ModalSubmitInteractio
 
         if (newUserInfo.username !== author.username) {
             const user = await ctx.mongoService.getOne('users', { username: newUserInfo.username, guildId: interaction.guildId })
-            if (user) { await interaction.reply({ content: 'Esse nome de usuário já está em uso. =(', ephemeral: true }); return }
+            if (user) { await interaction.reply({ content: 'Esse nome de usuário já está em uso. =(', flags: MessageFlags.Ephemeral }); return }
         }
 
         if (newUserInfo.username) {
@@ -79,7 +79,7 @@ async function editUserProfile(ctx: IContext, interaction: ModalSubmitInteractio
         author.bio = newUserInfo.bio ?? author.bio;
         author.pronouns = newUserInfo.pronouns ?? author.pronouns;
 
-        await interaction.reply({ content: 'Editando perfil, aguarde...', ephemeral: true })
+        await interaction.reply({ content: 'Editando perfil, aguarde...', flags: MessageFlags.Ephemeral })
         await profileServices.updateProfilePictures(ctx, author, true, false);
         if (interaction.isRepliable()) {
             await interaction.editReply('Seu perfil foi atualizado com sucesso!')

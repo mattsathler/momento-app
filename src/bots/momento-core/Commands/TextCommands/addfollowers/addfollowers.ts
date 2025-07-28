@@ -16,7 +16,7 @@ export const addFollowers: ICommand = {
     deleteReply: true,
     exec: async function (ctx: IContext, message: Message): Promise<void> {
         const newFollowers = Number(message.content.split(' ')[1]);
-        if (!newFollowers) await message.reply('Defina a quantidade de seguidores!');
+        if (!newFollowers) await message.reply({ content: 'Defina a quantidade de seguidores!' });
 
         try {
             message.mentions.users.forEach(async (user: User) => {
@@ -26,7 +26,7 @@ export const addFollowers: ICommand = {
                     'userId': user.id,
                     'guildId': message.guildId
                 }) as MomentoUser;
-                if (!momentoUser) await message.reply(`Usuário ${user.username} não encontrado!`);
+                if (!momentoUser) await message.reply({ content: `Usuário ${user.username} não encontrado!` });
 
                 const followers = Number(momentoUser.stats.followers) + newFollowers;
                 const newUser = await ctx.mongoService.patch('users', {

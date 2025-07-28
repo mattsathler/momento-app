@@ -4,8 +4,6 @@ import { IContext } from "../../Interfaces/IContext";
 import { Permission } from "../../Interfaces/IPermission";
 import { tryDeleteMessage } from "../../Utils/Messages";
 import { ProfileServices } from "../../Utils/ProfileServices";
-import { IPost, IPostStatus } from "../../Interfaces/IPost";
-import { PostService } from "./PostService";
 import { User } from "src/shared/models/User";
 
 export const deletePost: ICommand = {
@@ -37,11 +35,7 @@ async function confirmDeletePost(ctx: IContext, interaction: ButtonInteraction) 
         }
         catch { }
 
-        const postService = new PostService(ctx);
         const profileService = new ProfileServices();
-
-        const post = await ctx.mongoService.getOne('posts', { 'references.messageId': postMessage.id, 'references.guildId': postMessage.guildId });
-
         await profileService.updateProfilePictures(ctx, user, true, false);
 
         return

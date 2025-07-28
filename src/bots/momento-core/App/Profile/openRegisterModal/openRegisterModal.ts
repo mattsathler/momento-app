@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonInteraction, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
+import { ActionRowBuilder, ButtonInteraction, MessageFlags, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { IContext } from "../../../Interfaces/IContext";
 import { ICommand } from "../../../Interfaces/ICommand";
 import { Permission } from "../../../Interfaces/IPermission";
@@ -15,7 +15,7 @@ export const openRegisterModal: ICommand = {
             }
         }
         catch (err: any) {
-            await interaction.reply({ content: err.message, ephemeral: true });
+            await interaction.reply({ content: err.message, flags: MessageFlags.Ephemeral });
             return
         }
         const modal = createRegisterModal();
