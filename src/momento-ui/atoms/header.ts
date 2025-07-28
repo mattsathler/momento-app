@@ -1,5 +1,5 @@
 import { assetPaths, fontsPaths } from "assets-paths";
-import { Canvas, loadImage } from "canvas";
+import { Canvas, loadImage } from "skia-canvas";
 import { calculateSizes, Sizes } from "src/shared/models/Style";
 import { cropCirclePicture } from "src/shared/services/canvas/CanvasService";
 import { ImageCropper } from "src/shared/services/ImageCropper";
@@ -24,7 +24,6 @@ export async function drawHeader(client: Client, title: string, width: number, t
     // ANALYTICS HEADER ========================
     x = sizes.medium;
     y += sizes.medium;
-    ctx.quality = 'best';
 
     drawCard(ctx, x, y, canvas.width - (sizes.medium * 2), (sizes.big * 2), 24, theme.colors.background);
     x += sizes.medium;

@@ -1,5 +1,5 @@
 import { Guild, Message, TextChannel } from "discord.js";
-import { loadImage } from "canvas";
+import { loadImage } from "skia-canvas";
 import { ImageCropper } from "../../../Utils/ImageCropper";
 import { IContext } from "../../../Interfaces/IContext";
 import { ProfileServices } from "../../../Utils/ProfileServices";
@@ -10,7 +10,7 @@ import { MomentoService } from "src/shared/services/MomentoService";
 export class CapaService {
     public async treatCoverPicture(ctx: IContext, url: string): Promise<Message> {
         const newcoverImg = await loadImage(url);
-        const croppedImage = ImageCropper.cropImage(newcoverImg).toBuffer();
+        const croppedImage = await ImageCropper.cropImage(newcoverImg).toBuffer('jpeg');
         const uploadChannel = await MomentoService.getUploadChannel(ctx.client);
         const imageURL = await LinkService.uploadImageToMomento(uploadChannel, croppedImage);
         return imageURL

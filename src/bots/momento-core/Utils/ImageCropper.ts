@@ -1,4 +1,4 @@
-import { Canvas, Image, createCanvas, loadImage } from "canvas"
+import { Canvas, Image, loadImage } from "skia-canvas"
 
 export class ImageCropper {
     static cropImage(src: Image, width?: number, height?: number, keepRatio?: boolean): Canvas {
@@ -6,9 +6,8 @@ export class ImageCropper {
         height = height ?? src.height;
         keepRatio = keepRatio ?? true;
 
-        const canvas = createCanvas(width, height);
+        const canvas = new Canvas(width, height);
         const context = canvas.getContext('2d');
-        context.quality = "best";
 
         if (keepRatio) {
             const imgRatio = src.height / src.width;
@@ -24,7 +23,7 @@ export class ImageCropper {
             }
         }
         else {
-            const canvas = createCanvas(width, height);
+            const canvas = new Canvas(width, height);
             const context = canvas.getContext('2d');
             context.drawImage(src, 0, 0, canvas.width, canvas.height);
         }

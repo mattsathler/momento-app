@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, Embed, Guild, PermissionsBitField, TextChannel, ThreadChannel } from "discord.js";
 import { IContext } from "../Interfaces/IContext";
-import { Canvas } from "canvas";
+import { Canvas } from "skia-canvas";
 import { tryDeleteMessage } from "./Messages";
 import "dotenv";
 import { getSecureToken } from "src/shared/services/TokenService";
@@ -145,8 +145,8 @@ export class ProfileServices {
         const uploadChannel: TextChannel = await MomentoService.getUploadChannel(ctx.client);
         const newProfilePicture: Canvas = await drawProfileCanvas(user, uploadChannel, theme, momentos, trendings);
         const newProfileCollage: Canvas = await drawCollageCanvas(uploadChannel, user, theme, collage);
-        const uploadedProfileUrl = await LinkService.uploadImageToMomento(uploadChannel, newProfilePicture.toBuffer());
-        const uploadedCanvasUrl = await LinkService.uploadImageToMomento(uploadChannel, newProfileCollage.toBuffer());
+        const uploadedProfileUrl = await LinkService.uploadImageToMomento(uploadChannel, await newProfilePicture.toBuffer('jpeg'));
+        const uploadedCanvasUrl = await LinkService.uploadImageToMomento(uploadChannel, await newProfileCollage.toBuffer('jpeg'));
 
 
         return {

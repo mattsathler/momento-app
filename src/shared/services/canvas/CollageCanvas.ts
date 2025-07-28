@@ -1,4 +1,4 @@
-import { createCanvas, loadImage, Canvas, Image } from "canvas";
+import {  loadImage, Canvas, Image } from "skia-canvas";
 import { TextChannel } from "discord.js";
 import { calculateSizes, Styles } from "../../models/Style";
 import { cropImage } from "./CanvasService";
@@ -9,10 +9,9 @@ import { Collage } from "../../models/Collage";
 import { MomentoService } from "../MomentoService";
 
 export async function drawCollageCanvas(uploadChannel: TextChannel, user: User, theme: Theme, userCollageStyle: Collage): Promise<Canvas> {
-    const canvas = createCanvas(Styles.sizes.large.profile.collage.width, Styles.sizes.large.profile.collage.height);
+    const canvas = new Canvas(Styles.sizes.large.profile.collage.width, Styles.sizes.large.profile.collage.height);
     const ctx = canvas.getContext('2d');
     const sizes = calculateSizes(canvas.width)
-    ctx.quality = "best";
     let y = sizes.medium * 2;
 
     ctx.fillStyle = theme.colors.background;

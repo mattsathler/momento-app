@@ -5,7 +5,7 @@ import { IContext } from "../../Interfaces/IContext";
 import { IPost, IPostStatus } from "../../Interfaces/IPost";
 import { PostService } from "./PostService";
 import { validateImageURL } from "../../Utils/Pictures";
-import { loadImage } from "canvas";
+import { loadImage } from "skia-canvas";
 import { ImageCropper } from "../../Utils/ImageCropper";
 import { IServer } from "../../Interfaces/IServer";
 import { defaultTheme, Theme } from "src/shared/models/Theme";
@@ -52,7 +52,7 @@ async function createNewPost(ctx: IContext, interaction: ModalSubmitInteraction)
         try {
             const image = await loadImage(url)
             const uploadChannel = await MomentoService.getUploadChannel(ctx.client);
-            imageMsg = await LinkService.uploadImageToMomento(uploadChannel, ImageCropper.cropImage(image).toBuffer())
+            imageMsg = await LinkService.uploadImageToMomento(uploadChannel, await ImageCropper.cropImage(image).toBuffer("png"))
         }
         catch (err) {
             console.log(err);

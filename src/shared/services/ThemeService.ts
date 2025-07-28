@@ -59,7 +59,7 @@ export async function displayThemeInCatalogue(client: Client, guild: Guild, them
     const postCount = 0;
     const trendingCount = 0;
     const newThemeProfile = await drawProfileCanvas(DefaultUser, uploadChannel, theme, postCount, trendingCount);
-    const themeLink = await LinkService.uploadImageToMomento(uploadChannel, newThemeProfile.toBuffer());
+    const themeLink = await LinkService.uploadImageToMomento(uploadChannel, await newThemeProfile.toBuffer('jpeg'));
 
     const components = [
         new ContainerBuilder()
@@ -91,7 +91,7 @@ export async function displayCollageInCatalogue(client: Client, author: string, 
     const collageUploaderChannel = await hubGuild.channels.fetch(process.env.HUB_COLLAGES_CHANNEL_ID!) as TextChannel;
     const uploadChannel = await MomentoService.getUploadChannel(client);
     const newProfileCollage = await drawCollageCanvas(uploadChannel, DefaultUser, defaultTheme, collage);
-    const collageLink = await LinkService.uploadImageToMomento(uploadChannel, newProfileCollage.toBuffer());
+    const collageLink = await LinkService.uploadImageToMomento(uploadChannel, await newProfileCollage.toBuffer('jpeg'));
 
     const collageEmbed = createCollageEmbed(author || 'Indisponível', collage).setImage(collageLink.attachments.first()?.url || '')
 

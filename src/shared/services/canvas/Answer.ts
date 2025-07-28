@@ -1,4 +1,4 @@
-import { createCanvas, loadImage, Canvas, Image } from "canvas";
+import { loadImage, Canvas, Image } from "skia-canvas";
 import { ImageCropper } from "../../../bots/momento-core/Utils/ImageCropper";
 import { cropCirclePicture } from "../../../bots/momento-core/Utils/Pictures";
 import { IContext } from "../../../bots/momento-core/Interfaces/IContext";
@@ -17,6 +17,7 @@ export async function drawAnswerCanvas(context: IContext, question: string, answ
         name: 'AskTheme',
         creatorId: 'system',
         is_system_theme: true,
+        last_use: new Date(),
         colors: {
             primary: '#FFFFFF',
             secondary: '#EAEAEA',
@@ -24,10 +25,9 @@ export async function drawAnswerCanvas(context: IContext, question: string, answ
         }
     }
 
-    const canvas = createCanvas(Styles.sizes.large.post.width, Styles.sizes.large.post.height);
+    const canvas = new Canvas(Styles.sizes.large.post.width, Styles.sizes.large.post.height);
     const ctx = canvas.getContext('2d');
     const sizes = calculateSizes(canvas.width)
-    ctx.quality = "best";
 
     let y = sizes.huge;
     let x = sizes.huge;

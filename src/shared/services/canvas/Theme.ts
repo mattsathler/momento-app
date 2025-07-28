@@ -1,4 +1,4 @@
-import { Canvas } from "canvas";
+import { Canvas } from "skia-canvas";
 import { Styles } from "src/shared/models/Style";
 
 export function drawThemeInCanvas(profileImage: Canvas, collageImage: Canvas): Canvas {

@@ -110,7 +110,7 @@ export class AnalyticsService {
                 primary: 'sfpro',
                 secondary: 'sfpro'
             });
-            const buffer = canvas.toBuffer('image/png');
+            const buffer = await canvas.toBuffer('jpeg');
             const link = await LinkService.uploadImageToMomento(uploadChannel, buffer);
 
             const userProfileChannel = await client.channels.fetch(postAuthor.references.channelId) as TextChannel;

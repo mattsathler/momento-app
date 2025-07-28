@@ -1,4 +1,4 @@
-import { Canvas, Image, createCanvas, loadImage } from "canvas"
+import { Canvas, Image,  loadImage } from "skia-canvas"
 
 export class ImageCropper {
     static cropImage(
@@ -12,9 +12,8 @@ export class ImageCropper {
         height = height ?? src.height;
         borderRadius = Math.max(borderRadius, 0); // garante que não seja negativo
 
-        const canvas = createCanvas(width, height);
+        const canvas = new Canvas(width, height);
         const context = canvas.getContext('2d');
-        context.quality = 'best';
 
         // Desenha o clipping com bordas arredondadas (antes do drawImage)
         if (borderRadius > 0) {

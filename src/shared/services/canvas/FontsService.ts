@@ -1,11 +1,11 @@
 import { fontsPaths } from "assets-paths";
-import { registerFont } from "canvas";
+import { FontLibrary } from "skia-canvas";
 
 export function loadFonts(): void {
     const fonts = fontsPaths;
     fonts.forEach(font => {
         console.log("Fonts - Registering", font.name);
-        registerFont(font.path, { family: font.name });
+        FontLibrary.use(font.name, font.path);
     });
 
     return;

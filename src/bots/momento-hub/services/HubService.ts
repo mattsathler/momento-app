@@ -393,7 +393,7 @@ Nossa equipe irá validar o quanto antes.`)
                 const uploadChannel = await MomentoService.getUploadChannel(client);
 
                 const drawedProfile = await drawProfileCanvas(defaultUser, uploadChannel, defaultTheme, 0, 0);
-                const themeImageUrl = await LinkService.uploadImageToMomento(uploadChannel, drawedProfile.toBuffer());
+                const themeImageUrl = await LinkService.uploadImageToMomento(uploadChannel, await drawedProfile.toBuffer('jpeg'));
 
                 const components = [
                     new ContainerBuilder()

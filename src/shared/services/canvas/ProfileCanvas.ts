@@ -1,16 +1,16 @@
-import { createCanvas, loadImage, Canvas, Image } from "canvas";
+import { loadImage, Canvas, Image } from "skia-canvas";
 import { cropCirclePicture, cropImage } from "./CanvasService";
 import { TextChannel } from "discord.js";
 import { StringService } from "../StringService";
 import { calculateSizes, Sizes, Styles } from "../../models/Style";
 import { LinkService } from "../LinkService";
 import { User } from "../../models/User";
-import { defaultTheme, Theme } from "../../models/Theme";
+import { Theme } from "../../models/Theme";
 import { MomentoService } from "../MomentoService";
 import { assetPaths } from "assets-paths";
 
 export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, theme: Theme, momentos: number, trendings: number): Promise<Canvas> {
-    const canvas = createCanvas(Styles.sizes.large.profile.stats.width, Styles.sizes.large.profile.stats.height);
+    const canvas = new Canvas(Styles.sizes.large.profile.stats.width, Styles.sizes.large.profile.stats.height);
     const ctx = canvas.getContext('2d');
 
     ctx.fillStyle = theme.colors.background;

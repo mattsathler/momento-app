@@ -1,4 +1,4 @@
-import { Canvas, Image } from "canvas";
+import { Canvas, Image } from "skia-canvas";
 import { IUser } from "./IUser";
 
 export enum NotificationType {

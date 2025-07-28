@@ -1,4 +1,4 @@
-import { Canvas, loadImage } from "canvas";
+import { Canvas, loadImage } from "skia-canvas";
 import { resizeCanvas } from "../../../bots/momento-core/Utils/Pictures";
 import { drawPostActionBar } from "./Post";
 import { IContext } from "../../../bots/momento-core/Interfaces/IContext";

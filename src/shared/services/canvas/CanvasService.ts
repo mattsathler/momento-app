@@ -1,8 +1,8 @@
-import { Canvas, createCanvas, Image, loadImage } from "canvas";
+import { Canvas,  Image, loadImage } from "skia-canvas";
 
 export function cropCirclePicture(image: Canvas, width: number = 80, height: number = 80): Canvas {
     try {
-        const canvas: Canvas = createCanvas(width, height);
+        const canvas: Canvas = new Canvas(width, height);
         const context = canvas.getContext('2d');
 
         context.save();
@@ -25,9 +25,8 @@ export function cropImage(src: Image, width?: number, height?: number, keepRatio
     height = height ?? src.height;
     keepRatio = keepRatio ?? true;
 
-    const canvas = createCanvas(width, height);
+    const canvas = new Canvas(width, height);
     const context = canvas.getContext('2d');
-    context.quality = "best";
 
     if (keepRatio) {
         const imgRatio = src.height / src.width;
@@ -43,7 +42,7 @@ export function cropImage(src: Image, width?: number, height?: number, keepRatio
         }
     }
     else {
-        const canvas = createCanvas(width, height);
+        const canvas = new Canvas(width, height);
         const context = canvas.getContext('2d');
         context.drawImage(src, 0, 0, canvas.width, canvas.height);
     }

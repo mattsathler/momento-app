@@ -115,7 +115,7 @@ export async function messageCreate(ctx: IContext, message: Message) {
                 await Promise.all(
                     message.attachments.map(async (attachment: Attachment) => {
                         const postImage = await ImageCropper.cropImageFromURL(attachment.url);
-                        const postImageLink = (await LinkService.uploadImageToMomento(uploadChannel, postImage.toBuffer())).url;
+                        const postImageLink = (await LinkService.uploadImageToMomento(uploadChannel, await postImage.toBuffer('jpeg'))).url;
                         postImagesURL.push(postImageLink);
                     })
                 )

@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Guild, Message } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Guild, Message, TextChannel } from "discord.js";
 import { ICommand } from "../../Interfaces/ICommand";
 import { IContext } from "../../Interfaces/IContext";
 import { Permission } from "../../Interfaces/IPermission";
@@ -63,7 +63,7 @@ async function createNewComment(ctx: IContext, message: Message) {
         .setStyle(ButtonStyle.Secondary);
 
     const AR = new ActionRowBuilder<ButtonBuilder>().addComponents(deleteCommentButton);
-    const commentMsg = await message.channel.send({ files: [commentImg.toBuffer()], components: [AR] })
+    const commentMsg = await (message.channel as TextChannel).send({ files: [await commentImg.toBuffer('jpeg')], components: [AR] })
     await commentMsg.react('❤️')
 
     const notificationService = new NotificationService(ctx);

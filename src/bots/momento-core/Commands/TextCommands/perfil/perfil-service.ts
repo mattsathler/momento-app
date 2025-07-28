@@ -1,5 +1,5 @@
-import { loadImage } from "canvas";
-import { Guild, Message, TextChannel } from "discord.js";
+import { loadImage } from "skia-canvas";
+import { Message } from "discord.js";
 import { ImageCropper } from "../../../Utils/ImageCropper";
 import { ProfileServices } from "../../../Utils/ProfileServices";
 import { IContext } from "../../../Interfaces/IContext";
@@ -13,7 +13,7 @@ export class PerfilService {
     public async treatProfilePicture(ctx: IContext, url: string): Promise<string> {
         const newProfileImg = await loadImage(url);
         const croppedImage = ImageCropper.cropImage(newProfileImg);
-        const buffer = croppedImage.toBuffer();
+        const buffer = await croppedImage.toBuffer('jpeg');
         const uploadChannel = await MomentoService.getUploadChannel(ctx.client);
 
         const imageURL = (await LinkService.uploadImageToMomento(uploadChannel, buffer)).url;

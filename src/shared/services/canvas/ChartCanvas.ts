@@ -1,4 +1,4 @@
-import { Canvas } from "canvas";
+import { Canvas } from "skia-canvas";
 import { Log, LogType } from "../../models/Log";
 import { resizeCanvas } from "./TextCanvas";
 import { Theme } from "src/shared/models/Theme";

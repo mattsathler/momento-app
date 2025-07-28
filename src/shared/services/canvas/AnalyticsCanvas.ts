@@ -1,4 +1,4 @@
-import { Canvas, Image, loadImage } from "canvas";
+import { Canvas, Image, loadImage } from "skia-canvas";
 import { Post } from "../../models/Post";
 import { Log } from "../../models/Log";
 import { LinkService } from "../LinkService";

@@ -1,4 +1,4 @@
-import { loadImage, Canvas, Image } from "canvas";
+import { loadImage, Canvas, Image } from "skia-canvas";
 import { ImageCropper } from "../../../Utils/ImageCropper";
 import { cropCirclePicture, resizeCanvas } from "../../../Utils/Pictures";
 import { defaultTheme, Theme } from "src/shared/models/Theme";

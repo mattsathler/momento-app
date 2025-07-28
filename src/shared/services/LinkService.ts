@@ -1,8 +1,8 @@
 import { Message, TextChannel } from "discord.js";
-import { Image, loadImage } from "canvas";
+import { Image, loadImage } from "skia-canvas";
 
 export class LinkService {
-    static async uploadImageToMomento(uploadChannel: TextChannel, image: Buffer, type: string = 'png'): Promise<Message> {
+    static async uploadImageToMomento(uploadChannel: TextChannel, image: Buffer, type: string = 'jpeg'): Promise<Message> {
         try {
             if (!uploadChannel) { throw new Error('Invalid upload channel') }
 
@@ -26,7 +26,11 @@ export class LinkService {
         if (url.indexOf('discord.com')) {
             const splitURL = url.split('/');
             const messageId = splitURL[6];
-            const message = await uploadChannel.messages.fetch(messageId);
+            let message: Message;
+            message = uploadChannel.messages.cache.get(messageId) as Message;
+            if (!message) {
+                message = await uploadChannel.messages.fetch(messageId) as Message;
+            }
 
             if (!message.attachments.first()?.url) throw new Error('Não existe nenhum attachment nessa mensagem!')
             return message.attachments.first()?.url;

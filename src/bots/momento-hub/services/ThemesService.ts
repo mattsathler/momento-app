@@ -17,7 +17,7 @@ export class ThemeService {
         themes.forEach(async (theme) => {
             try {
                 const drawedProfile = await drawProfileCanvas(DefaultUser, uploadChannel, theme, 0, 0);
-                const themeImageUrl = await LinkService.uploadImageToMomento(uploadChannel, drawedProfile.toBuffer());
+                const themeImageUrl = await LinkService.uploadImageToMomento(uploadChannel, await drawedProfile.toBuffer('jpeg'));
 
                 const components = [
                     new ContainerBuilder()
@@ -109,7 +109,7 @@ export class ThemeService {
         collages.forEach(async (collage) => {
             try {
                 const drawedProfile = await drawCollageCanvas(uploadChannel, DefaultUser, defaultTheme, collage);
-                const collagesImageUrl = await LinkService.uploadImageToMomento(uploadChannel, drawedProfile.toBuffer());
+                const collagesImageUrl = await LinkService.uploadImageToMomento(uploadChannel, await drawedProfile.toBuffer('jpeg'));
 
                 const components = [
                     new ContainerBuilder()

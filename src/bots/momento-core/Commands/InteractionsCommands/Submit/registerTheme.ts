@@ -150,7 +150,7 @@ export async function displayThemeInCatalogue(ctx: IContext, guild: Guild, theme
     const postCount = 0;
     const trendingCount = 0;
     const newThemeProfile = await drawProfileCanvas(DefaultUser, uploadChannel, theme, postCount, trendingCount);
-    const themeLink = await LinkService.uploadImageToMomento(uploadChannel, newThemeProfile.toBuffer());
+    const themeLink = await LinkService.uploadImageToMomento(uploadChannel, newThemeProfiletoBuffer('jpeg'));
 
     const components = [
         new ContainerBuilder()

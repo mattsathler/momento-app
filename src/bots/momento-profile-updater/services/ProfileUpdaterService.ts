@@ -70,7 +70,7 @@ export class ProfileUpdaterService {
 
             const theme = await mongoService.getOne('themes', { name: user.styles.theme }) as Theme || defaultTheme;
             const newProfilePicture = await drawProfileCanvas(user, uploadChannel, theme, postCount, trendingCount)
-            const imageURL = await LinkService.uploadImageToMomento(uploadChannel, newProfilePicture.toBuffer())
+            const imageURL = await LinkService.uploadImageToMomento(uploadChannel, await newProfilePicture.toBuffer('jpeg'))
 
             if (!imageURL || !imageURL.attachments.first()) throw new Error("Invalid Image URL");
 
@@ -85,7 +85,7 @@ export class ProfileUpdaterService {
             const collageStyle = await mongoService.getOne('collages', { id: user.styles.collage }) as Collage || defaultCollage;
             const newCollagePicture = await drawCollageCanvas(uploadChannel, user, theme, collageStyle);
 
-            const imageURL = await LinkService.uploadImageToMomento(uploadChannel, newCollagePicture.toBuffer());
+            const imageURL = await LinkService.uploadImageToMomento(uploadChannel, await newCollagePicture.toBuffer('jpeg'));
 
             await collageMessage.edit(imageURL.attachments.first()?.url || '');
         }

@@ -1,4 +1,4 @@
-import { Image } from "canvas"
+import { Image } from "skia-canvas"
 
 export enum PostType {
     'image',

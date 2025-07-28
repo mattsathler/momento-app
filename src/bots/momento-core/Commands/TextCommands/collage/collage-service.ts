@@ -1,4 +1,4 @@
-import { loadImage } from "canvas";
+import { loadImage } from "skia-canvas";
 import { Guild, Message, TextChannel } from "discord.js";
 import { ImageCropper } from "../../../Utils/ImageCropper";
 import { ProfileServices } from "../../../Utils/ProfileServices";
@@ -11,7 +11,7 @@ export class CollageService {
     public async treatCollagePicture(ctx: IContext, guild: Guild, url: string): Promise<string | undefined> {
         const newCollageImg = await loadImage(url);
         const croppedImage = ImageCropper.cropImage(newCollageImg);
-        const buffer = croppedImage.toBuffer();
+        const buffer = await croppedImage.toBuffer('jpeg');
         const uploadChannel = await MomentoService.getUploadChannel(ctx.client);
 
         const imageURL = await LinkService.uploadImageToMomento(uploadChannel, buffer);

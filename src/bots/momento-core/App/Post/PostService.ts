@@ -6,7 +6,7 @@ import { tryDeleteMessage } from "../../Utils/Messages";
 import { INotification, NotificationType } from "../../Interfaces/INotification";
 import { NotificationService } from "../../../../shared/services/NotificationService";
 import { ProfileServices } from "../../Utils/ProfileServices";
-import { Canvas, Image, loadImage } from "canvas";
+import { Canvas, Image, loadImage } from "skia-canvas";
 import path from "path";
 import { VideoService } from "./VideoService";
 import { IServer } from "../../Interfaces/IServer";
@@ -77,7 +77,7 @@ export class PostService {
             const frame = await drawPostFrame(ctx.uploadChannel, author, post, theme);
             const path = `./Temp/Posts/${message.guildId}${message.channelId}${message.id}`
             await fs.mkdir(path, { recursive: true });
-            await fs.writeFile(`${path}/frame.png`, frame.toBuffer(), { recursive: true });
+            await fs.writeFile(`${path}/frame.png`, frame.toBuffer('jpeg'), { recursive: true });
 
             const ffmpeg = require('fluent-ffmpeg');
             ffmpeg.setFfmpegPath(toolsPaths.ffmpeg);
@@ -268,8 +268,12 @@ export class PostService {
             postImageURL = await LinkService.uploadImageToMomento(uploadChannel, buffer || null, 'gif');
         }
         else {
+            console.time("drawPostCanvas");
             const postImage = await drawPostCanvas(this.ctx, author, theme, post);
-            postImageURL = await LinkService.uploadImageToMomento(uploadChannel, postImage?.toBuffer() || null);
+            console.timeEnd("drawPostCanvas");
+            console.time("uploadImage");
+            postImageURL = await LinkService.uploadImageToMomento(uploadChannel, await postImage?.toBuffer('jpeg') || null);
+            console.timeEnd("uploadImage");
         }
 
         postThumbURL = post.content.images ? post.content.images[0] : undefined;
@@ -464,11 +468,11 @@ export class PostService {
                     postImages.push(postImage);
                     return postImages;
                 }));
-                postImageURL = await LinkService.uploadImageToMomento(uploadChannel, postImages[0]?.toBuffer() || null);
+                postImageURL = await LinkService.uploadImageToMomento(uploadChannel, await postImages[0]?.toBuffer('jpeg') || null);
             }
             else {
                 const postImage = await drawPostCanvas(ctx, author, theme, post);
-                postImageURL = await LinkService.uploadImageToMomento(uploadChannel, postImage?.toBuffer() || null);
+                postImageURL = await LinkService.uploadImageToMomento(uploadChannel, await postImage?.toBuffer('jpeg') || null);
             }
 
             const postChannel = await ctx.client.channels.fetch(post.references.channelId) as TextChannel;

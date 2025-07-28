@@ -1,4 +1,4 @@
-import { createCanvas, Canvas, loadImage, Image } from "canvas";
+import {  Canvas, loadImage, Image } from "skia-canvas";
 import { drawNotificationHeader } from "../../../bots/momento-core/Styles/Canvas/Notifications/NotificationHeader";
 import { ImageCropper } from "../../../bots/momento-core/Utils/ImageCropper";
 import { changePixelColor, resizeCanvas } from "../../../bots/momento-core/Utils/Pictures";
@@ -9,7 +9,7 @@ import { User } from "src/shared/models/user";
 import { defaultTheme, Theme } from "src/shared/models/Theme";
 import { calculateSizes, Styles } from "src/shared/models/Style";
 import { LinkService } from "src/shared/services/LinkService";
-import { assetPaths, fontsPaths } from "assets-paths";
+import { assetPaths } from "assets-paths";
 import { drawTextInCanvas } from "src/shared/services/canvas/TextCanvas";
 import { MomentoService } from "../MomentoService";
 import { Fonts } from "src/shared/models/Fonts";
@@ -18,7 +18,7 @@ import { Fonts } from "src/shared/models/Fonts";
 export async function drawPostCanvas(context: IContext, user: User, theme: Theme, post: IPost): Promise<Canvas> {
     const postWidth = Styles.sizes.large.post.width;
     const sizes = calculateSizes(postWidth);
-    let canvas = new Canvas(postWidth, 4000);
+    let canvas = new Canvas(postWidth, 2000);
     const ctx = canvas.getContext('2d');
 
     const profileImageUrl = await LinkService.readImageOfMomento(context.uploadChannel, user.imagesUrl.profilePicture);
@@ -74,7 +74,7 @@ export async function drawPostActionBar(width: number, post: IPost | null, theme
     const treatedShareIcon = changePixelColor(shareIcon, [55, 52, 53], theme.colors.primary);
 
     const sizes = calculateSizes(width);
-    let canvas = createCanvas(width, 4000);
+    let canvas = new Canvas(width, 4000);
     const ctx = canvas.getContext('2d');
 
     let x: number = sizes.medium;

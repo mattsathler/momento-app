@@ -1,8 +1,8 @@
-import { Canvas, Image, createCanvas, loadImage } from "canvas";
+import { Canvas, Image,  loadImage } from "skia-canvas";
 
 export function cropCirclePicture(image: Canvas, width: number = 80, height: number = 80): Canvas {
     try {
-        const canvas: Canvas = createCanvas(width, height);
+        const canvas: Canvas = new Canvas(width, height);
         const context = canvas.getContext('2d');
 
         context.save();
@@ -21,7 +21,7 @@ export function cropCirclePicture(image: Canvas, width: number = 80, height: num
 }
 
 export function imageToCanvas(image: Image): Canvas {
-    const canvas = createCanvas(image.width, image.height);
+    const canvas = new Canvas(image.width, image.height);
     const ctx = canvas.getContext('2d');
     canvas.width = image.width;
     canvas.height = image.height;

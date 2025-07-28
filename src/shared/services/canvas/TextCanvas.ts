@@ -1,4 +1,4 @@
-import { Canvas } from "canvas";
+import { Canvas } from "skia-canvas";
 import { Theme } from "../../models/Theme";
 
 export function drawTextInCanvas(

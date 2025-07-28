@@ -59,7 +59,7 @@ async function execRepostPost(ctx: IContext, message: Message, author: User): Pr
     const repostImage = await drawPostCanvas(ctx, targetUser, theme || defaultTheme, post);
     const uploadChannel = await MomentoService.getUploadChannel(ctx.client);
 
-    const uploadedImage = await LinkService.uploadImageToMomento(uploadChannel, repostImage.toBuffer(), 'png');
+    const uploadedImage = await LinkService.uploadImageToMomento(uploadChannel, await repostImage.toBuffer('jpeg'), 'jpeg');
 
     const repostEmbed: EmbedBuilder =
         new EmbedBuilder()
