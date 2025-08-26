@@ -75,6 +75,11 @@ async function createUser(ctx: IContext, newUser: User, guild: Guild) {
     const theme = await ctx.mongoService.getOne('themes', { name: createdUser.styles.theme }) as Theme ?? defaultTheme;
     createdUser.styles.fonts = createdUser.styles.fonts;
 
+    const otherAccounts: User[] = await ctx.mongoService.get('users', { userId: newUser.userId });
+    if (otherAccounts.length > 0) {
+        createdUser.stats.isVerified = otherAccounts[0].stats.isVerified;
+    }
+    
     const collageStyle = await ctx.mongoService.getOne('collages', { id: createdUser.styles.collage }) || defaultCollage;
     const images = await profileService.drawProfilePictures(ctx, createdUser, theme, collageStyle, 0, 0);
     const userChannel = await profileService.createUserChannel(guild, createdUser.username, createdUser.userId);
@@ -91,6 +96,7 @@ async function createUser(ctx: IContext, newUser: User, guild: Guild) {
         collageId: collageMessage.id,
         notificationId: ''
     }
+
 
     await ctx.mongoService.post('users', createdUser);
 
