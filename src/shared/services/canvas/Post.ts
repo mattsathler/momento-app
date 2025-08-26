@@ -23,7 +23,6 @@ export async function drawPostCanvas(context: IContext, user: User, theme: Theme
     
     const profileImageUrl = await LinkService.readImageOfMomento(context.uploadChannel, user.imagesUrl.profilePicture);
     if (!profileImageUrl) { throw new Error('Erro ao carregar imagem de perfil'); }
-        console.log('DEBUG2');
     
     const userImage = await loadImage(profileImageUrl);
     
@@ -39,7 +38,6 @@ export async function drawPostCanvas(context: IContext, user: User, theme: Theme
     ctx.drawImage(postHeader, 0, 0);
     y += postHeader.height;
     
-    console.log('DEBUG4', post.content.images);
     const postImageURL = post.content.images && post.content.images?.length > 0 ? await LinkService.readImageOfMomento(context.uploadChannel, post.content.images[0]) : undefined;
     if (postImageURL) {
         const postImage = await loadImage(postImageURL);
