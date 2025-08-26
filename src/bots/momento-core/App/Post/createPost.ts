@@ -14,7 +14,6 @@ import { MomentoService } from "src/shared/services/MomentoService";
 import { User } from "src/shared/models/User";
 
 interface PostFields {
-    url: string | null,
     description: string | null,
     music: string | null,
     location: string | null,
@@ -41,36 +40,21 @@ async function createNewPost(ctx: IContext, interaction: ModalSubmitInteraction)
     author.styles.fonts = author.styles.fonts;
 
     const formField = fetchFormFields(interaction);
-    let imageMsg: Message | null = null;
-    if (!formField) { throw new Error('Informações inválidas! Você precisa de um link de imagem ou descrição para postar!') }
-    if (formField.url) {
-        const url = LinkService.treatUrlForPost(formField.url)
-        const isValid = await validateImageURL(url)
-        if (!isValid) {
-            throw new Error('Foto inválida! Tente outro link.');
-        }
-        try {
-            const image = await loadImage(url)
-            const uploadChannel = await MomentoService.getUploadChannel(ctx.client);
-            imageMsg = await LinkService.uploadImageToMomento(uploadChannel, await ImageCropper.cropImage(image).toBuffer("png"))
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
+    if (!formField) { throw new Error('Informações inválidas! Você precisa de uma descrição para postar!') }
+    
     if (interaction.isRepliable()) {
-        await interaction.reply({ content: 'Criando seu momento...', flags: MessageFlags.Ephemeral })
+        await interaction.reply({ content: 'Criando seu momento, aguarde...', flags: MessageFlags.Ephemeral })
     }
     const postService = new PostService(ctx);
 
     if (!author.guildId) { throw new Error('Invalid author guild id') }
     if (!author.references.channelId) { throw new Error('Invalid author channel id') }
 
-    if (!interaction.message) return;
+    if (!interaction) return;
 
     const post: IPost = {
         content: {
-            images: imageMsg?.url ? [imageMsg.url] : undefined,
+            images: undefined,
             description: formField.description ?? '',
             music: formField.music ?? undefined,
             location: formField.location ?? undefined,
@@ -83,7 +67,7 @@ async function createNewPost(ctx: IContext, interaction: ModalSubmitInteraction)
             messageId: null,
         },
         stats: {
-            type: imageMsg?.url ? 'image' : 'text',
+            type: 'text',
             likes: [],
             date: new Date(),
             status: IPostStatus.active,
@@ -91,7 +75,7 @@ async function createNewPost(ctx: IContext, interaction: ModalSubmitInteraction)
             isRepost: false,
         }
     }
-    await postService.createImagePost(interaction.message, post, author, theme);
+    await postService.createImagePost(interaction, post, author, theme);
     if (interaction.isRepliable()) {
         await interaction.editReply({ content: 'Momento postado com sucesso!' })
     }
@@ -99,16 +83,14 @@ async function createNewPost(ctx: IContext, interaction: ModalSubmitInteraction)
 }
 
 function fetchFormFields(interaction: ModalSubmitInteraction): PostFields | null {
-    const pictureURLField = interaction.fields.getField('url_field', ComponentType.TextInput).value
     const descriptionField = interaction.fields.getField('description_field', ComponentType.TextInput).value
     const musicField = interaction.fields.getField('music_field', ComponentType.TextInput).value
     const locationField = interaction.fields.getField('location_field', ComponentType.TextInput).value
 
-    const url = pictureURLField.length > 0 ? pictureURLField : null;
     const description = descriptionField.length > 0 ? descriptionField : null;
     const music = musicField.length > 0 ? musicField : null;
     const location = locationField.length > 0 ? locationField : null;
 
-    if (!url && !description) { return null }
-    return { url, description, music, location }
+    if (!description) { return null }
+    return { description, music, location }
 }

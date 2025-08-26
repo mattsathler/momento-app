@@ -52,7 +52,7 @@ export class MomentoService {
                         },
                         {
                             "name": "update_collage",
-                            "value": false
+                            "value": "false"
                         },
                         {
                             "name": "sent_from",

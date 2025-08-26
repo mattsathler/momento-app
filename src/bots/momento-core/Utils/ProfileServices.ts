@@ -113,7 +113,7 @@ export class ProfileServices {
         return ProfileButtons;
     }
 
-    public async createEditProfileButtons(user: User): Promise<ActionRowBuilder<ButtonBuilder>> {
+    public async createEditProfileButtons(user: User, isVerified: boolean): Promise<ActionRowBuilder<ButtonBuilder>> {
         let ProfileButtons: ActionRowBuilder<ButtonBuilder> = new ActionRowBuilder();
 
         const editProfileButton = new ButtonBuilder()
@@ -138,6 +138,10 @@ export class ProfileServices {
 
 
         ProfileButtons.addComponents(editProfileButton, styleProfileButton, nofiticationToggler);
+
+        if (isVerified) {
+            ProfileButtons.addComponents(importFollowersButton);
+        }
         return ProfileButtons;
     }
 

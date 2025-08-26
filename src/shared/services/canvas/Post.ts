@@ -20,24 +20,26 @@ export async function drawPostCanvas(context: IContext, user: User, theme: Theme
     const sizes = calculateSizes(postWidth);
     let canvas = new Canvas(postWidth, 2000);
     const ctx = canvas.getContext('2d');
-
+    
     const profileImageUrl = await LinkService.readImageOfMomento(context.uploadChannel, user.imagesUrl.profilePicture);
     if (!profileImageUrl) { throw new Error('Erro ao carregar imagem de perfil'); }
-
+        console.log('DEBUG2');
+    
     const userImage = await loadImage(profileImageUrl);
-
+    
     const postHeader = await drawNotificationHeader(theme, user.styles.fonts, userImage, user.username, `${user.name} ${user.surname}`, post.content.music, postWidth, MomentoService.isUserVerified(user.stats.isVerified));
     const postBar = await drawPostActionBar(postWidth, post, theme, user.styles.fonts);
-
+    
     let y = 0;
     let x = 0;
-
+    
     ctx.fillStyle = theme.colors.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+    
     ctx.drawImage(postHeader, 0, 0);
     y += postHeader.height;
-
+    
+    console.log('DEBUG4', post.content.images);
     const postImageURL = post.content.images && post.content.images?.length > 0 ? await LinkService.readImageOfMomento(context.uploadChannel, post.content.images[0]) : undefined;
     if (postImageURL) {
         const postImage = await loadImage(postImageURL);
@@ -45,7 +47,7 @@ export async function drawPostCanvas(context: IContext, user: User, theme: Theme
         ctx.drawImage(croppedImage, sizes.small, y);
         y += croppedImage.height + sizes.medium;
     }
-
+    
     if (post.content.description) {
         const textDescriptionCanvas = drawTextInCanvas(post.content.description, theme, user.styles.fonts.secondary, postWidth - (sizes.huge * 2), sizes.big);
         x += sizes.huge;

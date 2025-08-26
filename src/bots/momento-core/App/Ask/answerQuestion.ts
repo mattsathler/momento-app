@@ -59,7 +59,7 @@ async function answerQuestionExec(ctx: IContext, interaction: ModalSubmitInterac
         }
     }
 
-    await postService.createImagePost(interaction.message, post, user, userTheme, false);
+    await postService.createImagePost(interaction, post, user, userTheme, false);
 }
 
 function fetchModalFields(interaction: ModalSubmitInteraction): { question: string, answer: string, author: string } {

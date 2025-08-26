@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, Embed, EmbedBuilder, MessageFlags, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, Embed, EmbedBuilder, MessageFlags, SelectMenuInteraction, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import { ICommand } from "../../../../Interfaces/ICommand";
 import { IContext } from "../../../../Interfaces/IContext";
 import { Permission } from "../../../../Interfaces/IPermission";
@@ -6,6 +6,7 @@ import { NotificationService } from "../../../../../../shared/services/Notificat
 import { ProfileServices } from "../../../../Utils/ProfileServices";
 import { tryDeleteMessage } from "../../../../Utils/Messages";
 import { User } from "src/shared/models/User";
+import { NotificationType } from "src/bots/momento-core/Interfaces/INotification";
 
 export const createImportFollowersMessage: ICommand = {
     permission: Permission.user,
@@ -18,16 +19,11 @@ export const createImportFollowersMessage: ICommand = {
         let user = accounts.find(user => (user.guildId === interaction.guildId));
         accounts = accounts.filter(account => account.guildId !== interaction.guildId);
 
-        if (!user) {
-            await interaction.reply({ content: "Você não possui outras contas no momento.", flags: MessageFlags.Ephemeral});
+        if (!user || accounts.length < 1) {
+            await interaction.reply({ content: "Você não possui outras contas no momento.", flags: MessageFlags.Ephemeral });
             return;
         }
 
-        if (accounts.length < 1) {
-            await interaction.reply({ content: "Você não possui outras contas no momento.", flags: MessageFlags.Ephemeral});
-            return;
-        }
-        
         const checkedUser = user;
 
         accounts = accounts.filter(account => account.stats.followers > checkedUser.stats.followers);
@@ -36,18 +32,11 @@ export const createImportFollowersMessage: ICommand = {
             await interaction.reply({ content: "Só é possível importar seguidores caso possua uma conta com mais seguidores que essa.", flags: MessageFlags.Ephemeral });
             return;
         }
-        const followersBefore: number = user.stats.followers;
 
         const importFollowersSelect = new StringSelectMenuBuilder()
             .setCustomId("accounts")
             .setPlaceholder("Escolha uma conta de outro RPG")
 
-        importFollowersSelect.addOptions(
-            new StringSelectMenuOptionBuilder()
-                .setLabel('Cancelar')
-                .setValue("cancel")
-                .setEmoji("❌")
-        )
         accounts.forEach(account => {
             importFollowersSelect.addOptions(
                 new StringSelectMenuOptionBuilder()
@@ -60,29 +49,18 @@ export const createImportFollowersMessage: ICommand = {
         const row1 = new ActionRowBuilder<StringSelectMenuBuilder>()
             .addComponents(importFollowersSelect)
 
-        const row2 = new ActionRowBuilder<ButtonBuilder>()
-            .addComponents(
-                new ButtonBuilder()
-                    .setCustomId('deleteMessage')
-                    .setLabel('Cancelar')
-                    .setStyle(ButtonStyle.Secondary)
-            )
-        const response = await interaction.reply({ components: [row1, row2] })
-
-        let collector = response.createMessageComponentCollector({ componentType: ComponentType.StringSelect, time: 3_600_000 });
-
-        collector.on('collect', async i => {
+        const response = await interaction.reply({ components: [row1], flags: MessageFlags.Ephemeral, fetchReply: true });
+        const collector = response.channel.createMessageComponentCollector({
+            filter: i => i.user.id === interaction.user.id,
+            time: 60000
+        });
+        collector.on('collect', async (i: SelectMenuInteraction) => {
             try {
-                const message = await response.fetch()
                 if (i.user.id !== user?.userId) {
-                    await i.reply({content: "Você não tem permissões para alterar esse perfil!", flags: MessageFlags.Ephemeral})
+                    await i.editReply({ content: "Você não tem permissões para alterar esse perfil!", components: [] })
                 };
-                const selection = i.values[0];
 
-                if (selection === 'cancel') {
-                    await tryDeleteMessage(message);
-                    return;
-                }
+                const selection = i.values[0];
 
                 await ctx.mongoService.patch('users', {
                     userId: interaction.user.id,
@@ -91,34 +69,25 @@ export const createImportFollowersMessage: ICommand = {
                     'stats.followers': Number(selection)
                 })
 
-
-                if (!user || accounts.length < 1) {
-                    await interaction.reply({ content: "Você não possui outras contas no momento.",  flags: MessageFlags.Ephemeral });
-                    return;
-                };
-
                 const profileService = new ProfileServices();
                 user.stats.followers = Number(selection);
-                await tryDeleteMessage(message);
-                await tryDeleteMessage(interaction.message);
+
                 await profileService.updateProfilePictures(ctx, user, true, false);
 
                 const notificationService = new NotificationService(ctx);
-                await notificationService.sendEmbedNotification(user,
-                    new EmbedBuilder()
-                        .setAuthor({
-                            name: "MOMENTO",
-                            iconURL: "https://imgur.com/diuZwFL.png",
-                        })
-                        .setColor("#dd247b")
-                        .setTitle("Seguidores Importados")
-                        .setDescription(`Você importou ${selection} seguidores de seu outro perfil do momento!`)
-                        .setFooter({
-                            text: `Antes, você tinha: ${followersBefore} seguidores`
-                        })
-                )
+                await notificationService.sendNotification(user, {
+                    targetUser: user,
+                    type: NotificationType.Embed,
+                    message: `Você importou ${selection} seguidores de seu outro perfil do momento!`,
+                })
+
+                await i.deferUpdate();
+                await i.editReply({ content: 'Seguidores importados com sucesso!', attachments: [], components: [] });
             }
-            catch { }
+            catch (error) {
+                console.log(error)
+            }
         });
+
     }
 }

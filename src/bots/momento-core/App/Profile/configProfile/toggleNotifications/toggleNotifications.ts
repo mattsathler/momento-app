@@ -6,6 +6,7 @@ import { NotificationService } from "../../../../../../shared/services/Notificat
 import { NotificationType } from "../../../../Interfaces/INotification";
 import { ProfileServices } from "../../../../Utils/ProfileServices";
 import { User } from "src/shared/models/User";
+import { MomentoService } from "src/shared/services/MomentoService";
 
 export const toggleNotifications: ICommand = {
     permission: Permission.user,
@@ -21,7 +22,7 @@ export const toggleNotifications: ICommand = {
             const notificationsService = new NotificationService(ctx);
 
             const profileService = new ProfileServices();
-            const newButtons = await profileService.createEditProfileButtons(author);
+            const newButtons = await profileService.createEditProfileButtons(author, MomentoService.isUserVerified(author.stats.isVerified));
 
             await interaction.update(
                 {

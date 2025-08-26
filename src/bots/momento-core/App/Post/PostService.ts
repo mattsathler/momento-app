@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, EmbedBuilder, Guild, Message, MessageType, TextChannel, ThreadAutoArchiveDuration } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, EmbedBuilder, Guild, Message, MessageType, ModalSubmitInteraction, TextChannel, ThreadAutoArchiveDuration } from "discord.js";
 import { IPost, IPostStatus, PostType } from "../../Interfaces/IPost";
 import { IContext } from "../../Interfaces/IContext";
 import { drawMultiplePostsCanvas, drawPostCanvas, drawPostFrame } from "../../../../shared/services/canvas/Post";
@@ -224,15 +224,14 @@ export class PostService {
         }
     }
 
-    async createImagePost(message: Message, post: IPost, author: User, theme: Theme, disableRepost?: boolean) {
-        const serverConfig = await this.ctx.mongoService.getOne('servers', { id: message.guildId }) as IServer;
+    async createImagePost(source: Message | ModalSubmitInteraction, post: IPost, author: User, theme: Theme, disableRepost?: boolean) {
+        const serverConfig = await this.ctx.mongoService.getOne('servers', { id: source.guildId }) as IServer;
         this.ctx.serverConfig = serverConfig;
-
         if (!this.ctx.serverConfig) { throw new Error('Invalid server config') };
-        if (!message.guild) { throw new Error('Invalid server guild') }
+        if (!source.guild) { throw new Error('Invalid server guild') }
         if (!author.references.channelId) { throw new Error('Invalid author channel id') }
 
-        const authorProfileChannel = await message.guild.channels.fetch(author.references.channelId) as TextChannel;
+        const authorProfileChannel = await source.guild.channels.fetch(author.references.channelId) as TextChannel;
 
         if (!author.guildId) { throw new Error('Invalid author guild id') }
 
@@ -268,15 +267,10 @@ export class PostService {
             postImageURL = await LinkService.uploadImageToMomento(uploadChannel, buffer || null, 'gif');
         }
         else {
-            console.time("drawPostCanvas");
             const postImage = await drawPostCanvas(this.ctx, author, theme, post);
-            console.timeEnd("drawPostCanvas");
-            console.time("uploadImage");
             postImageURL = await LinkService.uploadImageToMomento(uploadChannel, await postImage?.toBuffer('jpeg') || null);
-            console.timeEnd("uploadImage");
         }
 
-        postThumbURL = post.content.images ? post.content.images[0] : undefined;
         post.content.imageUrl = postImageURL.url;
         post.content.thumbUrl = postThumbURL ? postThumbURL : postImageURL.url;
 
@@ -322,7 +316,7 @@ export class PostService {
         post.content.imageUrl = postImageURL.url;
 
         await this.sendPostToDatabase(this.ctx, post);
-        await this.createPostCommentsThread(message.guild, author, postMessage);
+        await this.createPostCommentsThread(source.guild, author, postMessage);
 
         if (postMentions?.mentionedUsers) {
             postMentions.mentionedUsers.forEach(async mentionedUser => {

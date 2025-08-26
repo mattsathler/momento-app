@@ -5,6 +5,7 @@ import { IContext } from "../../../Interfaces/IContext";
 import { tryDeleteMessage } from "../../../Utils/Messages";
 import { ProfileServices } from "../../../Utils/ProfileServices";
 import { User } from "src/shared/models/User";
+import { MomentoService } from "src/shared/services/MomentoService";
 
 export const openProfileConfigurations: ICommand = {
     permission: Permission.user,
@@ -15,7 +16,7 @@ export const openProfileConfigurations: ICommand = {
 async function openProfileConfigurationsMenu(ctx: IContext, interaction: ButtonInteraction) {
     const interactionAuthor = await ctx.mongoService.getOne('users', { userId: interaction.user.id, guildId: interaction.guildId }) as User;
     const profileService = new ProfileServices;
-    const profileButtonsActionRow = await profileService.createEditProfileButtons(interactionAuthor);
+    const profileButtonsActionRow = await profileService.createEditProfileButtons(interactionAuthor, MomentoService.isUserVerified(interactionAuthor.stats.isVerified));
     try {
         const embed = new EmbedBuilder()
             .setColor('#DD247B')
