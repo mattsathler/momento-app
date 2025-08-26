@@ -131,15 +131,17 @@ export class ProfileServices {
             .setLabel(user.stats.notifications ? '🔕' : '🔔')
             .setStyle(ButtonStyle.Secondary);
 
-        const importFollowersButton = new ButtonBuilder()
-            .setCustomId('createImportFollowersMessage')
-            .setLabel('Importar Seguidores 👑')
-            .setStyle(ButtonStyle.Success)
 
 
         ProfileButtons.addComponents(editProfileButton, styleProfileButton, nofiticationToggler);
 
+        console.log(isVerified)
         if (isVerified) {
+            const importFollowersButton = new ButtonBuilder()
+                .setCustomId('createImportFollowersMessage')
+                .setLabel('Importar Seguidores 👑')
+                .setStyle(ButtonStyle.Success)
+
             ProfileButtons.addComponents(importFollowersButton);
         }
         return ProfileButtons;
