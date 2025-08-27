@@ -1,4 +1,4 @@
-import {  Canvas, loadImage, Image } from "skia-canvas";
+import { Canvas, loadImage, Image } from "skia-canvas";
 import { drawNotificationHeader } from "../../../bots/momento-core/Styles/Canvas/Notifications/NotificationHeader";
 import { ImageCropper } from "../../../bots/momento-core/Utils/ImageCropper";
 import { changePixelColor, resizeCanvas } from "../../../bots/momento-core/Utils/Pictures";
@@ -20,24 +20,24 @@ export async function drawPostCanvas(context: IContext, user: User, theme: Theme
     const sizes = calculateSizes(postWidth);
     let canvas = new Canvas(postWidth, 2000);
     const ctx = canvas.getContext('2d');
-    
+
     const profileImageUrl = await LinkService.readImageOfMomento(context.uploadChannel, user.imagesUrl.profilePicture);
     if (!profileImageUrl) { throw new Error('Erro ao carregar imagem de perfil'); }
-    
+
     const userImage = await loadImage(profileImageUrl);
-    
+
     const postHeader = await drawNotificationHeader(theme, user.styles.fonts, userImage, user.username, `${user.name} ${user.surname}`, post.content.music, postWidth, MomentoService.isUserVerified(user.stats.isVerified));
     const postBar = await drawPostActionBar(postWidth, post, theme, user.styles.fonts);
-    
+
     let y = 0;
     let x = 0;
-    
+
     ctx.fillStyle = theme.colors.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
+
     ctx.drawImage(postHeader, 0, 0);
     y += postHeader.height;
-    
+
     const postImageURL = post.content.images && post.content.images?.length > 0 ? await LinkService.readImageOfMomento(context.uploadChannel, post.content.images[0]) : undefined;
     if (postImageURL) {
         const postImage = await loadImage(postImageURL);
@@ -45,7 +45,7 @@ export async function drawPostCanvas(context: IContext, user: User, theme: Theme
         ctx.drawImage(croppedImage, sizes.small, y);
         y += croppedImage.height + sizes.medium;
     }
-    
+
     if (post.content.description) {
         const textDescriptionCanvas = drawTextInCanvas(post.content.description, theme, user.styles.fonts.secondary, postWidth - (sizes.huge * 2), sizes.big);
         x += sizes.huge;
@@ -120,48 +120,88 @@ export async function drawPostActionBar(width: number, post: IPost | null, theme
     return canvas;
 }
 
-export async function drawPostFrame(uploadChannel: TextChannel, user: User, post: IPost | null, theme: Theme): Promise<Canvas> {
+export async function drawPostFrame(
+    uploadChannel: TextChannel,
+    user: User,
+    post: IPost | null,
+    theme: Theme
+): Promise<Canvas> {
     const postWidth = Styles.sizes.large.post.width;
-
     const sizes = calculateSizes(postWidth);
-    let canvas = new Canvas(postWidth + (2 * sizes.small), 4000);
+
+    // Canvas inicial com altura grande e fundo transparente
+    let canvas = new Canvas(postWidth + 2 * sizes.small, 4000);
     const ctx = canvas.getContext('2d');
 
-    const profileImageUrl: string | undefined = await LinkService.readImageOfMomento(uploadChannel, user.imagesUrl.profilePicture);
-    if (!profileImageUrl) { throw new Error('Erro ao carregar imagem de perfil') }
+    // Carregar imagem de perfil do usuário
+    const profileImageUrl: string | undefined = await LinkService.readImageOfMomento(
+        uploadChannel,
+        user.imagesUrl.profilePicture
+    );
+    if (!profileImageUrl) throw new Error('Erro ao carregar imagem de perfil');
 
     const userImage = await loadImage(profileImageUrl);
 
-    const postHeader = await drawNotificationHeader(theme, user.styles.fonts, userImage, user.username, `${user.name} ${user.surname}`, null, postWidth, MomentoService.isUserVerified(user.stats.isVerified));
+    // Desenhar cabeçalho e barra de ações
+    const postHeader = await drawNotificationHeader(
+        theme,
+        user.styles.fonts,
+        userImage,
+        user.username,
+        `${user.name} ${user.surname}`,
+        null,
+        postWidth,
+        MomentoService.isUserVerified(user.stats.isVerified)
+    );
+
     const postBar = await drawPostActionBar(postWidth, post || null, theme, user.styles.fonts);
 
     let y: number;
     let x: number = 0;
 
+    // 1️⃣ Desenhar fundo da borda
     ctx.fillStyle = theme.colors.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // 2️⃣ Desenhar cabeçalho
     ctx.drawImage(postHeader, 0, 0);
     y = postHeader.height;
 
+    // 3️⃣ Desenhar texto do post (se houver)
     y += Styles.sizes.large.post.height + sizes.medium;
     if (post?.content.description) {
-        const textDescriptionCanvas = drawTextInCanvas(post.content.description, theme, user.styles.fonts.secondary, canvas.width - (sizes.huge * 2), sizes.big);
+        const textDescriptionCanvas = drawTextInCanvas(
+            post.content.description,
+            theme,
+            user.styles.fonts.secondary,
+            canvas.width - sizes.huge * 2,
+            sizes.big
+        );
         x += sizes.huge;
         ctx.drawImage(textDescriptionCanvas, x, y);
         y += textDescriptionCanvas.height;
     }
 
+    // 4️⃣ Desenhar barra de ações
     ctx.drawImage(postBar, sizes.big, y);
     y += postBar.height;
 
+    // 5️⃣ Recortar o meio para ficar transparente usando destination-out
     ctx.globalCompositeOperation = 'destination-out';
-    ctx.fillRect(sizes.small, postHeader.height, postWidth - sizes.small * 2, Styles.sizes.large.post.height);
+    ctx.fillStyle = 'white'; // cor não importa aqui
+    ctx.fillRect(
+        sizes.small,                  // x
+        postHeader.height,            // y
+        postWidth - sizes.small * 2,  // largura
+        Styles.sizes.large.post.height // altura
+    );
     ctx.globalCompositeOperation = 'source-over';
 
     canvas = resizeCanvas(canvas, postWidth, y);
+
     return canvas;
 }
+
 
 export async function drawMultiplePostsCanvas(uploadChannel: TextChannel, user: User, theme: Theme, post: IPost, buffers?: Image[]): Promise<Canvas[]> {
     const postImages = post.content.images ? post.content.images : null;

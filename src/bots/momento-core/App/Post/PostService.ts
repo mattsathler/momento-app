@@ -77,7 +77,8 @@ export class PostService {
             const frame = await drawPostFrame(ctx.uploadChannel, author, post, theme);
             const path = `./Temp/Posts/${message.guildId}${message.channelId}${message.id}`
             await fs.mkdir(path, { recursive: true });
-            await fs.writeFile(`${path}/frame.png`, await frame.toBuffer('jpeg'), { recursive: true });
+            const buffer = await frame.toBuffer('png')
+            await fs.writeFile(`${path}/frame.png`, buffer, { recursive: true });
 
             const ffmpeg = require('fluent-ffmpeg');
             ffmpeg.setFfmpegPath(toolsPaths.ffmpeg);
@@ -204,7 +205,7 @@ export class PostService {
                             const profileService = new ProfileServices();
                             await profileService.updateProfilePictures(ctx, author, true, false);
 
-                            fs.rm(path, { recursive: true })
+                            // fs.rm(path, { recursive: true })
 
                             await tryDeleteMessage(message);
                             return;
