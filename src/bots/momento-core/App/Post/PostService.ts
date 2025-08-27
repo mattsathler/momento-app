@@ -77,7 +77,7 @@ export class PostService {
             const frame = await drawPostFrame(ctx.uploadChannel, author, post, theme);
             const path = `./Temp/Posts/${message.guildId}${message.channelId}${message.id}`
             await fs.mkdir(path, { recursive: true });
-            await fs.writeFile(`${path}/frame.png`, frame.toBuffer('jpeg'), { recursive: true });
+            await fs.writeFile(`${path}/frame.png`, await frame.toBuffer('jpeg'), { recursive: true });
 
             const ffmpeg = require('fluent-ffmpeg');
             ffmpeg.setFfmpegPath(toolsPaths.ffmpeg);
