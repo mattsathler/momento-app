@@ -36,7 +36,7 @@ async function styleUserProfile(ctx: IContext, interaction: ModalSubmitInteracti
     formField = MomentoService.removeNullOrUndefined(formField);
     if (!formField) { await interaction.reply({ content: 'Nada alterado em seu perfil. =)', flags: MessageFlags.Ephemeral }); return }
 
-    let newUserStyle = author.styles;
+    let newUserStyle = { ...author.styles };
 
     let isEdittingProfile = false;
     let isEdittingCollage = false;
