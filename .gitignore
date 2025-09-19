@@ -14,3 +14,4 @@ temp/
 tmp/
 .env
 src/bots/momento-core/Temp/Posts
+momento2.pem
