@@ -1,6 +1,6 @@
 {
   "name": "momento-app",
-  "version": "3.13.0",
+  "version": "3.14.0",
   "main": "generateToken.js",
   "private": true,
   "workspaces": [
