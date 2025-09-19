@@ -2,6 +2,7 @@ import { AxiosService } from "src/shared/services/AxiosService";
 import { getUpdateInfo } from "src/shared/services/ChangelogService";
 import fs from "fs";
 import path from "path";
+import "dotenv/config";
 
 async function publishVersion() {
     const packagePath = path.join(process.cwd(), "package.json");
