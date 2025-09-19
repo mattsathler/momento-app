@@ -1,9 +1,6 @@
-import axios from "axios";
 import fs from "fs";
 import path from "path";
-import { getUpdateInfo } from "src/shared/services/ChangelogService";
 import "dotenv/config";
-import { AxiosService } from "src/shared/services/AxiosService";
 
 type VersionType = "major" | "minor" | "patch";
 
@@ -30,11 +27,6 @@ async function updateVersion(type: VersionType) {
 
     fs.writeFileSync(packagePath, JSON.stringify(pkg, null, 2) + "\n");
     console.log(`✅ Versão atualizada de ${oldVersion} para ${newVersion}`);
-
-    const json = getUpdateInfo(newVersion)
-    const axiosService: AxiosService = new AxiosService();
-    
-    await axiosService.postWebhook(process.env.HUB_UPDATE_CHANNEL_WEBHOOK!, json)
 }
 
 const type = process.argv[2] as VersionType;
