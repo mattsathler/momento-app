@@ -35,6 +35,5 @@ export const fontsPaths: { name: string; path: string }[] = fs.readdirSync(fonts
 
 export const toolsPaths = {
     ffmpeg: path.join(root, 'tools/ffmpeg.exe'),
-    ffplay: path.join(root, 'tools/ffplay.exe'),
     ffprobe: path.join(root, 'tools/ffprobe.exe'),
 }
