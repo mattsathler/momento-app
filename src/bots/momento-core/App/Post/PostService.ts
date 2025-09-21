@@ -80,9 +80,10 @@ export class PostService {
             await fs.writeFile(`${path}/frame.png`, buffer, { recursive: true });
 
             const ffmpeg = require('fluent-ffmpeg');
-            // ffmpeg.setFfmpegPath(toolsPaths.ffmpeg);
-            // ffmpeg.setFfprobePath(toolsPaths.ffprobe);
-
+            ffmpeg.setFfmpegPath('/usr/bin/ffmpeg');
+            ffmpeg.setFfprobePath('/usr/bin/ffprobe');
+            console.log('FFMPEG PATH:', ffmpeg._getFfmpegPath());
+            
             // return
             const videoUrl = message.attachments.first()?.url;
             const videoSize = `${Math.round(frame.width)}x${Math.round(frame.height)}`
@@ -567,7 +568,7 @@ export class PostService {
 
     public async captureScreenshots(videoUrl: string, screenshotsFolderPath: string): Promise<any> {
         const fs = require('fs').promises;
-        const ffmpeg = require('fluent-ffmpeg');
+        const ffmpeg = require('ffmpeg');
         const extractFrames = require('ffmpeg-extract-frames')
 
         // ffmpeg.setFfmpegPath(toolsPaths.ffmpeg);
