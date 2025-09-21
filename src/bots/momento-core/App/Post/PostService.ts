@@ -17,7 +17,6 @@ import { LinkService } from "src/shared/services/LinkService";
 import { MomentoService } from "src/shared/services/MomentoService";
 import { getSecureToken } from "src/shared/services/TokenService";
 import { AxiosService } from "src/shared/services/AxiosService";
-import { toolsPaths } from "assets-paths";
 
 export class PostService {
     ctx: IContext;
@@ -81,8 +80,8 @@ export class PostService {
             await fs.writeFile(`${path}/frame.png`, buffer, { recursive: true });
 
             const ffmpeg = require('fluent-ffmpeg');
-            ffmpeg.setFfmpegPath(toolsPaths.ffmpeg);
-            ffmpeg.setFfprobePath(toolsPaths.ffprobe);
+            // ffmpeg.setFfmpegPath(toolsPaths.ffmpeg);
+            // ffmpeg.setFfprobePath(toolsPaths.ffprobe);
 
             // return
             const videoUrl = message.attachments.first()?.url;
@@ -571,8 +570,8 @@ export class PostService {
         const ffmpeg = require('fluent-ffmpeg');
         const extractFrames = require('ffmpeg-extract-frames')
 
-        ffmpeg.setFfmpegPath(toolsPaths.ffmpeg);
-        ffmpeg.setFfprobePath(toolsPaths.ffprobe);
+        // ffmpeg.setFfmpegPath(toolsPaths.ffmpeg);
+        // ffmpeg.setFfprobePath(toolsPaths.ffprobe);
 
         await fs.mkdir(screenshotsFolderPath, { recursive: true })
         await extractFrames({
