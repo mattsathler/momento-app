@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonInteraction, MessageFlags, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
+import { ActionRowBuilder, ButtonInteraction, MessageFlags, ModalBuilder, Options, TextInputBuilder, TextInputStyle } from "discord.js";
 import { IContext } from "../../../../Interfaces/IContext";
 import { ICommand } from "../../../../Interfaces/ICommand";
 import { Permission } from "../../../../Interfaces/IPermission";
@@ -56,17 +56,35 @@ function createThemeModal(): ModalBuilder {
         .setLabel('BACKGROUND')
         .setMinLength(6)
         .setMaxLength(6)
+        
+    const profileImageField = new TextInputBuilder()
+        .setCustomId('profile_background_field')
+        .setPlaceholder('A IMAGEM DE FUNDO DO PERFIL (opcional)')
+        .setRequired(false)
+        .setStyle(TextInputStyle.Short)
+        .setLabel('IMAGEM DE FUNDO DO PERFIL')
+
+    const collageImageField = new TextInputBuilder()
+        .setCustomId('collage_background_field')
+        .setPlaceholder('A IMAGEM DE FUNDO DO COLLAGE (opcional)')
+        .setRequired(true)
+        .setStyle(TextInputStyle.Short)
+        .setLabel('IMAGEM DE FUNDO DO COLLAGE')
+
 
 
     const AR1 = new ActionRowBuilder<TextInputBuilder>().addComponents(nameField)
     const AR2 = new ActionRowBuilder<TextInputBuilder>().addComponents(primaryField)
     const AR3 = new ActionRowBuilder<TextInputBuilder>().addComponents(secondaryField)
     const AR4 = new ActionRowBuilder<TextInputBuilder>().addComponents(backgroundField)
+    const AR5 = new ActionRowBuilder<TextInputBuilder>().addComponents(profileImageField)
 
     const modal = new ModalBuilder()
         .setTitle('Criar tema')
         .setCustomId('registerTheme')
-        .addComponents(AR1, AR2, AR3, AR4)
+        .setComponents(
+            AR1, AR2, AR3, AR4, AR5
+        )
 
     return modal
 }

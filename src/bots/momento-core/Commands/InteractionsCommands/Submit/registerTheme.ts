@@ -9,12 +9,15 @@ import { drawProfileCanvas } from "src/shared/services/canvas/ProfileCanvas"
 import { LinkService } from "src/shared/services/LinkService"
 import { DefaultUser } from "src/shared/models/DefaultUser"
 import "dotenv/config";
+import { loadImage } from "skia-canvas"
 
 interface IFormFields {
     name: string | null,
     primary: string | null,
     secondary: string | null,
     background: string | null,
+    profileImage: string | null,
+    collageImage: string | null,
 }
 
 export const registerTheme: ICommand = {
@@ -94,6 +97,23 @@ export const registerTheme: ICommand = {
             throw new Error('Já existe um tema com esse nome!')
         }
 
+        if (response.profileImage) {
+            if (!StringValidator.isValidURL(response.profileImage)) {
+                await interaction.reply({
+                    content: 'A imagem de background do perfil precisa ser uma URL válida!',
+                    flags: MessageFlags.Ephemeral
+                })
+                throw new Error('A imagem de background do perfil precisa ser uma URL válida!')
+            };
+
+            try {
+                const img = await loadImage(response.profileImage);
+                const buffer = Buffer(img);
+                const image = LinkService.uploadImageToMomento(ctx.uploadChannel, Buffer.from(img));
+            }
+
+        }
+
         const newTheme: Theme = {
             name: response.name.toLowerCase(),
             creatorId: interaction.user.id,
@@ -103,7 +123,11 @@ export const registerTheme: ICommand = {
                 primary: `#${response.primary.toUpperCase()}`,
                 secondary: `#${response.secondary.toUpperCase()}`,
                 background: `#${response.background.toUpperCase()}`,
-            }
+            },
+            images: {
+                'profile-background': response.profileImage,
+                'collage-background': null
+            },
         }
         await createTheme(ctx, interaction.guild, newTheme)
         if (interaction.isRepliable()) {
@@ -118,12 +142,16 @@ function fetchFormFields(interaction: ModalSubmitInteraction): IFormFields {
     const primaryField = interaction.fields.getField('primary_field', ComponentType.TextInput).value;
     const secondaryField = interaction.fields.getField('secondary_field', ComponentType.TextInput).value;
     const backgroundField = interaction.fields.getField('background_field', ComponentType.TextInput).value;
+    const profileImageField = interaction.fields.getField('profile_background_field', ComponentType.TextInput).value;
+    const collageImageField = interaction.fields.getField('collage_background_field', ComponentType.TextInput).value;
 
     const response: IFormFields = {
         name: nameField !== '' ? nameField : null,
         primary: primaryField !== '' ? primaryField : null,
         secondary: secondaryField !== '' ? secondaryField : null,
         background: backgroundField !== '' ? backgroundField : null,
+        profileImage: profileImageField !== '' ? profileImageField : null,
+        collageImage: collageImageField !== '' ? collageImageField : null,
     }
 
     return response

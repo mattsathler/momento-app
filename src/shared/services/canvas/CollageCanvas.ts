@@ -17,6 +17,17 @@ export async function drawCollageCanvas(uploadChannel: TextChannel, user: User, 
     ctx.fillStyle = theme.colors.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    if (theme.images) {
+        if (theme.images["collage-background"]) {
+            const backgroundImageUrl: string | undefined = await LinkService.readImageOfMomento(uploadChannel, theme.images["collage-background"]);
+            if (backgroundImageUrl) {
+                const backgroundImage = await loadImage(backgroundImageUrl);
+                const backgroundCanvas = cropImage(backgroundImage, canvas.width, canvas.height, true);
+                ctx.drawImage(backgroundCanvas, 0, 0, canvas.width, canvas.height);
+            }
+        }
+    }
+
     // HEADER ========================================
     ctx.textAlign = 'center';
 

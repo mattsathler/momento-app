@@ -12,9 +12,20 @@ import { assetPaths } from "assets-paths";
 export async function drawProfileCanvas(user: User, uploadChannel: TextChannel, theme: Theme, momentos: number, trendings: number): Promise<Canvas> {
     const canvas = new Canvas(Styles.sizes.large.profile.stats.width, Styles.sizes.large.profile.stats.height);
     const ctx = canvas.getContext('2d');
-
     ctx.fillStyle = theme.colors.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (theme.images) {
+        if (theme.images["profile-background"]) {
+            const backgroundImageUrl: string | undefined = await LinkService.readImageOfMomento(uploadChannel, theme.images["profile-background"]);
+            if (backgroundImageUrl) {
+                const backgroundImage = await loadImage(backgroundImageUrl);
+                const backgroundCanvas = cropImage(backgroundImage, canvas.width, canvas.height, true);
+                ctx.drawImage(backgroundCanvas, 0, 0, canvas.width, canvas.height);
+            }
+        }
+    }
+
 
     let coverImage: Image | null = null;
     const profileImageUrl: string | undefined = await LinkService.readImageOfMomento(uploadChannel, user.imagesUrl.profilePicture);
