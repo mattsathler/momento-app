@@ -17,6 +17,10 @@ export const ThemesSchema = new Schema({
         type: Date,
         required: true
     },
+    images: {
+        'profile-background': { type: String, default: null, required: false },
+        'collage-background': { type: String, default: null, required: false },
+    },
     colors: {
         primary: {
             type: String,
