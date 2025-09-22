@@ -1,6 +1,16 @@
 import emojiRegex from "emoji-regex";
 
 export class StringValidator {
+    static isValidURL(url: string): boolean {
+        const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+            '(\\#[-a-z\\d_]*)?$', 'i');
+        return !!pattern.test(url);
+    };
+    
     static hasSpecialCharacters(str: string): boolean {
         if (typeof str !== 'string') {
             return false;

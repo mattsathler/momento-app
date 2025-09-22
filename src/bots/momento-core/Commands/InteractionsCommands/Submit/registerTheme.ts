@@ -9,12 +9,16 @@ import { drawProfileCanvas } from "src/shared/services/canvas/ProfileCanvas"
 import { LinkService } from "src/shared/services/LinkService"
 import { DefaultUser } from "src/shared/models/DefaultUser"
 import "dotenv/config";
+import { loadImage } from "skia-canvas"
+import { ImageCropper } from "src/shared/services/ImageCropper"
 
 interface IFormFields {
     name: string | null,
     primary: string | null,
     secondary: string | null,
     background: string | null,
+    profileImage?: string | null,
+    collageImage?: string | null,
 }
 
 export const registerTheme: ICommand = {
@@ -26,13 +30,13 @@ export const registerTheme: ICommand = {
     deleteReply: false,
 
     exec: async function (ctx: IContext, interaction: ModalSubmitInteraction): Promise<void> {
-        await interaction.reply({ content: 'Criando seu tema, aguarde...', flags: MessageFlags.Ephemeral });
-
         if (!interaction) { throw new Error('Invalid interaction type') }
         if (!interaction.guild) { throw new Error('Invalid guild') }
         if (!interaction.isButton) { throw new Error('Invalid interaction type') }
 
-        const response = fetchFormFields(interaction)
+        await interaction.reply({ content: 'Criando seu tema, aguarde...', flags: MessageFlags.Ephemeral });
+
+        const response = fetchFormFields(interaction);
         if (!response) { throw new Error('Invalid form fields') }
 
         if (!response.name) {
@@ -94,7 +98,7 @@ export const registerTheme: ICommand = {
             throw new Error('Já existe um tema com esse nome!')
         }
 
-        const newTheme: Theme = {
+        let newTheme: Theme = {
             name: response.name.toLowerCase(),
             creatorId: interaction.user.id,
             is_system_theme: interaction.user.id === process.env.OWNER_ID,
@@ -103,30 +107,62 @@ export const registerTheme: ICommand = {
                 primary: `#${response.primary.toUpperCase()}`,
                 secondary: `#${response.secondary.toUpperCase()}`,
                 background: `#${response.background.toUpperCase()}`,
+            },
+            images: {
+                'profile-background': null,
+                'collage-background': null
             }
         }
-        await createTheme(ctx, interaction.guild, newTheme)
+
+        if (response.profileImage) {
+            try {
+                if (!StringValidator.isValidURL(response.profileImage)) {
+                    throw new Error('A imagem de background do perfil precisa ser uma URL válida!')
+                };
+
+                const image = await loadImage(response.profileImage);
+                const uploadChannel = await MomentoService.getUploadChannel(ctx.client);
+                const croppedImage = await ImageCropper.cropImage(image).toBuffer('png');
+                const imageMsg = await LinkService.uploadImageToMomento(uploadChannel, croppedImage)
+                newTheme.images = {
+                    'profile-background': imageMsg.url || null,
+                    'collage-background': null
+                }
+
+            } catch (err: any) {
+                await interaction.editReply('Não foi possível criar o tema! - ' + err.message);
+                throw new Error('Não foi possível criar o tema!');
+            }
+
+        }
+
+        await createTheme(ctx, interaction.guild, newTheme);
         if (interaction.isRepliable()) {
             await interaction.editReply({ content: 'Seu tema foi criado com sucesso!' });
         }
+
+        await interaction.deferUpdate();
         return
     }
 }
+
 
 function fetchFormFields(interaction: ModalSubmitInteraction): IFormFields {
     const nameField = interaction.fields.getField('name_field', ComponentType.TextInput).value;
     const primaryField = interaction.fields.getField('primary_field', ComponentType.TextInput).value;
     const secondaryField = interaction.fields.getField('secondary_field', ComponentType.TextInput).value;
     const backgroundField = interaction.fields.getField('background_field', ComponentType.TextInput).value;
+    const profileImageField = interaction.fields.getField('profile_background_field', ComponentType.TextInput).value;
 
     const response: IFormFields = {
         name: nameField !== '' ? nameField : null,
         primary: primaryField !== '' ? primaryField : null,
         secondary: secondaryField !== '' ? secondaryField : null,
         background: backgroundField !== '' ? backgroundField : null,
+        profileImage: profileImageField !== '' ? profileImageField : null,
     }
 
-    return response
+    return response;
 }
 
 async function checkThemeNameAvailability(ctx: IContext, name: string): Promise<boolean> {
@@ -155,7 +191,7 @@ export async function displayThemeInCatalogue(ctx: IContext, guild: Guild, theme
     const components = [
         new ContainerBuilder()
             .addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`# ${theme.name} ${theme.is_system_theme ? "👑" : ""}`),
+                new TextDisplayBuilder().setContent(`# ${theme.name} ${theme.is_system_theme ? "" : "👑"}`),
             )
             .addSeparatorComponents(
                 new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
