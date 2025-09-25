@@ -198,7 +198,6 @@ export class HubService {
         const selectMenu: StringSelectMenuBuilder = new StringSelectMenuBuilder()
             .setCustomId('selectSubscriptionType')
             .setPlaceholder("Escolha a duração da assinatura")
-        console.log(subscriptionsType)
         subscriptionsType.forEach(sub => {
             selectMenu.addOptions({
                 label: sub.label,
@@ -221,10 +220,16 @@ export class HubService {
     public async createPaymentQRCode(client: Client, interaction: SelectMenuInteraction): Promise<void> {
         const pixkey: string | undefined = process.env.HUB_PIX_KEY;
         if (!pixkey) throw new Error("Couldn't get pix key");
-        const subscriptionType = Number(interaction.values[0]);
+        const mongoservice = new MongoService();
+
+        const subscriptionsType: SubscriptionType[] = await mongoservice.get("subscriptions", { isActive: true }) as SubscriptionType[];
+        
+        const subscriptionType = subscriptionsType.find(sub => sub.period_in_months === Number(interaction.values[0]));
+        if (!subscriptionType) throw new Error("Couldn't find subscription type");
+
         const pixMessage = `Assinatura de ${interaction.values[0]} meses do momento app`;
-        const value = subscriptionType === 1 ? 19.90 : subscriptionType === 2 ? 29.90 : 39.90;
-        const valueInBRL = `R$ ${value.toFixed(2).replace('.', ',')}`;
+
+        const valueInBRL = `R$ ${subscriptionType.price.toFixed(2).replace('.', ',')}`;
 
         const QRCodeParams: QrCodePixParams = {
             name: `${interaction.message.id}${interaction.guildId}`,
@@ -232,7 +237,7 @@ export class HubService {
             version: "01",
             city: "RIO DE JANEIRO",
             message: pixMessage,
-            value: value
+            value: subscriptionType.price
         }
 
         const pixqrcode = await QrCodePix(QRCodeParams).base64();
@@ -254,9 +259,9 @@ Nossa equipe irá validar o quanto antes.`)
                 { name: '🏷️ Referência', value: `Matheus William Sathler Lima`, inline: false },
                 { name: '🏦 Banco', value: 'NuBank', inline: true },
                 { name: '💰 Valor', value: String(valueInBRL), inline: true },
-                { name: '🎫 Meses de Verificado', value: `${String(subscriptionType)} mes(es)` },
+                { name: '🎫 Meses de Verificado', value: `${String(subscriptionType.period_in_months)} mes(es)` },
                 { name: 'id', value: interaction.user.id },
-                { name: 'subscription', value: String(subscriptionType) }
+                { name: 'subscription', value: String(subscriptionType.period_in_months) }
             )
             .setImage(qrcodelink.attachments.first()!.url)
             .setFooter({ text: 'Envie o comprovante neste canal assim que concluir o pagamento que o desenvolvedor entrará em contato.' });
