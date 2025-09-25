@@ -1,6 +1,6 @@
 {
   "name": "momento-app",
-  "version": "3.11.0",
+  "version": "3.12.0",
   "main": "generateToken.js",
   "private": true,
   "workspaces": [
@@ -40,9 +40,9 @@
     "start:profile-updater": "npm run start --workspace momento-profile-updater",
     "start:analytics": "npm run start --workspace momento-analytics",
     "start:hub": "npm run start --workspace momento-hub",
-    "update:major": "tsx scripts/updateVersion.ts major && update:deploy",
-    "update:minor": "tsx scripts/updateVersion.ts minor && update:deploy",
-    "update:patch": "tsx scripts/updateVersion.ts patch && update:deploy",
+    "update:major": "tsx scripts/updateVersion.ts major && npm run update:deploy",
+    "update:minor": "tsx scripts/updateVersion.ts minor && npm run update:deploy",
+    "update:patch": "tsx scripts/updateVersion.ts patch && npm run update:deploy",
     "update:deploy": "git add package.json && sudo git commit -m \"🏷️ - v$npm_package_version\" && git push origin master && npm run deploy && tsx scripts/publishVersion.ts",
     "deploy": "sudo ssh -i momento.pem ubuntu@ec2-54-207-197-131.sa-east-1.compute.amazonaws.com \"cd ~/momento-app && git checkout master && git pull origin master && npm ci && pm2 kill && npm run pm2\""
   },
