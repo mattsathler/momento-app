@@ -10,9 +10,8 @@ Thumbs.db
 .idea/
 *.tsbuildinfo
 coverage/
-temp/
+Temp/
 tmp/
 .env
 src/bots/momento-core/Temp/Posts
 momento.pem
-package-lock.json

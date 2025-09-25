@@ -44,7 +44,7 @@
     "update:minor": "tsx scripts/updateVersion.ts minor",
     "update:patch": "tsx scripts/updateVersion.ts patch",
     "update:deploy": "git add package.json && git commit -m \"🏷️ - v$npm_package_version\" && git push origin master && npm run deploy && tsx scripts/publishVersion.ts",
-    "deploy": "ssh -i momento.pem ubuntu@ec2-54-207-197-131.sa-east-1.compute.amazonaws.com \"cd ~/momento-app && git checkout master && git pull origin master && npm install && pm2 kill && npm run pm2\""
+    "deploy": "sudo ssh -i momento.pem ubuntu@ec2-54-207-197-131.sa-east-1.compute.amazonaws.com \"cd ~/momento-app && git checkout master && git pull origin master && npm ci && pm2 kill && npm run pm2\""
   },
   "author": "",
   "license": "ISC",
