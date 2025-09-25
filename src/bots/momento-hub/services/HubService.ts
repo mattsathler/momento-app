@@ -3,11 +3,12 @@ import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, Channe
 import { QrCodePix, QrCodePixParams } from "qrcode-pix";
 import { DefaultUser } from "src/shared/models/DefaultUser";
 import { defaultTheme } from "src/shared/models/Theme";
-import { User } from "src/shared/models/user";
+import { User } from "src/shared/models/User";
 import { drawProfileCanvas } from "src/shared/services/canvas/ProfileCanvas";
 import { LinkService } from "src/shared/services/LinkService";
 import { MomentoService } from "src/shared/services/MomentoService";
 import { MongoService } from "src/shared/services/MongoService";
+import { SubscriptionType } from "../src/models/SubscriptionType";
 
 export class HubService {
     public async createVerifyMessage(channel: TextChannel): Promise<void> {
@@ -193,31 +194,21 @@ export class HubService {
                     ),
             )
 
-        const subscriptionSelect = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-            new StringSelectMenuBuilder()
-                .setCustomId('selectSubscriptionType')
-                .setPlaceholder("Escolha a duração da assinatura")
-                .addOptions([
-                    {
-                        label: '1 mês – R$19,90',
-                        value: '1',
-                        emoji: "👑",
-                        description: 'Assinatura padrão mensal.'
-                    },
-                    {
-                        label: '2 meses – R$29,90',
-                        value: '2',
-                        emoji: "👑",
-                        description: 'R$14,95/mês, desconto de 25%!'
-                    },
-                    {
-                        label: '3 meses – R$39,90',
-                        value: '3',
-                        emoji: "👑",
-                        description: 'R$13,30/mês, desconto de 33%!'
-                    }
-                ])
-        );
+        const subscriptionsType: SubscriptionType[] = await mongoservice.get("subscriptions", { isActive: true }) as SubscriptionType[];
+        const selectMenu: StringSelectMenuBuilder = new StringSelectMenuBuilder()
+            .setCustomId('selectSubscriptionType')
+            .setPlaceholder("Escolha a duração da assinatura")
+        console.log(subscriptionsType)
+        subscriptionsType.forEach(sub => {
+            selectMenu.addOptions({
+                label: sub.label,
+                value: String(sub.period_in_months),
+                emoji: "👑",
+                description: sub.description,
+            });
+        })
+
+        const subscriptionSelect = new ActionRowBuilder<SelectMenuBuilder>().addComponents([selectMenu]);
 
         await newTicketChannel.send({
             flags: MessageFlags.IsComponentsV2,

@@ -4,6 +4,7 @@ import { UserSchema } from "./UserSchema";
 import { CollagesSchema } from "./CollagesSchema";
 import { PostsSchema } from "./PostsSchema";
 import { LogsSchema } from "./LogsSchema";
+import { SubscriptionSchema } from "./SubscriptionSchema";
 
 const mongo = require('mongoose');
 
@@ -13,5 +14,6 @@ const themes = mongo.model('themes', new mongo.Schema(ThemesSchema))
 const collages = mongo.model('collages', new mongo.Schema(CollagesSchema))
 const posts = mongo.model('posts', new mongo.Schema(PostsSchema))
 const logs = mongo.model('logs', new mongo.Schema(LogsSchema))
+const subscriptions = mongo.model('subscriptions', new mongo.Schema(SubscriptionSchema))
 
-module.exports = user, server, themes, collages, posts, logs;
+module.exports = user, server, themes, collages, posts, logs, subscriptions;
