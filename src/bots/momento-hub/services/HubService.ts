@@ -251,7 +251,7 @@ export class HubService {
 
         const pixEmbed = new EmbedBuilder()
             .setTitle('Confirmação de Pagamento via Pix')
-            .setDescription(`Você está prestes a realizar o pagamento da sua assinatura de **${subscriptionType} mes(es)** de verificado do momento.\nConfira atentamente os dados abaixo antes de prosseguir.\n\n**📌 Após efetuar o pagamento, envie o comprovante neste canal.**  
+            .setDescription(`Você está prestes a realizar o pagamento da sua assinatura de **${subscriptionType.period_in_months} mes(es)** de verificado do momento.\nConfira atentamente os dados abaixo antes de prosseguir.\n\n**📌 Após efetuar o pagamento, envie o comprovante neste canal.**  
 Nossa equipe irá validar o quanto antes.`)
             .setColor(0xDD247B)
             .addFields(
